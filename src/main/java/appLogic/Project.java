@@ -1,8 +1,7 @@
 package appLogic;
 
-import jdk.javadoc.doclet.Reporter;
-
 import java.util.*;
+import java.util.UUID;
 
 public class Project {
 
@@ -10,6 +9,7 @@ public class Project {
 //
 //    }
 
+    private UUID projectUUID;
     private String projectID;
     private String name;
     private boolean hasCustomer;
@@ -22,11 +22,13 @@ public class Project {
     private Set<TimeEntry> events;
     private Set<Employee> employees;
 
-
     // Constructor -- Use this instead of createProject?
     public Project(String name, Integer expectedHours) {
         this.name = name;
         this.expectedHours = expectedHours;
+
+        // Use ProjectIdGenerator instead of UUID. This is temporary.
+        this.projectUUID = UUID.randomUUID();
     }
 
     // Status true
