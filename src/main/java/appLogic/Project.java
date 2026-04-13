@@ -20,6 +20,7 @@ public class Project {
     private int expectedHours;
     private Report currentReport;
     private Set<TimeEntry> events;
+    private Set<Employee> employees;
 
 
     // Constructor -- Use this instead of createProject?
@@ -35,19 +36,26 @@ public class Project {
 
     // -----SETTERS-----
     public void addActivity(Activity act) {
-
+        activities.add(act);
     }
 
     public void assignProjectLeader(Employee empl) {
-
+        this.projectLeader = empl;
     }
 
     public Report generateReport() {
-        return null;
+        return currentReport;
     }
 
     public boolean assignEmployee(Employee empl) {
-        return true;
+        boolean b;
+        if (employees.contains(empl)) {
+            b = false;
+        } else {
+            employees.add(empl);
+            b = true;
+        }
+        return b;
     }
 
     public void setExpectedHours(int hours) {
