@@ -1,6 +1,8 @@
 package appLogic;
 
-import java.util.Set;
+import jdk.javadoc.doclet.Reporter;
+
+import java.util.*;
 
 public class Project {
 
@@ -11,7 +13,7 @@ public class Project {
     private String projectID;
     private String name;
 
-    private Integer expectedHours;
+    private int expectedHours;
     private boolean hasCustomer;
     private boolean isCompleted = false;
     private Employee projectLeader;
@@ -20,10 +22,38 @@ public class Project {
 
 
 
-    // Constructor
+    // Constructor -- Use this instead of createProject?
     public Project(String name, Integer expectedHours) {
         this.name = name;
         this.expectedHours = expectedHours;
+    }
+
+    // Status true
+    public void setCompletedStatus(boolean status) {
+        this.isCompleted = status;
+    }
+
+    // -----SETTERS-----
+    public void addActivity(Activity act) {
+
+    }
+
+    public void assignProjectLeader(Employee empl) {
+
+    }
+
+    public boolean assignEmployee(Employee empl) {
+        return true;
+    }
+
+    public void setExpectedHours(int hours) {
+        this.expectedHours = hours;
+    }
+
+    public Set<TimeEntry> getEvents() {
+        // TODO: implement
+        Set<TimeEntry> entries = new HashSet<>();
+        return entries;
     }
 
 }
