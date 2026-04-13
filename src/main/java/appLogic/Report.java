@@ -1,7 +1,6 @@
 package appLogic;
 
 import java.util.Set;
-import java.util.HashSet;
 
 public class Report {
     private double hoursUsed;
