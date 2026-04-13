@@ -12,14 +12,14 @@ public class Project {
 
     private String projectID;
     private String name;
-
-    private int expectedHours;
     private boolean hasCustomer;
-    private boolean isCompleted = false;
     private Employee projectLeader;
-
     private Set<Activity> activities;
-
+    private boolean isCompleted = false;
+    private Set<Customer> customerList;
+    private int expectedHours;
+    private Report currentReport;
+    private Set<TimeEntry> events;
 
 
     // Constructor -- Use this instead of createProject?
@@ -42,6 +42,10 @@ public class Project {
 
     }
 
+    public Report generateReport() {
+        return null;
+    }
+
     public boolean assignEmployee(Employee empl) {
         return true;
     }
@@ -51,9 +55,12 @@ public class Project {
     }
 
     public Set<TimeEntry> getEvents() {
-        // TODO: implement
         Set<TimeEntry> entries = new HashSet<>();
         return entries;
+    }
+
+    public Set<Customer> getCustomers() {
+        return null;
     }
 
 }
