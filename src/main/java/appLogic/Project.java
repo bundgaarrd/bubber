@@ -9,7 +9,7 @@ public class Project {
 //
 //    }
 
-    private UUID projectUUID;
+    private String projectUUID;
     private String projectID;
     private String name;
     private boolean hasCustomer;
@@ -23,12 +23,12 @@ public class Project {
     private Set<Employee> employees;
 
     // Constructor -- Use this instead of createProject?
-    public Project(String name, Integer expectedHours) {
+    public Project(String name, int expectedHours) {
         this.name = name;
         this.expectedHours = expectedHours;
 
         // Use ProjectIdGenerator instead of UUID. This is temporary.
-        this.projectUUID = UUID.randomUUID();
+        this.projectUUID = UUID.randomUUID().toString();
     }
 
     // Status true
@@ -71,6 +71,10 @@ public class Project {
 
     public Set<Customer> getCustomers() {
         return null;
+    }
+
+    public String getProjectID() {
+        return projectID;
     }
 
 }

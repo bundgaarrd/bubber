@@ -18,14 +18,14 @@ public class App {
         this.adminLogin = false;
     }
 
-    public Project Project(String name) { // Create project
-        Project newProject = new Project(name);
+    public Project Project(String name, int expectedHours) { // Create project
+        Project newProject = new Project(name, expectedHours);
         this.projects.add(newProject);
         return newProject;
     }
 
     public void deleteProject(String id) {
-        projects.removeIf(project -> project.projectID().equals(id)); // Antager at Project har en projectID() metode
+        projects.removeIf(project -> project.getProjectID().equals(id)); // Antager at Project har en projectID() metode
     }
 
     public List<Employee> getAvailableEmployees(int week, int year) {
@@ -36,7 +36,7 @@ public class App {
 
     public Project getProjectById(String id) {
         for (Project p : projects) {
-            if (p.projectID().equals(id)) {
+            if (p.getProjectID().equals(id)) {
                 return p;
             }
         }
