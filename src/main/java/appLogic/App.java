@@ -18,8 +18,12 @@ public class App {
         this.adminLogin = false;
     }
 
-    public Project Project(String name, int expectedHours) { // Create project
-        Project newProject = new Project(name, expectedHours);
+    public Project Project(String name) { // Create project
+        Project newProject = new Project(name);
+        // Check if a project with the same name already exists
+        projects.stream().filter(predicate -> predicate.getProjectID().equals(newProject.getProjectID())).findFirst().ifPresent(project -> {
+            throw new IllegalStateException("A project with the name " + name + " already exists in the system.");
+        });
         this.projects.add(newProject);
         return newProject;
     }
@@ -54,4 +58,7 @@ public class App {
         return adminLogin;
     }
 
+    public void setAdminLoggedIn(boolean status) {
+        this.adminLogin = status;
+    }
 }
