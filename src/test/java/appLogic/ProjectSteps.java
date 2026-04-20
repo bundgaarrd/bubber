@@ -26,7 +26,7 @@ public class ProjectSteps {
 
     @When("I create a project with the name {string}")
     public void iCreateAProjectWithTheName(String name) {
-        project = TestApp.getInstance().getApp().Project(name);
+        project = TestApp.getInstance().getApp().createProject(name);
     }
 
     @Then("the project exists in the system")
