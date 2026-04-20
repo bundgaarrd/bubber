@@ -9,7 +9,6 @@ Feature: Assign employee to activity
     Then the selected employee is added to the activity
     And the employee's schedule is updated
 
-
   Scenario: Assign unavailable employee
     Given I am logged in as an employee or a project leader
     And the selected employee is unavailable
