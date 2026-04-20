@@ -1,5 +1,7 @@
 package appLogic;
 
+import io.cucumber.core.runtime.Runtime;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,14 +13,30 @@ public class App {
     private Map<String, Employee> employees;
     private Set<Project> projects;
     private boolean adminLogin;
+    private boolean appActive;
+
+    public static void main(String[] args) { // Has to be run from mvn javafx:run
+        System.out.println("Starting the application ...");
+        App app = new App();
+        app.run();
+    }
+
+    private void run() {
+        while (appActive) {
+            System.out.println("Application started!");
+            appActive = false;
+            System.out.println("Quitting!");
+        }
+    }
 
     public App() {
         this.employees = new HashMap<>();
         this.projects = new HashSet<>();
         this.adminLogin = false;
+        this.appActive = true;
     }
 
-    public Project Project(String name) { // Create project
+    public Project createProject(String name) { // Create project
         Project newProject = new Project(name);
         // Check if a project with the same name already exists
         projects.stream().filter(predicate -> predicate.getProjectID().equals(newProject.getProjectID())).findFirst().ifPresent(project -> {
