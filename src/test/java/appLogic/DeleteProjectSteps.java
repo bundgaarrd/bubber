@@ -16,7 +16,7 @@ public void LoggedIn1() {
     }
 }
 
-@Given("A projectnamed {string} exists")
+@Given("A project named {string} exists")
 public void ProjectExists(String string) {
     // Write code here that turns the phrase above into concrete actions
     throw new io.cucumber.java.PendingException();
