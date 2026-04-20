@@ -4,9 +4,9 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-public class AssignEmploySteps {
-
-// Scenario: Assigning an available employee to an activity
+public class DeleteProjectSteps {
+    
+// Scenario: Deleting an existing project
 
 @Given("I am logged in as project leader or employee")
 public void LoggedIn1() {
@@ -16,33 +16,24 @@ public void LoggedIn1() {
     }
 }
 
-@Given("The selected employee is available")
-public void SelectedEmployeeAvailable() {
-    boolean isAvailable = true; 
-    if (!isAvailable) {
-        throw new IllegalStateException("Selected employee is not available.");
-    }
-}
-
-@When("Selected employee is assigned to the activity")
-public void AssignEmployeeToActivity() {
+@Given("A projectnamed {string} exists")
+public void ProjectExists(String string) {
     // Write code here that turns the phrase above into concrete actions
     throw new io.cucumber.java.PendingException();
 }
-@Then("Selected employee is added to the activity")
-public void AddEmployeeToActivity() {
+@When("I delete the project named {string}")
+public void DeleteProjectNamed(String string) {
     // Write code here that turns the phrase above into concrete actions
     throw new io.cucumber.java.PendingException();
 }
-
-@Then("Employee schedule is updated")
-public void UpdateEmployeeSchedule() {
+@Then("The project no longer exists in the system")
+public void theProjectNoLongerExists() {
     // Write code here that turns the phrase above into concrete actions
     throw new io.cucumber.java.PendingException();
 }
 
 
-// Scenario: Assigning a non-available employee to an activity
+// Scenario: Deleting a non-existing project from the system
 
 @Given("I am logged in as project leader or employee")
 public void LoggedIn2() {
@@ -52,27 +43,19 @@ public void LoggedIn2() {
     }
 }
 
-@Given("The selected employee is unavailable")
-public void SelectedEmployeeUnavailable() {
+@Given("There is no project named {string} in the system")
+public void ProjectDoesNotExist(String string) {
     // Write code here that turns the phrase above into concrete actions
     throw new io.cucumber.java.PendingException();
 }
-
-@When("Selected employee is assigned to the activity")
-public void AssignUnavailableEmployee() {
+@When("I delete the project named {string}")
+public void DeleteProject(String string) {
     // Write code here that turns the phrase above into concrete actions
     throw new io.cucumber.java.PendingException();
 }
-@Then("Selected employee is not added to the activity")
-public void DoNotAddEmployeeToActivity() {
+@Then("an error message is shown indicating that the project does not exist in the system")
+public void ErrorMessageSaysProjectDoesNotExist() {
     // Write code here that turns the phrase above into concrete actions
     throw new io.cucumber.java.PendingException();
 }
-
-@Then("Error message is shown indicating that the employee is unavailable for the activity")
-public void ShowUnavailableEmployeeError() {
-    // Write code here that turns the phrase above into concrete actions
-    throw new io.cucumber.java.PendingException();
-}
-
 }

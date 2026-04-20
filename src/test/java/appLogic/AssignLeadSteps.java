@@ -4,9 +4,9 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-public class AssignEmploySteps {
+public class AssignLeadSteps {
 
-// Scenario: Assigning an available employee to an activity
+// Scenario: Assigning an employee as project leader
 
 @Given("I am logged in as project leader or employee")
 public void LoggedIn1() {
@@ -16,33 +16,31 @@ public void LoggedIn1() {
     }
 }
 
-@Given("The selected employee is available")
-public void SelectedEmployeeAvailable() {
-    boolean isAvailable = true; 
-    if (!isAvailable) {
-        throw new IllegalStateException("Selected employee is not available.");
-    }
-}
-
-@When("Selected employee is assigned to the activity")
-public void AssignEmployeeToActivity() {
-    // Write code here that turns the phrase above into concrete actions
-    throw new io.cucumber.java.PendingException();
-}
-@Then("Selected employee is added to the activity")
-public void AddEmployeeToActivity() {
+@Given("There is a project named {string} with no assigned project leader")
+public void ProjectExists(String projectName) {
     // Write code here that turns the phrase above into concrete actions
     throw new io.cucumber.java.PendingException();
 }
 
-@Then("Employee schedule is updated")
-public void UpdateEmployeeSchedule() {
+@When("An employee is chosen as project leader for the project")
+public void EmployeeChosenAsLeader(String projectName) {
+    // Write code here that turns the phrase above into concrete actions
+    throw new io.cucumber.java.PendingException();
+}
+@When("Selected employee confirms role as project leader")
+public void EmployeeConfirmsRole() {
+    // Write code here that turns the phrase above into concrete actions
+    throw new io.cucumber.java.PendingException();
+}
+
+@Then("Employee is assigned as project leader for the project")
+public void AssignEmployeeAsLeader() {
     // Write code here that turns the phrase above into concrete actions
     throw new io.cucumber.java.PendingException();
 }
 
 
-// Scenario: Assigning a non-available employee to an activity
+// Scenario: Employee declines being project leader
 
 @Given("I am logged in as project leader or employee")
 public void LoggedIn2() {
@@ -52,25 +50,26 @@ public void LoggedIn2() {
     }
 }
 
-@Given("The selected employee is unavailable")
-public void SelectedEmployeeUnavailable() {
+@Given("There is a project named {string} with no assigned project leader")
+public void ProjectExistsNoLeader(String projectName) {
     // Write code here that turns the phrase above into concrete actions
     throw new io.cucumber.java.PendingException();
 }
 
-@When("Selected employee is assigned to the activity")
-public void AssignUnavailableEmployee() {
-    // Write code here that turns the phrase above into concrete actions
-    throw new io.cucumber.java.PendingException();
-}
-@Then("Selected employee is not added to the activity")
-public void DoNotAddEmployeeToActivity() {
+@When("An employee is chosen as project leader for the project")
+public void EmployeeChosenAsLead(String projectName) {
     // Write code here that turns the phrase above into concrete actions
     throw new io.cucumber.java.PendingException();
 }
 
-@Then("Error message is shown indicating that the employee is unavailable for the activity")
-public void ShowUnavailableEmployeeError() {
+@When("Selected employee does not confirm role as project leader")
+public void EmployeeDeclinesRole() {
+    // Write code here that turns the phrase above into concrete actions
+    throw new io.cucumber.java.PendingException();
+}
+
+@Then("Selected employee is not assigned as project leader and error message is shown")
+public void UnableToAssignLeader() {
     // Write code here that turns the phrase above into concrete actions
     throw new io.cucumber.java.PendingException();
 }
