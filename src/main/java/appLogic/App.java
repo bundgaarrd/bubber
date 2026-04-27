@@ -1,15 +1,11 @@
 package appLogic;
 
-import io.cucumber.core.runtime.Runtime;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class App {
+    private static App instance;
+
+    private Employee currentUser;
     private Map<String, Employee> employees;
     private Set<Project> projects;
     private boolean adminLogin;
@@ -17,8 +13,8 @@ public class App {
 
     public static void main(String[] args) { // Has to be run from mvn javafx:run
         System.out.println("Starting the application ...");
-        App app = new App();
-        app.run();
+        instance = new App();
+        instance.run();
     }
 
     private void run() {
@@ -34,6 +30,11 @@ public class App {
         this.projects = new HashSet<>();
         this.adminLogin = false;
         this.appActive = true;
+        this.currentUser = AppContext.employeeRepository.findByInitials("huba");
+    }
+
+    public static App getInstance() {
+        return instance;
     }
 
     public Project createProject(String name) { // Create project
@@ -87,5 +88,20 @@ public class App {
 
     public void setAdminLoggedIn(boolean status) {
         this.adminLogin = status;
+    }
+
+    public Set<Activity> getAllActivities() {
+        if(!adminLogin) throw new IllegalStateException("Only admin can access activities.");
+        List<Project> projects = getAllProjects();
+        Set<Activity> activities = new HashSet<>();
+        for(Project project : projects) {
+            activities.addAll(project.getActivities());
+        }
+
+        return activities;
+    }
+
+    public Employee getCurrentUser() {
+        return currentUser;
     }
 }
