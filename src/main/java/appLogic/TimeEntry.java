@@ -1,4 +1,4 @@
-package appLogic;
+package appLogic; //s244813
 
 import java.time.LocalDateTime;
 
@@ -9,9 +9,11 @@ public class TimeEntry {
     private LocalDateTime entryStartTime;
     private double hoursWorked;
 
-    public TimeEntry(Employee employee, Activity activity) {
+    public TimeEntry(Employee employee, Activity activity, LocalDateTime entryStartTime, double hoursWorked) {
         this.employee = employee;
         this.activity = activity;
+        this.entryStartTime = entryStartTime;
+        this.hoursWorked = hoursWorked;
     }
 
     public Employee getEmployee() {

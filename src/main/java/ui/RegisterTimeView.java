@@ -1,4 +1,4 @@
-package ui;
+package ui; //s244813
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -127,10 +127,7 @@ public class RegisterTimeView {
 
             employee.addActivity(activity);
 
-            TimeEntry entry = new TimeEntry(employee, activity);
-            entry.setEntryStartTime(LocalDateTime.now());
-            entry.setHoursWorked(hours);
-
+            TimeEntry entry = new TimeEntry(employee, activity, LocalDateTime.now(), hours);
             timeEntryRepository.save(entry);
             tableData.add(entry);
 
