@@ -10,5 +10,6 @@ public class AppContext {
         employeeRepository.save(new Employee("huba", "Hubert Baumeister", true));
         employeeRepository.save(new Employee("wilo", "William Lopez", true));
         employeeRepository.save(new Employee("anda", "Annemette A. Damgaard", true));
+        timeEntryRepository.save(new TimeEntry("huba", ));
     }
 }
