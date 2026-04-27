@@ -7,13 +7,16 @@ import java.util.UUID;
 
 public abstract class Activity {
     private UUID id;
+    private String name;
     private String description;
     private String summary;
     private LocalDate date;
     private Set<Employee> assignedEmployees = new HashSet<>();
 
-    public Activity(String description, String summary, LocalDate date) {
+    public Activity(String name, String description, String summary, LocalDate date) {
         this.id = UUID.randomUUID();
+
+        this.name = name;
         this.description = description;
         this.summary = summary;
         this.date = date;
@@ -21,6 +24,10 @@ public abstract class Activity {
 
     public UUID getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getProjectReferenceId() {
