@@ -27,12 +27,23 @@ public class App {
 
     public App() {
         this.employeeRepository = new InMemoryEmployeeRepository();
+        initializeUsers();
         this.employees = new HashMap<>();
         this.projects = new HashSet<>();
         this.appActive = true;
     }
 
+    private void initializeUsers() {
+        employeeRepository.save(new Employee("huba", "Hubert Baumeister", true));
+        employeeRepository.save(new Employee("wilo", "William Lopez", true));
+        employeeRepository.save(new Employee("anda", "Annemette A. Damgaard", true));
+    }
+
     public static App getInstance() {
+        if(instance == null) {
+            instance = new App();
+            instance.run();
+        }
         return instance;
     }
 
