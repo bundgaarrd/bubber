@@ -1,6 +1,7 @@
 package appLogic;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public class Project {
@@ -41,8 +42,14 @@ public class Project {
         activities.add(act);
     }
 
+    public Employee getProjectLeader() {
+        return projectLeader;
+    }
+
     public void assignProjectLeader(Employee empl) {
+        if(projectLeader != null) projectLeader.removeProjectAsLeader(this);
         this.projectLeader = empl;
+        empl.addProjectAsLeader(this);
     }
 
     public Report generateReport() {
@@ -86,6 +93,9 @@ public class Project {
     }
 
     public Activity getActivity(String name) {
+        if(!App.getInstance().isAdminLoggedIn()) {
+            throw new IllegalStateException("Only admin can access activities.");
+        }
         for(Activity activity : activities) {
             if(activity.getName().equals(name)) {
                 return activity;
@@ -96,6 +106,9 @@ public class Project {
     }
 
     public void deleteActivity(String name) {
+        if(!App.getInstance().isAdminLoggedIn()) {
+            throw new IllegalStateException("Only admin can delete activities.");
+        }
         Activity toRemove = null;
         for(Activity activity : activities) {
             if(activity.getName().equals(name)) {
@@ -105,5 +118,4 @@ public class Project {
 
         if(toRemove != null) activities.remove(toRemove);
     }
-
 }
