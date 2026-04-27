@@ -8,13 +8,15 @@ import java.util.UUID;
 public abstract class Activity {
 
     private final UUID id;
+    private final String name;
     private final String description;
     private final String summary;
     private final LocalDate date;
     private final Set<Employee> assignedEmployees = new HashSet<>();
 
-    public Activity(String description, String summary, LocalDate date) {
+    public Activity(String name, String description, String summary, LocalDate date) {
         this.id = UUID.randomUUID();
+        this.name = name;
         this.description = description;
         this.summary = summary;
         this.date = date;

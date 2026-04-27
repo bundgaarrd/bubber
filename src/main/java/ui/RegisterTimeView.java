@@ -119,6 +119,7 @@ public class RegisterTimeView {
             }
 
             Activity activity = new WorkActivity(
+                    "huba",
                     activityDescField.getText(),
                     activitySummaryField.getText(),
                     LocalDate.now()
