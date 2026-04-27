@@ -20,7 +20,7 @@ Feature: Viewing overall schedule
     Given I am logged in as project leader or employee
     When I create a project with the name "Hansen ApS"
     Then the project exists in the system
-    And the project tildeles is assigned a project number
+    And the project is assigned a project number
 
   Scenario: Create activity
     Given I am logged in as project leader or employee
