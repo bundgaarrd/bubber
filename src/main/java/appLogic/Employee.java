@@ -10,7 +10,7 @@ public class Employee {
     private String initials;
     private String name;
     private boolean isAvailable;
-    private List<Activity> activities = new ArrayList<>();
+    private final List<Activity> activities = new ArrayList<>();
 
     public String getInitials() {
         return initials;
