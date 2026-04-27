@@ -4,7 +4,7 @@ Feature: Create project
 
 
   Scenario: Create project
-    Given I am logged in as project leader or employee
+    Given I am logged in as project leader or employee with the initials "huba"
     And A project with the name "Hansen ApS" does not exist in the system
     When I create a project with the name "Hansen ApS"
     Then the project exists in the system
@@ -12,8 +12,7 @@ Feature: Create project
 
 
   Scenario: Create preexisting project
-    Given I am logged in as project leader or employee
-    When I create a project with the name "Hansen ApS"
+    Given I am logged in as project leader or employee with the initials "huba"
     And A project with the name "Hansen ApS" exists in the system
     When I create a project with the name "Hansen ApS"
     Then an error message is shown indicating that a project with the same name already exists
