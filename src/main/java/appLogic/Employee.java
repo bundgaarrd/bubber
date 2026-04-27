@@ -19,10 +19,6 @@ public class Employee {
         this.isAvailable = isAvailable;
     }
 
-    public Employee(String initials) {
-        this.initials = initials;
-    }
-
     public String getInitials() {
         return initials;
     }
