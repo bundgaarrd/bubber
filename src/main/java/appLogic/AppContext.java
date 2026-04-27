@@ -9,6 +9,10 @@ public class AppContext {
     public static final InMemoryTimeEntryRepository timeEntryRepository = new InMemoryTimeEntryRepository();
 
     static {
+        employeeRepository.save(new Employee("huba", "Hubert Baumeister", true));
+        employeeRepository.save(new Employee("wilo", "William Lopez", true));
+        employeeRepository.save(new Employee("anda", "Annemette A. Damgaard", true));
+
         saveTimeEntry("huba", "Being a good teacher", "TDD/BDD forelæsning", 2.5);
         saveTimeEntry("wilo", "Being a good TA", "Explaining TDD issues", 1.5);
     }
