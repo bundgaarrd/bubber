@@ -3,8 +3,9 @@ package appLogic;
 import java.time.LocalDateTime;
 
 public class TimeEntry {
-    private Employee employee;
-    private Activity activity;
+
+    private final Employee employee;
+    private final Activity activity;
     private LocalDateTime entryStartTime;
     private double hoursWorked;
 
@@ -13,28 +14,27 @@ public class TimeEntry {
         this.activity = activity;
     }
 
-    public void setEntryStartTime(LocalDateTime time) {
-        this.entryStartTime = time;
-    }
-
-    public void setHoursWorked(double hours) {
-        this.hoursWorked = hours;
-    }
-
-    public double getHoursWorked() {
-        return hoursWorked;
+    public Employee getEmployee() {
+        return employee;
     }
 
     public Activity getActivity() {
         return activity;
     }
 
-    // Optional getters
-    public Employee getEmployee() {
-        return employee;
-    }
-
     public LocalDateTime getEntryStartTime() {
         return entryStartTime;
+    }
+
+    public void setEntryStartTime(LocalDateTime entryStartTime) {
+        this.entryStartTime = entryStartTime;
+    }
+
+    public double getHoursWorked() {
+        return hoursWorked;
+    }
+
+    public void setHoursWorked(double hoursWorked) {
+        this.hoursWorked = hoursWorked;
     }
 }
