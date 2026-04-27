@@ -24,8 +24,9 @@ Feature: Viewing overall schedule
 
   Scenario: Create activity
     Given I am logged in as project leader or employee
-    When I create an activity named "Analysis”
+    When I create an activity named "Analysis"
     Then the activity should exist in the system
+  
   Scenario: Assign employee
     Given I am logged in as an employee or a project leader
     And the selected employee is available

@@ -1,0 +1,11 @@
+package appLogic;
+
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+
+public class DeleteActivitySteps {
+
+// Scenario: Deleting an existing activity from a project
+
+}
