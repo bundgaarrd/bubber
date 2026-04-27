@@ -18,7 +18,7 @@ public class App {
 
     public static void main(String[] args) { // Has to be run from mvn javafx:run
         System.out.println("Starting the application ...");
-        App app = new App(new InMemoryEmployeeRepository());
+        App app = new App();
         app.run();
     }
 
@@ -30,8 +30,8 @@ public class App {
         }
     }
 
-    public App(EmployeeRepository repository) {
-        this.employeeRepository = repository;
+    public App() {
+        this.employeeRepository = new InMemoryEmployeeRepository();
         this.employees = new HashMap<>();
         this.projects = new HashSet<>();
         this.appActive = true;
