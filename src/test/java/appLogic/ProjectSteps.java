@@ -48,7 +48,7 @@ public class ProjectSteps {
     // Create preexisting project
     @And("A project with the name {string} exists in the system")
     public void aProjectWithTheNameExistsInTheSystem(String name) {
-        Project existingProject = TestApp.getInstance().getApp().Project(name);
+        Project existingProject = TestApp.getInstance().getApp().getProjectById(name);
         if (existingProject == null) {
             throw new IllegalStateException("Failed to create a project with the name " + name + " for testing.");
         }
@@ -56,7 +56,7 @@ public class ProjectSteps {
 
     @Then("an error message is shown indicating that a project with the same name already exists")
     public void anErrorMessageIsShownIndicatingThatAProjectWithTheSameNameAlreadyExists() {
-        TestApp.getInstance().getApp().Project(project.getProjectID());
+        TestApp.getInstance().getApp().getProjectById(project.getProjectID());
     }
 
     @And("the project is not duplicated in the system")

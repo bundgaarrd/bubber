@@ -2,7 +2,7 @@ package appLogic;
 
 public class TestApp {
     private static TestApp instance;
-    private final App app;
+    private App app;
 
     public static TestApp getInstance() {
         if(instance == null) {
@@ -12,9 +12,12 @@ public class TestApp {
     }
 
     private TestApp() {
+        reset();
+    }
+
+    public void reset() {
         this.app = new App();
         app.setAdminLoggedIn(true);
-
     }
 
     public App getApp() {
