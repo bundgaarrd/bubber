@@ -7,6 +7,11 @@ import io.cucumber.java.en.When;
 import org.junit.jupiter.api.Assertions;
 
 public class ProjectSteps {
+    @Given("I am logged in as project leader or employee with the initials {string}")
+    public void iAmLoggedInAsProjectLeaderOrEmployeeWithTheInitials(String initials) {
+        TestApp.getInstance().getApp().login(initials);
+    }
+
     @Given("I am logged in as project leader or employee")
     public void iAmLoggedInAsProjectLeaderOrEmployee() {
         App app = TestApp.getInstance().getApp();

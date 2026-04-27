@@ -5,7 +5,6 @@ import java.util.*;
 public class App {
     private static App instance;
 
-    private Employee currentUser;
     private Map<String, Employee> employees;
     private Set<Project> projects;
     private boolean appActive;
@@ -28,13 +27,23 @@ public class App {
 
     public App() {
         this.employeeRepository = new InMemoryEmployeeRepository();
+        initializeUsers();
         this.employees = new HashMap<>();
         this.projects = new HashSet<>();
         this.appActive = true;
-        this.currentUser = AppContext.employeeRepository.findByInitials("huba");
+    }
+
+    private void initializeUsers() {
+        employeeRepository.save(new Employee("huba", "Hubert Baumeister", true));
+        employeeRepository.save(new Employee("wilo", "William Lopez", true));
+        employeeRepository.save(new Employee("anda", "Annemette A. Damgaard", true));
     }
 
     public static App getInstance() {
+        if(instance == null) {
+            instance = new App();
+            instance.run();
+        }
         return instance;
     }
 
@@ -105,8 +114,12 @@ public class App {
         return loggedInUser != null;
     }
 
+    public Employee getLoggedInUser() {
+        return loggedInUser;
+    }
+
     public Set<Activity> getAllActivities() {
-        if(!adminLogin) throw new IllegalStateException("Only admin can access activities.");
+        if(!isAdminLoggedIn()) throw new IllegalStateException("Only admin can access activities.");
         List<Project> projects = getAllProjects();
         Set<Activity> activities = new HashSet<>();
         for(Project project : projects) {
@@ -114,9 +127,5 @@ public class App {
         }
 
         return activities;
-    }
-
-    public Employee getCurrentUser() {
-        return currentUser;
     }
 }

@@ -1,7 +1,5 @@
 package appLogic;
 
-import io.cucumber.java.en_old.Ac;
-
 public class TestApp {
     private static TestApp instance;
     private App app;
@@ -20,11 +18,7 @@ public class TestApp {
     }
 
     public void reset() {
-        EmployeeRepository repo = new InMemoryEmployeeRepository();
-    
-        repo.save(new Employee("huba")); 
-        
-        this.app = new App(repo);
+        this.app = new App();
 }   
 
     public App getApp() {
