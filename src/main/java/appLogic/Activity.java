@@ -26,6 +26,10 @@ public abstract class Activity {
         return id;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public String getProjectReferenceId() {
         return id.toString();
     }
