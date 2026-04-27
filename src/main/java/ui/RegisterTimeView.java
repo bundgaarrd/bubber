@@ -1,26 +1,39 @@
 package ui;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import appLogic.Activity;
+import appLogic.AppContext;
+import appLogic.Employee;
+import appLogic.EmployeeRepository;
+import appLogic.InMemoryTimeEntryRepository;
+import appLogic.TimeEntry;
+import appLogic.WorkActivity;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 
 public class RegisterTimeView {
 
-    private Scene scene;
+    private final Scene scene;
+    private final EmployeeRepository employeeRepository = AppContext.employeeRepository;
+    private final InMemoryTimeEntryRepository timeEntryRepository = AppContext.timeEntryRepository;
+
+    private final ObservableList<TimeEntry> tableData = FXCollections.observableArrayList();
 
     public RegisterTimeView(Scene scene) {
         this.scene = scene;
+        tableData.addAll(timeEntryRepository.findAll());
     }
 
     public Parent getView() {
@@ -33,62 +46,95 @@ public class RegisterTimeView {
         form.setVgap(10);
 
         TextField employeeField = new TextField();
-        TextField activityField = new TextField();
-        DatePicker datePicker = new DatePicker();
+        TextField activityDescField = new TextField();
+        TextField activitySummaryField = new TextField();
         TextField hoursField = new TextField();
 
-        form.add(new Label("Employee:"), 0, 0);
+        form.add(new Label("Employee initials:"), 0, 0);
         form.add(employeeField, 1, 0);
 
-        form.add(new Label("Activity:"), 0, 1);
-        form.add(activityField, 1, 1);
+        form.add(new Label("Activity description:"), 0, 1);
+        form.add(activityDescField, 1, 1);
 
-        form.add(new Label("Date:"), 0, 2);
-        form.add(datePicker, 1, 2);
+        form.add(new Label("Activity summary:"), 0, 2);
+        form.add(activitySummaryField, 1, 2);
 
-        form.add(new Label("Hours:"), 0, 3);
+        form.add(new Label("Hours worked:"), 0, 3);
         form.add(hoursField, 1, 3);
 
         Button addButton = new Button("Register Time");
-        Button backButton = new Button("Back");
-
-        HBox buttons = new HBox(10, addButton, backButton);
-        form.add(buttons, 1, 4);
+        form.add(addButton, 1, 4);
 
         root.setTop(form);
 
-        TableView<String> table = new TableView<>();
+        TableView<TimeEntry> table = new TableView<>();
+        table.setItems(tableData);
 
-        TableColumn<String, String> colEmployee = new TableColumn<>("Employee");
-        TableColumn<String, String> colActivity = new TableColumn<>("Activity");
-        TableColumn<String, String> colDate = new TableColumn<>("Date");
-        TableColumn<String, String> colHours = new TableColumn<>("Hours");
+        TableColumn<TimeEntry, String> colEmployee = new TableColumn<>("Employee");
+        colEmployee.setCellValueFactory(data ->
+                new javafx.beans.property.SimpleStringProperty(
+                        data.getValue().getEmployee().getInitials()
+                )
+        );
 
-        table.getColumns().addAll(colEmployee, colActivity, colDate, colHours);
+        TableColumn<TimeEntry, String> colActivity = new TableColumn<>("Activity");
+        colActivity.setCellValueFactory(data ->
+                new javafx.beans.property.SimpleStringProperty(
+                        data.getValue().getActivity().getDescription()
+                )
+        );
 
-        ObservableList<String> data = FXCollections.observableArrayList();
-        table.setItems(data);
+        TableColumn<TimeEntry, String> colStart = new TableColumn<>("Start time");
+        colStart.setCellValueFactory(data ->
+                new javafx.beans.property.SimpleStringProperty(
+                        String.valueOf(data.getValue().getEntryStartTime())
+                )
+        );
 
+        TableColumn<TimeEntry, String> colHours = new TableColumn<>("Hours");
+        colHours.setCellValueFactory(data ->
+                new javafx.beans.property.SimpleStringProperty(
+                        String.valueOf(data.getValue().getHoursWorked())
+                )
+        );
+
+        table.getColumns().addAll(colEmployee, colActivity, colStart, colHours);
         root.setCenter(table);
 
         addButton.setOnAction(e -> {
-            // her skal jeg indsætte min funktion fra app'ens logik
-            System.out.println("Register time clicked");
 
-            // der skal gøres noget ved det her
-            data.add(
-                employeeField.getText() + " | " +
-                activityField.getText() + " | " +
-                datePicker.getValue() + " | " +
-                hoursField.getText()
+            Employee employee = employeeRepository.findByInitials(employeeField.getText());
+
+            if (employee == null) {
+                System.out.println("Employee not found");
+                return;
+            }
+
+            double hours;
+            try {
+                hours = Double.parseDouble(hoursField.getText());
+            } catch (Exception ex) {
+                System.out.println("Invalid hours");
+                return;
+            }
+
+            Activity activity = new WorkActivity(
+                    "huba",
+                    activityDescField.getText(),
+                    activitySummaryField.getText(),
+                    LocalDate.now()
             );
-        });
 
-        MainView MainView = new MainView(scene);
+            employee.addActivity(activity);
 
-        backButton.setOnAction(e -> {
-            scene.setRoot(MainView.getView());
-            System.out.println("Back clicked");
+            TimeEntry entry = new TimeEntry(employee, activity);
+            entry.setEntryStartTime(LocalDateTime.now());
+            entry.setHoursWorked(hours);
+
+            timeEntryRepository.save(entry);
+            tableData.add(entry);
+
+            System.out.println("Time entry saved");
         });
 
         return root;

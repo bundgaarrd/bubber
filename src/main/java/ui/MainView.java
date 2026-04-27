@@ -14,11 +14,19 @@ public class MainView {
     }
 
     public Parent getView() {
-        VBox root = new VBox();
-        Button btn = new Button("Gå til registrering");
+
+        VBox root = new VBox(15);
+
+        Button timeBtn = new Button("Register Time");
         RegisterTimeView timeView = new RegisterTimeView(scene);
-        btn.setOnAction(e -> scene.setRoot(timeView.getView()));
-        root.getChildren().add(btn);
+        timeBtn.setOnAction(e -> scene.setRoot(timeView.getView()));
+
+        Button employeeBtn = new Button("Create Employee");
+        CreateEmployeeView employeeView = new CreateEmployeeView(scene);
+        employeeBtn.setOnAction(e -> scene.setRoot(employeeView.getView()));
+
+        root.getChildren().addAll(timeBtn, employeeBtn);
+
         return root;
     }
 }
