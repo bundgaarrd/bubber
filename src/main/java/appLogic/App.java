@@ -5,7 +5,6 @@ import java.util.*;
 public class App {
     private static App instance;
 
-    private Employee currentUser;
     private Map<String, Employee> employees;
     private Set<Project> projects;
     private boolean appActive;
@@ -31,7 +30,6 @@ public class App {
         this.employees = new HashMap<>();
         this.projects = new HashSet<>();
         this.appActive = true;
-        this.currentUser = AppContext.employeeRepository.findByInitials("huba");
     }
 
     public static App getInstance() {
@@ -105,8 +103,12 @@ public class App {
         return loggedInUser != null;
     }
 
+    public Employee getLoggedInUser() {
+        return loggedInUser;
+    }
+
     public Set<Activity> getAllActivities() {
-        if(!adminLogin) throw new IllegalStateException("Only admin can access activities.");
+        if(!isAdminLoggedIn()) throw new IllegalStateException("Only admin can access activities.");
         List<Project> projects = getAllProjects();
         Set<Activity> activities = new HashSet<>();
         for(Project project : projects) {
@@ -114,9 +116,5 @@ public class App {
         }
 
         return activities;
-    }
-
-    public Employee getCurrentUser() {
-        return currentUser;
     }
 }

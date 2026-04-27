@@ -5,7 +5,6 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 /**
  * Scenario: Viewing the overall schedule of activities
@@ -13,15 +12,9 @@ import org.junit.jupiter.api.Test;
 public class OverallScheduleSteps {
     private Exception exception;
 
-    @Before
-    public void setup() {
-        TestApp.getInstance().getApp().setAdminLoggedIn(false);
-    }
-
     @Given("I am logged in as an employee")
     public void iAmLoggedInAsAnEmployee() {
-        boolean admin = TestApp.getInstance().getApp().isAdminLoggedIn();
-        Assertions.assertFalse(admin, "User is not logged in as an employee.");
+        TestApp.getInstance().getApp().login("wilo");
     }
 
     @When("I attempt to access overview of all employee schedules")
@@ -40,7 +33,7 @@ public class OverallScheduleSteps {
 
     @Given("I am logged in as a project leader")
     public void iAmLoggedInAsAProjectLeader() {
-        Employee currentUser = TestApp.getInstance().getApp().getCurrentUser();
+        Employee currentUser = TestApp.getInstance().getApp().getLoggedInUser();
         boolean isLeader = !currentUser.getLeaderProjects().isEmpty();
         Assertions.assertTrue(isLeader, "User is not logged in as a project leader.");
     }
