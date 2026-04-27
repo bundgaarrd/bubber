@@ -1,8 +1,12 @@
 package appLogic;
 
+import io.cucumber.java.en_old.Ac;
+
 public class TestApp {
     private static TestApp instance;
     private App app;
+    private Project project;
+    private Activity activity;
 
     public static TestApp getInstance() {
         if(instance == null) {
@@ -25,5 +29,21 @@ public class TestApp {
 
     public App getApp() {
         return app;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setActivity(Activity activity) {
+        this.activity = activity;
+    }
+
+    public Activity getActivity() {
+        return activity;
     }
 }

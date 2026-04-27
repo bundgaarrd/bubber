@@ -7,10 +7,17 @@ import java.util.List;
 import java.util.Locale;
 
 public class Employee {
-    private String initials;
-    private String name;
+
+    private final String initials;
+    private final String name;
     private boolean isAvailable;
-    private List<Activity> activities = new ArrayList<>();
+    private final List<Activity> activities = new ArrayList<>();
+
+    public Employee(String initials, String name, boolean isAvailable) {
+        this.initials = initials;
+        this.name = name;
+        this.isAvailable = isAvailable;
+    }
 
     public Employee(String initials) {
         this.initials = initials;
@@ -34,7 +41,7 @@ public class Employee {
 
     public void addActivity(Activity activity) {
         activities.add(activity);
-        activity.assignEmployee(this); 
+        activity.assignEmployee(this);
     }
 
     public int getActiveActivityCount(int week, int year) {

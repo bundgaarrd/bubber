@@ -63,7 +63,16 @@ public class App {
                 return p;
             }
         }
-    return null;
+        return null;
+    }
+
+    public Project getProjectByName(String name) {
+        for (Project p : projects) {
+            if (p.getProjectName().equals(name)) {
+                return p;
+            }
+        }
+        return null;
     }
 
     public void importEmployeesFromFile(String path) {

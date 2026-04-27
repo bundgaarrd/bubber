@@ -77,4 +77,33 @@ public class Project {
         return projectID;
     }
 
+    public String getProjectName() {
+        return name;
+    }
+
+    public Set<Activity> getActivities() {
+        return activities;
+    }
+
+    public Activity getActivity(String name) {
+        for(Activity activity : activities) {
+            if(activity.getName().equals(name)) {
+                return activity;
+            }
+        }
+
+        return null;
+    }
+
+    public void deleteActivity(String name) {
+        Activity toRemove = null;
+        for(Activity activity : activities) {
+            if(activity.getName().equals(name)) {
+                toRemove = activity;
+            }
+        }
+
+        if(toRemove != null) activities.remove(toRemove);
+    }
+
 }
