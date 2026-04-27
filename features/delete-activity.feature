@@ -4,14 +4,14 @@ Feature: Delete activity
 
 
   Scenario: Delete activity
-    Given I am logged in as project leader or employee
+    Given I am logged in as project leader or employee with the initials "huba"
     And There is an activity named "Analysis" in this project
     When I delete the activity named "Analysis"
     Then the activity no longer exists in the project
 
 
   Scenario: Delete non-existent activity
-    Given I am logged in as project leader or employee
+    Given I am logged in as project leader or employee with the initials "huba"
     And There is no activity named "Analysis" in this project
     When I delete the activity named "Analysis"
     Then an error message is shown indicating that the activity does not exist in the project

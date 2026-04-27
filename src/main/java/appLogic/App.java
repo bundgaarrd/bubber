@@ -12,12 +12,13 @@ import java.util.Set;
 public class App {
     private Map<String, Employee> employees;
     private Set<Project> projects;
-    private boolean adminLogin;
     private boolean appActive;
+    private EmployeeRepository employeeRepository;
+    private Employee loggedInUser;
 
     public static void main(String[] args) { // Has to be run from mvn javafx:run
         System.out.println("Starting the application ...");
-        App app = new App();
+        App app = new App(new InMemoryEmployeeRepository());
         app.run();
     }
 
@@ -29,10 +30,10 @@ public class App {
         }
     }
 
-    public App() {
+    public App(EmployeeRepository repository) {
+        this.employeeRepository = repository;
         this.employees = new HashMap<>();
         this.projects = new HashSet<>();
-        this.adminLogin = false;
         this.appActive = true;
     }
 
@@ -72,11 +73,25 @@ public class App {
         return new ArrayList<>(projects);
     }
 
-    public boolean isAdminLoggedIn() {
-        return adminLogin;
+    public void login(String initials) {
+        if (initials == null || initials.length() > 4) {
+            throw new IllegalArgumentException("Initials must be 1-4 characters");
+        }
+
+        Employee emp = employeeRepository.findByInitials(initials);
+        if (emp == null) {
+            throw new IllegalStateException("Employee not found");
+        }
+
+        this.loggedInUser = emp;
     }
 
-    public void setAdminLoggedIn(boolean status) {
-        this.adminLogin = status;
+    // Check login
+    public boolean isUserLoggedIn() {
+        return loggedInUser != null;
+    }
+
+    public boolean isAdminLoggedIn() {
+        return loggedInUser != null;
     }
 }

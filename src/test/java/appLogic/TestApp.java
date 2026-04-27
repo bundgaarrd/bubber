@@ -16,9 +16,12 @@ public class TestApp {
     }
 
     public void reset() {
-        this.app = new App();
-        app.setAdminLoggedIn(true);
-    }
+        EmployeeRepository repo = new InMemoryEmployeeRepository();
+    
+        repo.save(new Employee("huba")); 
+        
+        this.app = new App(repo);
+}   
 
     public App getApp() {
         return app;

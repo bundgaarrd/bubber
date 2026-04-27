@@ -12,6 +12,10 @@ public class Employee {
     private boolean isAvailable;
     private List<Activity> activities = new ArrayList<>();
 
+    public Employee(String initials) {
+        this.initials = initials;
+    }
+
     public String getInitials() {
         return initials;
     }

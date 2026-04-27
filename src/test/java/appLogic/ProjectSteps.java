@@ -10,9 +10,12 @@ public class ProjectSteps {
 
     @Given("I am logged in as project leader or employee")
     public void iAmLoggedInAsProjectLeaderOrEmployee() {
-        boolean admin = TestApp.getInstance().getApp().isAdminLoggedIn();
-        if(!admin) {
-            throw new IllegalStateException("User is not logged in as project leader or employee.");
+        App app = TestApp.getInstance().getApp();
+        
+        app.login("huba"); 
+    
+        if(!app.isAdminLoggedIn()) {
+            throw new IllegalStateException("User is not logged in...");
         }
     }
 
