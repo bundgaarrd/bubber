@@ -21,9 +21,5 @@ public class AssignEmploySteps {
         app = TestApp.getInstance().getApp();
     }
 
-   @Given("I am logged in as an employee or a project leader with the initials {string}")
-    public void loggedInWithInitials(String initials) {
-        app.login(initials);
-        assertTrue(app.isUserLoggedIn(), "User was not logged in successfully");
-    }
+    
 }
