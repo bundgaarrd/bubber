@@ -14,14 +14,13 @@ public class AppUI extends Application{
     private static Scene scene;
 
     public static void main(String[] args) {
-        System.out.println("Maven rokcs!");
         launch();
     }
 
     public void start(Stage stage) throws IOException {
         VBox root = new VBox();
         scene = new Scene(root, 860, 640);
-        scene.setRoot(new MainView(scene).getView());
+        scene.setRoot(new LoginView(scene).getView());
         stage.setScene(scene);
         stage.setTitle("Timeregistrering");
         stage.show();
