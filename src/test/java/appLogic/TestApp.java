@@ -42,6 +42,6 @@ public class TestApp {
     }
 
     public Employee getEmployeeByInitials(String initials) {
-        return employeeRepository.findByInitials(initials);
+        return app.getEmployeeRepository().findByInitials(initials);
     }
 }

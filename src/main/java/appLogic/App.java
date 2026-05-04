@@ -43,6 +43,13 @@ public class App {
         Project KBHShop = new Project("KBHShop");
         this.projects.add(KBHShop);
         KBHShop.assignProjectLeader(laha);
+
+        Employee alla = new Employee("alla", "Allan Lassen", true);
+        employeeRepository.save(alla);
+
+        Project DTU = new Project("DTU");
+        this.projects.add(DTU);
+        DTU.assignProjectLeader(alla);
     }
 
     public static App getInstance() {
@@ -134,4 +141,8 @@ public class App {
 
         return activities;
     }
+
+    public EmployeeRepository getEmployeeRepository() {
+        return employeeRepository;
+}
 }
