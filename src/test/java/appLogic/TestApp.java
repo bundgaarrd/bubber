@@ -40,4 +40,8 @@ public class TestApp {
     public Activity getActivity() {
         return activity;
     }
+
+    public Employee getEmployeeByInitials(String initials) {
+        return app.getEmployeeRepository().findByInitials(initials);
+    }
 }

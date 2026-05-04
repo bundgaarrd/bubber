@@ -6,10 +6,6 @@ import java.util.UUID;
 
 public class Project {
 
-//    public static void main(String[] args) {
-//
-//    }
-
     private UUID projectUUID;
     private String projectID;
     private String name;
