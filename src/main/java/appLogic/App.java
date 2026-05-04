@@ -116,19 +116,18 @@ public class App {
         return loggedInUser != null;
     }
 
-    public boolean isAdminLoggedIn() {
-        return loggedInUser != null;
-    }
-
     public Employee getLoggedInUser() {
         return loggedInUser;
     }
 
     public Set<Activity> getAllActivities() {
-        if(!isAdminLoggedIn()) throw new IllegalStateException("Only admin can access activities.");
         List<Project> projects = getAllProjects();
         Set<Activity> activities = new HashSet<>();
+        Employee user = getLoggedInUser();
         for(Project project : projects) {
+            if(!project.getProjectLeader().equals(user)) {
+                throw new IllegalStateException("Only project leader can access activities.");
+            }
             activities.addAll(project.getActivities());
         }
 

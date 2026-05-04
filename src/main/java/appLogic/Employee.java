@@ -43,6 +43,10 @@ public class Employee {
         activity.assignEmployee(this);
     }
 
+    public List<Activity> getActivities() {
+        return activities;
+    }
+
     public int getActiveActivityCount(int week, int year) {
         int count = 0;
         WeekFields weekFields = WeekFields.of(Locale.getDefault());

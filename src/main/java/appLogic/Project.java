@@ -15,7 +15,7 @@ public class Project {
     private String name;
     private boolean hasCustomer;
     private Employee projectLeader;
-    private Set<Activity> activities;
+    private Set<Activity> activities = new HashSet<>();
     private boolean isCompleted = false;
     private Set<Customer> customerList;
     private int expectedHours;
@@ -93,8 +93,8 @@ public class Project {
     }
 
     public Activity getActivity(String name) {
-        if(!App.getInstance().isAdminLoggedIn()) {
-            throw new IllegalStateException("Only admin can access activities.");
+        if(!App.getInstance().getLoggedInUser().equals(projectLeader)) {
+            throw new IllegalStateException("Only project leader can access activities.");
         }
         for(Activity activity : activities) {
             if(activity.getName().equals(name)) {
@@ -106,8 +106,8 @@ public class Project {
     }
 
     public void deleteActivity(String name) {
-        if(!App.getInstance().isAdminLoggedIn()) {
-            throw new IllegalStateException("Only admin can delete activities.");
+        if(!App.getInstance().getLoggedInUser().equals(projectLeader)) {
+            throw new IllegalStateException("Only project leader can delete activities.");
         }
         Activity toRemove = null;
         for(Activity activity : activities) {

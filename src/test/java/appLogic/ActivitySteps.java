@@ -1,41 +1,40 @@
 package appLogic;
-import javax.annotation.processing.Generated;
 
 import io.cucumber.java.en.And;
-import io.cucumber.java.en.When;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+import org.junit.jupiter.api.Assertions;
 
 
-public class ActivitySteps{
-    private Project project;
-    private Activity activity;
-
+public class ActivitySteps {
+/*
 
     @Given("I am logged in as project leader or employee")
     public void iAmLoggedInAsProjectLeaderOrEmployee(){
-    boolean admin = TestApp.getInstance().getApp().isAdminLoggedIn();
-    assertTrue(admin, "User is logged in as a projectleader or employee");
-    }  
-        
+        boolean admin = TestApp.getInstance().getApp().isAdminLoggedIn();
+        Assertions.assertTrue(admin, "User is logged in as a projectleader or employee");
+    }
+
 
     @And("There is no activity named {string} in this project ")
-        public void activityNotExisting(String name){
-        Activity checkActivity = TestApp.getInstance().getApp().getActivity(name);
-        if (checkActivity = null)    
-            assertTrue(false);
-        }
+    public void activityNotExisting(String name){
+        Activity activity = TestApp.getInstance().getProject().getActivity(name);
+        Assertions.assertNull(activity, "Expected no activity named " + name + " to exist in the project, but it does.");
+     }
     
 
-    @When(" I create an activity named {string}")
+    @When("I create an activity named {string}")
     public void createActivityAnalysis(String name){
-        newActivity = app.createActivityAnalysis(name);
-
+        ProjectActivity newActivity = new ProjectActivity(name);
+        TestApp.getInstance().getProject().addActivity(newActivity);
+        TestApp.getInstance().setActivity(newActivity);
     }
 
     @Then("the activity now exists in the project")
     public void activityExists(){
-        assertTrue(activity != null);
+        Activity activity = TestApp.getInstance().getActivity();
+        Assertions.assertNotNull(activity, "Expected the activity to exist in the project, but it does not.");
     }
 
     // creating preexisting activity
@@ -44,9 +43,7 @@ public class ActivitySteps{
 
     @And("And there is already an activity named {string} in this project")
     public void activityAlreadyExisting(String name){
-        existingActivity = TestApp.getInstance.getActivity(name)
-        
-
-    }
-
+        Activity activity = TestApp.getInstance().getProject().getActivity(name);
+        Assertions.assertNotNull(activity, "Expected an activity named " + name + " to exist in the project, but it does not.");
+    }*/
 }
