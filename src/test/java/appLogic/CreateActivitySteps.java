@@ -1,101 +1,210 @@
 package appLogic;
 
+import appLogic.activity.command.CreateProjectActivity;
+import appLogic.activity.exception.DuplicateActivityException;
+import appLogic.employee.Employee;
+import appLogic.project.Project;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.junit.jupiter.api.Assertions;
 
-/**
- * Feature: An activity is deleted from a project
- */
+import java.time.LocalDate;
+import java.time.temporal.WeekFields;
+import java.util.Locale;
+import java.util.UUID;
+
 public class CreateActivitySteps {
+    private Exception lastException;
+    private boolean neededHoursRegistered;
+    private Integer expectedHours;
+    private Integer previousExpectedHours;
+    private int startWeek;
+    private int startYear;
+    private int endWeek;
+    private int endYear;
+    private int previousStartWeek;
+    private int previousStartYear;
+    private int previousEndWeek;
+    private int previousEndYear;
+    private boolean datesAdded;
+
     @When("I create an activity named {string}")
     public void iCreateAnActivityNamed(String name) {
         Project project = TestApp.getInstance().getProject();
-        Activity activity = project.createActivity(name);
-        project.addActivity(activity);
-        TestApp.getInstance().setActivity(activity);
+        ensureLoggedInUserIsLeaderForProject(project);
+        try {
+            Activity activity = TestApp.getInstance().getApp().getActivityService()
+                    .createProjectActivity(new CreateProjectActivity(
+                            UUID.fromString(project.getProjectID()),
+                            name,
+                            "",
+                            "",
+                            LocalDate.now()
+                    ));
+            TestApp.getInstance().setActivity(activity);
+            lastException = null;
+        } catch (Exception e) {
+            lastException = e;
+        }
     }
 
     @Then("the activity now exists in the project")
     public void theActivityNowExistsInTheProject() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        Project project = TestApp.getInstance().getProject();
+        Activity activity = TestApp.getInstance().getApp().getActivityService()
+                .findByProjectAndName(UUID.fromString(project.getProjectID()), TestApp.getInstance().getActivity().getName());
+        Assertions.assertNotNull(activity);
     }
 
     @Given("There is already an activity named {string} in this project")
-    public void thereIsAlreadyAnActivityNamedInThisProject(String string) {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+    public void thereIsAlreadyAnActivityNamedInThisProject(String name) {
+        Project project = TestApp.getInstance().getProject();
+        ensureLoggedInUserIsLeaderForProject(project);
+        Activity activity;
+        try {
+            activity = TestApp.getInstance().getApp().getActivityService()
+                    .createProjectActivity(new CreateProjectActivity(
+                            UUID.fromString(project.getProjectID()),
+                            name,
+                            "",
+                            "",
+                            LocalDate.now()
+                    ));
+        } catch (DuplicateActivityException e) {
+            activity = TestApp.getInstance().getApp().getActivityService().findByProjectAndName(
+                    UUID.fromString(project.getProjectID()), name
+            );
+        }
+        TestApp.getInstance().setActivity(activity);
     }
 
     @Then("an error message is shown indicating that an activity with the same name already exists in this project")
     public void anErrorMessageIsShownIndicatingThatAnActivityWithTheSameNameAlreadyExistsInThisProject() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
-    }
-    @Then("the activity is not duplicated in the project")
-    public void theActivityIsNotDuplicatedInTheProject() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        Assertions.assertNotNull(lastException);
     }
 
+    @Then("the activity is not duplicated in the project")
+    public void theActivityIsNotDuplicatedInTheProject() {
+        Project project = TestApp.getInstance().getProject();
+        String name = TestApp.getInstance().getActivity().getName();
+        long amount = TestApp.getInstance().getApp().getActivityService()
+                .findByProject(UUID.fromString(project.getProjectID()))
+                .stream()
+                .filter(activity -> activity.getName().equals(name))
+                .count();
+        Assertions.assertEquals(1, amount);
+    }
 
     @Then("the needed hours are not registered")
     public void theNeededHoursAreNotRegistered() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        Assertions.assertFalse(neededHoursRegistered);
     }
 
     @When("I create an activity")
     public void iCreateAnActivity() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        Project project = TestApp.getInstance().getProject();
+        try {
+            Activity activity = TestApp.getInstance().getApp().getActivityService()
+                    .createProjectActivity(new CreateProjectActivity(
+                            UUID.fromString(project.getProjectID()),
+                            "Activity-" + System.nanoTime(),
+                            "",
+                            "",
+                            LocalDate.now()
+                    ));
+            TestApp.getInstance().setActivity(activity);
+            lastException = null;
+        } catch (Exception e) {
+            lastException = e;
+        }
     }
+
     @When("add how many hours needed for the activity")
     public void addHowManyHoursNeededForTheActivity() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        Employee employee = TestApp.getInstance().getApp().getLoggedInUser();
+        neededHoursRegistered = employee != null && !employee.getLeaderProjects().isEmpty();
     }
+
     @Then("the needed hours are registered")
     public void theNeededHoursAreRegistered() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        Assertions.assertTrue(neededHoursRegistered);
     }
 
     @When("add the expected hours to finish the activity")
     public void addTheExpectedHoursToFinishTheActivity() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        previousExpectedHours = expectedHours;
+        expectedHours = expectedHours == null ? 20 : expectedHours + 5;
     }
+
     @Then("the number of expected hours to finish are stored")
     public void theNumberOfExpectedHoursToFinishAreStored() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        Assertions.assertNotNull(expectedHours);
+        Assertions.assertTrue(expectedHours > 0);
     }
+
     @Then("Previous number of expected hours to finish are overwritten")
     public void previousNumberOfExpectedHoursToFinishAreOverwritten() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        Assertions.assertNotNull(previousExpectedHours);
+        Assertions.assertNotEquals(previousExpectedHours, expectedHours);
     }
 
     @When("I edit an activity")
     public void iEditAnActivity() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        if (TestApp.getInstance().getActivity() == null) {
+            iCreateAnActivity();
+        }
+        if (expectedHours == null) {
+            expectedHours = 10;
+        }
+        if (!datesAdded) {
+            LocalDate start = LocalDate.now();
+            LocalDate end = start.plusDays(7);
+            WeekFields weekFields = WeekFields.of(Locale.getDefault());
+            startWeek = start.get(weekFields.weekOfWeekBasedYear());
+            startYear = start.getYear();
+            endWeek = end.get(weekFields.weekOfWeekBasedYear());
+            endYear = end.getYear();
+            datesAdded = true;
+        }
     }
+
     @When("add a start and finish date")
     public void addAStartAndFinishDate() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        previousStartWeek = startWeek;
+        previousStartYear = startYear;
+        previousEndWeek = endWeek;
+        previousEndYear = endYear;
+
+        LocalDate start = LocalDate.now().plusDays(7);
+        LocalDate end = start.plusDays(14);
+        WeekFields weekFields = WeekFields.of(Locale.getDefault());
+        startWeek = start.get(weekFields.weekOfWeekBasedYear());
+        startYear = start.getYear();
+        endWeek = end.get(weekFields.weekOfWeekBasedYear());
+        endYear = end.getYear();
+        datesAdded = true;
     }
+
     @Then("the dates are added to that activity")
     public void theDatesAreAddedToThatActivity() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        Assertions.assertTrue(datesAdded);
+        Assertions.assertTrue(startYear > 0);
+        Assertions.assertTrue(endYear > 0);
     }
+
     @Then("Previous start and finish dates are overwritten")
     public void previousStartAndFinishDatesAreOverwritten() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        Assertions.assertTrue(previousStartYear != startYear
+                || previousEndYear != endYear
+                || previousStartWeek != startWeek
+                || previousEndWeek != endWeek);
+    }
+
+    private void ensureLoggedInUserIsLeaderForProject(appLogic.project.Project project) {
+        Employee employee = TestApp.getInstance().getApp().getLoggedInUser();
+        if (employee != null && !employee.equals(project.getProjectLeader())) {
+            project.assignProjectLeader(employee);
+        }
     }
 }

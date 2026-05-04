@@ -1,71 +1,35 @@
 package appLogic;
 
-import io.cucumber.java.en.*;
+import appLogic.project.Project;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import org.junit.jupiter.api.Assertions;
 
+/**
+ * Feature: Deleting projects
+ */
 public class DeleteProjectSteps {
+    private String projectName;
+    private Exception exception;
 
-    private String errorMessage;
-    private Project project;
-
-    // Scenario: Deleting an existing project
-
-    @Given("there is a project named {string}")
-    public void thereIsAProjectNamed(String name) {
-        App app = TestApp.getInstance().getApp();
-
-        project = app.getProjectByName(name);
-        if (project == null) {
-            project = app.createProject(name);
-        }
-
-        Assertions.assertNotNull(project, "Expected project to exist");
-        TestApp.getInstance().setProject(project);
-    }
-
-    @When("I delete the project named {string}")
-    public void iDeleteTheProjectNamed(String name) {
-        App app = TestApp.getInstance().getApp();
-
-        Project found = app.getProjectByName(name);
-        Assertions.assertNull(found);
-
-        Project project = app.getProjectByName(name);
-
+    @When("I delete the project with name {string}")
+    public void iDeleteTheProject(String name) {
+        projectName = name;
         try {
-            if (project == null) {
-                throw new IllegalStateException("Project does not exist");
-            }
-
-            app.deleteProject(project.getProjectID());
-            TestApp.getInstance().setProject(null);
-
+            TestApp.getInstance().getProjectRegistry().deleteProjectByName(name);
         } catch (Exception e) {
-            errorMessage = e.getMessage();
+            exception = e;
         }
     }
 
-    @Then("the project no longer exists")
-    public void theProjectNoLongerExists() {
-        Project project = TestApp.getInstance().getProject();
-        Assertions.assertNull(project, "Expected project to be deleted, but it still exists");
+    @Then("the project no longer exists in the system")
+    public void theProjectNoLongerExistsInTheSystem() {
+        Project project = TestApp.getInstance().getProjectRegistry().getProjectByName(projectName);
+        Assertions.assertNull(project, "Expected the project to be deleted, but it still exists in the system.");
     }
 
-    // Scenario: Deleting a non-existing project
-
-    @Given("there is no project named {string}")
-    public void thereIsNoProjectNamed(String name) {
-        App app = TestApp.getInstance().getApp();
-
-        Project project = app.getProjectByName(name);
-        if (project != null) {
-            errorMessage = "Project already exists";
-            Assertions.fail(errorMessage);
-        }
-    }
-
-    @Then("an error message is shown indicating that the project does not exist")
-    public void errorMessageShown() {
-        Assertions.assertNotNull(errorMessage, "Expected an error message but none was thrown");
+    @Then("An error message is shown indicating that the project does not exist in the system")
+    public void anErrorMessageIsShownIndicatingThatTheProjectDoesNotExistInTheSystem() {
+        Assertions.assertNotNull(exception, "Expected an error message to be shown indicating that the project does not exist in the system, but no exception was thrown.");
     }
 }

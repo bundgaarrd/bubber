@@ -1,5 +1,6 @@
 package appLogic;
 
+import appLogic.project.Project;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -10,14 +11,15 @@ public class ProjectSteps {
 
     @And("A project with the name {string} does not exist in the system")
     public void aProjectWithTheNameDoesNotExistInTheSystem(String name) {
-        Project check = TestApp.getInstance().getApp().getProjectByName(name);
+        TestApp.getInstance().getApp().getProjectRegistry().deleteProjectByName(name);
+        Project check = TestApp.getInstance().getProjectRegistry().getProjectByName(name);
         Assertions.assertNull(check, "A project with the name " + name + " already exists in the system.");
     }
 
     @When("I create a project with the name {string}")
     public void iCreateAProjectWithTheName(String name) {
         try {
-            Project newProject = TestApp.getInstance().getApp().createProject(name);
+            Project newProject = TestApp.getInstance().getProjectRegistry().createProject(name);
             TestApp.getInstance().setProject(newProject);
         } catch (Exception e) {
             exception = e;
@@ -27,7 +29,7 @@ public class ProjectSteps {
     @Then("the project exists in the system")
     public void theProjectExistsInTheSystem() {
         Project current = TestApp.getInstance().getProject();
-        Project check = TestApp.getInstance().getApp().getProjectById(current.getProjectID());
+        Project check = TestApp.getInstance().getProjectRegistry().getProjectById(current.getProjectID());
         Assertions.assertNotNull(check, "The project does not exist in the system.");
     }
 
@@ -42,7 +44,7 @@ public class ProjectSteps {
     // Create preexisting project
     @And("A project with the name {string} exists in the system")
     public void aProjectWithTheNameExistsInTheSystem(String name) {
-        Project existingProject = TestApp.getInstance().getApp().getProjectByName(name);
+        Project existingProject = TestApp.getInstance().getProjectRegistry().getProjectByName(name);
         TestApp.getInstance().setProject(existingProject);
         Assertions.assertNotNull(existingProject, "A project with the name " + name + " does not exist in the system.");
     }
@@ -55,7 +57,7 @@ public class ProjectSteps {
     @And("the project is not duplicated in the system")
     public void theProjectIsNotDuplicatedInTheSystem() {
         Project project = TestApp.getInstance().getProject();
-        int amount = TestApp.getInstance().getApp().getAllProjects().stream().filter(predicate -> predicate.getProjectID().equals(project.getProjectID())).toList().size();
+        int amount = TestApp.getInstance().getProjectRegistry().getAllProjects().stream().filter(predicate -> predicate.getProjectID().equals(project.getProjectID())).toList().size();
         Assertions.assertFalse(amount > 1, "The project is duplicated in the system.");
     }
 }

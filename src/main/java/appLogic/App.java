@@ -1,14 +1,22 @@
 package appLogic;
 
+import appLogic.employee.Employee;
+import appLogic.employee.EmployeeRepository;
+import appLogic.employee.InMemoryEmployeeRepository;
+import appLogic.employee.InMemoryTimeEntryRepository;
+import appLogic.activity.*;
+import appLogic.project.Project;
+import appLogic.project.ProjectRegistry;
+
 import java.util.*;
 
 public class App {
     private static App instance;
 
-    private Map<String, Employee> employees;
-    private Set<Project> projects;
-    private boolean appActive;
-    private EmployeeRepository employeeRepository;
+    private final ProjectRegistry projectRegistry;
+    private final EmployeeRepository employeeRepository;
+    private final InMemoryTimeEntryRepository timeEntryRepository;
+    private final ActivityService activityService;
     private Employee loggedInUser;
 
     public static void main(String[] args) { // Has to be run from mvn javafx:run
@@ -22,9 +30,14 @@ public class App {
 
     private App() {
         this.employeeRepository = new InMemoryEmployeeRepository();
-        this.employees = new HashMap<>();
-        this.projects = new HashSet<>();
-        this.appActive = true;
+        this.projectRegistry = new ProjectRegistry();
+        this.timeEntryRepository = new InMemoryTimeEntryRepository();
+        this.activityService = new DefaultActivityService(
+                new InMemoryActivityRepository(),
+                this.projectRegistry,
+                this::getLoggedInUser,
+                this.timeEntryRepository
+        );
     }
 
     private void initializeUsers() {
@@ -35,14 +48,14 @@ public class App {
         employeeRepository.save(laha);
 
         Project KBHShop = new Project("KBHShop");
-        this.projects.add(KBHShop);
+        this.projectRegistry.register(KBHShop);
         KBHShop.assignProjectLeader(laha);
 
         Employee alla = new Employee("alla", "Allan Lassen", true);
         employeeRepository.save(alla);
 
         Project DTU = new Project("DTU");
-        this.projects.add(DTU);
+        this.projectRegistry.register(DTU);
         DTU.assignProjectLeader(alla);
     }
 
@@ -55,24 +68,9 @@ public class App {
         return instance;
     }
 
-    public Project createProject(String name) { // Create project
-        Project newProject = new Project(name);
-        // Check if a project with the same name already exists
-        projects.stream().filter(predicate -> predicate.getProjectName().equals(newProject.getProjectName())).findFirst().ifPresent(project -> {
-            throw new IllegalStateException("A project with the name " + name + " already exists in the system.");
-        });
-        this.projects.add(newProject);
-        return newProject;
+    public static void resetInstanceForTests() {
+        instance = null;
     }
-
-    public void deleteProject(String id) {
-    boolean removed = projects.removeIf(project -> project.getProjectID().equals(id));
-
-    if (!removed) {
-        throw new IllegalStateException("Project does not exist");
-    }
-}
-
 
     public List<Employee> getAvailableEmployees(int week, int year) {
         return null; // placeholder 
@@ -80,29 +78,7 @@ public class App {
         // Hvornår er en employee "available"? Under hvilket antal timer på activities?
     }
 
-    public Project getProjectById(String id) {
-        for (Project p : projects) {
-            if (p.getProjectID().equals(id)) {
-                return p;
-            }
-        }
-        return null;
-    }
-
-    public Project getProjectByName(String name) {
-        for (Project p : projects) {
-            if (p.getProjectName().equals(name)) {
-                return p;
-            }
-        }
-        return null;
-    }
-
     public void importEmployeesFromFile(String path) {
-    }
-
-    public List<Project> getAllProjects() {
-        return new ArrayList<>(projects);
     }
 
     public void login(String initials) {
@@ -131,18 +107,16 @@ public class App {
         return loggedInUser;
     }
 
-    public Set<Activity> getAllActivities() {
-        List<Project> projects = getAllProjects();
-        Set<Activity> activities = new HashSet<>();
-        Employee user = getLoggedInUser();
-        for(Project project : projects) {
-            if(!project.getProjectLeader().equals(user)) {
-                throw new IllegalStateException("Only project leader can access activities.");
-            }
-            activities.addAll(project.getActivities());
-        }
+    public ProjectRegistry getProjectRegistry() {
+        return projectRegistry;
+    }
 
-        return activities;
+    public ActivityService getActivityService() {
+        return activityService;
+    }
+
+    public InMemoryTimeEntryRepository getTimeEntryRepository() {
+        return timeEntryRepository;
     }
 
     public void testMethod() {

@@ -1,8 +1,9 @@
-package appLogic;
+package appLogic.project;
 import java.time.Year;
 
 public class ProjectIdGenerator {
-    private Integer currentSequence = 1;
+    private Integer currentSequence;
+
     public ProjectIdGenerator(Integer currentSequence){
         this.currentSequence = currentSequence;
     }

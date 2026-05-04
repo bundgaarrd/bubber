@@ -1,8 +1,8 @@
 package ui; //s244813
 
 import appLogic.AppContext;
-import appLogic.Employee;
-import appLogic.EmployeeRepository;
+import appLogic.employee.Employee;
+import appLogic.employee.EmployeeRepository;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;

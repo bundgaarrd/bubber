@@ -1,4 +1,6 @@
-package appLogic;
+package appLogic.employee;
+
+import appLogic.TimeEntry;
 
 import java.util.ArrayList;
 import java.util.List;

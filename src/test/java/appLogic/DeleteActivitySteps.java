@@ -1,30 +1,43 @@
 package appLogic;
 
+import appLogic.activity.command.CreateProjectActivity;
+import appLogic.activity.exception.ActivityNotFoundException;
+import appLogic.activity.exception.DuplicateActivityException;
+import appLogic.project.Project;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.jupiter.api.Assertions;
 
-/**
- * Scenario: Deleting an existing activity from a project
- */
+import java.time.LocalDate;
+import java.util.UUID;
+
 public class DeleteActivitySteps {
     private String errorMessage;
 
     @Given("There is an activity named {string} in this project")
     public void thereIsAnActivityNamedInThisProject(String name) {
         Project project = TestApp.getInstance().getProject();
-        Activity activity = project.createActivity(name);
-        project.addActivity(activity);
+        Activity activity;
+        try {
+            activity = TestApp.getInstance().getApp().getActivityService()
+                    .createProjectActivity(new CreateProjectActivity(
+                            UUID.fromString(project.getProjectID()), name, "", "", LocalDate.now()
+                    ));
+        } catch (DuplicateActivityException e) {
+            activity = TestApp.getInstance().getApp().getActivityService().findByProjectAndName(
+                    UUID.fromString(project.getProjectID()), name
+            );
+        }
         TestApp.getInstance().setActivity(activity);
-        Assertions.assertNotNull(activity, "Expected an activity named " + name + " to exist in the project, but it does not.");
+        Assertions.assertNotNull(activity);
     }
 
     @When("I delete the activity named {string}")
     public void iDeleteTheActivityNamed(String name) {
-        Project project = TestApp.getInstance().getProject();
+        var project = TestApp.getInstance().getProject();
         try {
-            project.deleteActivity(name);
+            TestApp.getInstance().getApp().getActivityService().deleteActivity(UUID.fromString(project.getProjectID()), name);
             TestApp.getInstance().setActivity(null);
         } catch (Exception e) {
             errorMessage = "An error occurred while trying to delete the activity: " + e.getMessage();
@@ -33,21 +46,21 @@ public class DeleteActivitySteps {
 
     @Then("the activity no longer exists in the project")
     public void theActivityNoLongerExistsInTheProject() {
-        Activity activity = TestApp.getInstance().getActivity();
-        Assertions.assertNull(activity, "Expected the activity to be deleted, but it still exists.");
+        Assertions.assertNull(TestApp.getInstance().getActivity());
     }
 
     @Given("There is no activity named {string} in this project")
     public void thereIsNoActivityNamedInThisProject(String name) {
-        Project project = TestApp.getInstance().getApp().getProjectByName(name);
-        if (project != null) {
-            errorMessage = "There is already an activity named " + name + " in the project.";
-            Assertions.fail(errorMessage);
+        var project = TestApp.getInstance().getProject();
+        try {
+            TestApp.getInstance().getApp().getActivityService().findByProjectAndName(UUID.fromString(project.getProjectID()), name);
+            Assertions.fail("There is already an activity named " + name + " in the project.");
+        } catch (ActivityNotFoundException ignored) {
         }
     }
 
     @Then("an error message is shown indicating that the activity does not exist in the project")
     public void anErrorMessageIsShownIndicatingThatTheActivityDoesNotExistInTheProject() {
-        Assertions.assertNotNull(errorMessage, "Expected an error message but none was thrown.");
+        Assertions.assertNotNull(errorMessage);
     }
 }

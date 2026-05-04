@@ -2,14 +2,17 @@ package ui; //s244813
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import appLogic.Activity;
 import appLogic.AppContext;
-import appLogic.Employee;
-import appLogic.EmployeeRepository;
-import appLogic.InMemoryTimeEntryRepository;
+import appLogic.employee.Employee;
+import appLogic.employee.EmployeeRepository;
+import appLogic.employee.InMemoryTimeEntryRepository;
 import appLogic.TimeEntry;
-import appLogic.WorkActivity;
+import appLogic.activity.ActivityService;
+import appLogic.activity.command.CreateWorkActivity;
+import appLogic.project.Project;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -28,6 +31,7 @@ public class RegisterTimeView {
     private final Scene scene;
     private final EmployeeRepository employeeRepository = AppContext.employeeRepository;
     private final InMemoryTimeEntryRepository timeEntryRepository = AppContext.timeEntryRepository;
+    private final ActivityService activityService = AppContext.activityService;
 
     private final ObservableList<TimeEntry> tableData = FXCollections.observableArrayList();
 
@@ -118,17 +122,20 @@ public class RegisterTimeView {
                 return;
             }
 
-            Activity activity = new WorkActivity(
-                    "huba",
+            Project contextProject = AppContext.projectRegistry.getProjectByName("AppContext");
+            if (contextProject == null) {
+                System.out.println("Project not found");
+                return;
+            }
+            Activity activity = activityService.createWorkActivity(new CreateWorkActivity(
+                    UUID.fromString(contextProject.getProjectID()),
+                    employee.getInitials() + "-" + activityDescField.getText(),
                     activityDescField.getText(),
                     activitySummaryField.getText(),
                     LocalDate.now()
-            );
+            ));
 
-            employee.addActivity(activity);
-
-            TimeEntry entry = new TimeEntry(employee, activity, LocalDateTime.now(), hours);
-            timeEntryRepository.save(entry);
+            TimeEntry entry = activityService.registerWork(activity.getId(), employee, LocalDateTime.now(), hours);
             tableData.add(entry);
 
             System.out.println("Time entry saved");
