@@ -22,6 +22,7 @@ public class MainView {
         Button timeBtn = new Button("Register Time");
         RegisterTimeView timeView = new RegisterTimeView(scene);
         Button logoutBtn = new Button("Log out");
+        Button projectsBtn = new Button("Show projects view");
 
         timeBtn.setOnAction(e -> scene.setRoot(timeView.getView()));
 
@@ -29,8 +30,9 @@ public class MainView {
         CreateEmployeeView employeeView = new CreateEmployeeView(scene);
         employeeBtn.setOnAction(e -> scene.setRoot(employeeView.getView()));
         logoutBtn.setOnAction(e -> scene.setRoot(new LoginView(scene).getView()));
+        projectsBtn.setOnAction(e -> scene.setRoot(new ChooseProjectView(scene).getView()));
 
-        root.getChildren().addAll(timeBtn, employeeBtn,logoutBtn );
+        root.getChildren().addAll(timeBtn, employeeBtn,logoutBtn, projectsBtn);
 
         return root;
     }
