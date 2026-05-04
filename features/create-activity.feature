@@ -6,6 +6,7 @@ Feature: Create activity
 
   Scenario: Create activity
     Given I am logged in as an employee or a project leader with the initials "huba"
+    And A project with the name "Hansen ApS" exists in the system
     And There is no activity named "Analysis" in this project
     When I create an activity named "Analysis"
     Then the activity now exists in the project
@@ -13,6 +14,7 @@ Feature: Create activity
 
   Scenario: Create preexisting activity
     Given I am logged in as an employee or a project leader with the initials "huba"
+    And A project with the name "Hansen ApS" exists in the system
     And There is already an activity named "Analysis" in this project
     When I create an activity named "Analysis"
     Then an error message is shown indicating that an activity with the same name already exists in this project
@@ -21,6 +23,7 @@ Feature: Create activity
 
   Scenario: Register working hours for activity as employee
     Given I am logged in as an employee with the initials "huba"
+    And A project with the name "Hansen ApS" exists in the system
     When I create an activity
     And add how many hours needed for the activity
     Then the needed hours are not registered
@@ -28,6 +31,7 @@ Feature: Create activity
 
   Scenario: Register working hours for activity as project leader
     Given I am logged in as a project leader with the initials "laha"
+    And A project with the name "Hansen ApS" exists in the system
     When I create an activity
     And add how many hours needed for the activity
     Then the needed hours are registered
@@ -35,6 +39,7 @@ Feature: Create activity
 
   Scenario: Hours expected for an activity
     Given I am logged in as a project leader with the initials "laha"
+    And A project with the name "Hansen ApS" exists in the system
     When I edit an activity
     And add the expected hours to finish the activity
     Then the number of expected hours to finish are stored
@@ -43,6 +48,7 @@ Feature: Create activity
 
   Scenario: Start and finish time for activity
     Given I am logged in as a project leader with the initials "laha"
+    And A project with the name "Hansen ApS" exists in the system
     When I edit an activity
     And add a start and finish date
     Then the dates are added to that activity
