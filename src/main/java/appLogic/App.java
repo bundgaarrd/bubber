@@ -140,11 +140,6 @@ public class App {
         return activities;
     }
 
-    public EmployeeRepository getEmployeeRepository() {
-        return employeeRepository;
-}
-  
-
     public void testMethod() {
         System.out.println("This is a testmethod from App.java\nThis means that the UI and app talks together");
     }

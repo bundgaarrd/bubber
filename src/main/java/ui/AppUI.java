@@ -20,7 +20,7 @@ public class AppUI extends Application{
     }
 
     public void start(Stage stage) throws IOException {
-        app = new App();
+        app = App.getInstance();
         VBox root = new VBox();
         scene = new Scene(root, 860, 640);
         scene.setRoot(new LoginView(scene).getView());
