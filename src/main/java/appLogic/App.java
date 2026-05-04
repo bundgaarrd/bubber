@@ -1,24 +1,20 @@
 package appLogic;
 
-import io.cucumber.core.runtime.Runtime;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class App {
+    private static App instance;
+
     private Map<String, Employee> employees;
     private Set<Project> projects;
-    private boolean adminLogin;
     private boolean appActive;
+    private EmployeeRepository employeeRepository;
+    private Employee loggedInUser;
 
     public static void main(String[] args) { // Has to be run from mvn javafx:run
         System.out.println("Starting the application ...");
-        App app = new App();
-        app.run();
+        instance = new App();
+        instance.run();
     }
 
     private void run() {
@@ -30,10 +26,31 @@ public class App {
     }
 
     public App() {
+        this.employeeRepository = new InMemoryEmployeeRepository();
         this.employees = new HashMap<>();
         this.projects = new HashSet<>();
-        this.adminLogin = false;
         this.appActive = true;
+        initializeUsers();
+    }
+
+    private void initializeUsers() {
+        employeeRepository.save(new Employee("huba", "Hubert Baumeister", true));
+        employeeRepository.save(new Employee("wilo", "William Lopez", true));
+        employeeRepository.save(new Employee("anda", "Annemette A. Damgaard", true));
+        Employee laha = new Employee("laha", "Lars Hansen", true);
+        employeeRepository.save(laha);
+
+        Project KBHShop = new Project("KBHShop");
+        this.projects.add(KBHShop);
+        KBHShop.assignProjectLeader(laha);
+    }
+
+    public static App getInstance() {
+        if(instance == null) {
+            instance = new App();
+            instance.run();
+        }
+        return instance;
     }
 
     public Project createProject(String name) { // Create project
@@ -62,7 +79,16 @@ public class App {
                 return p;
             }
         }
-    return null;
+        return null;
+    }
+
+    public Project getProjectByName(String name) {
+        for (Project p : projects) {
+            if (p.getProjectName().equals(name)) {
+                return p;
+            }
+        }
+        return null;
     }
 
     public void importEmployeesFromFile(String path) {
@@ -72,11 +98,40 @@ public class App {
         return new ArrayList<>(projects);
     }
 
-    public boolean isAdminLoggedIn() {
-        return adminLogin;
+    public void login(String initials) {
+        if (initials == null || initials.length() > 4) {
+            throw new IllegalArgumentException("Initials must be 1-4 characters");
+        }
+
+        Employee emp = employeeRepository.findByInitials(initials);
+        if (emp == null) {
+            throw new IllegalStateException("Employee not found");
+        }
+
+        this.loggedInUser = emp;
     }
 
-    public void setAdminLoggedIn(boolean status) {
-        this.adminLogin = status;
+    // Check login
+    public boolean isUserLoggedIn() {
+        return loggedInUser != null;
+    }
+
+    public boolean isAdminLoggedIn() {
+        return loggedInUser != null;
+    }
+
+    public Employee getLoggedInUser() {
+        return loggedInUser;
+    }
+
+    public Set<Activity> getAllActivities() {
+        if(!isAdminLoggedIn()) throw new IllegalStateException("Only admin can access activities.");
+        List<Project> projects = getAllProjects();
+        Set<Activity> activities = new HashSet<>();
+        for(Project project : projects) {
+            activities.addAll(project.getActivities());
+        }
+
+        return activities;
     }
 }

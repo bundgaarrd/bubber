@@ -1,16 +1,26 @@
-package appLogic;
+package appLogic; 
 
 import java.time.LocalDate;
 import java.time.temporal.WeekFields;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class Employee {
-    private String initials;
-    private String name;
+
+    private final String initials;
+    private final String name;
     private boolean isAvailable;
-    private List<Activity> activities = new ArrayList<>();
+    private final List<Activity> activities = new ArrayList<>();
+
+    /**
+     * Projects where this employee is a leader
+     */
+    private final Set<Project> leaderProjects = new HashSet<>();
+
+    public Employee(String initials, String name, boolean isAvailable) {
+        this.initials = initials;
+        this.name = name;
+        this.isAvailable = isAvailable;
+    }
 
     public String getInitials() {
         return initials;
@@ -30,7 +40,7 @@ public class Employee {
 
     public void addActivity(Activity activity) {
         activities.add(activity);
-        activity.assignEmployee(this); 
+        activity.assignEmployee(this);
     }
 
     public int getActiveActivityCount(int week, int year) {
@@ -49,5 +59,17 @@ public class Employee {
         }
 
         return count;
+    }
+
+    public Set<Project> getLeaderProjects() {
+        return leaderProjects;
+    }
+
+    public void addProjectAsLeader(Project project) {
+        leaderProjects.add(project);
+    }
+
+    public void removeProjectAsLeader(Project project) {
+        leaderProjects.remove(project);
     }
 }

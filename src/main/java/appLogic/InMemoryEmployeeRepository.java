@@ -6,7 +6,7 @@ import java.util.Set;
 
 public class InMemoryEmployeeRepository implements EmployeeRepository {
 
-    private Map<String, Employee> employees = new HashMap<>();
+    private final Map<String, Employee> employees = new HashMap<>();
 
     @Override
     public Employee findByInitials(String initials) {
@@ -25,8 +25,6 @@ public class InMemoryEmployeeRepository implements EmployeeRepository {
 
     @Override
     public void loadFromFile(String path) {
-        // der skal lige laves readfile logik her men tænker det skal se sådan her ud. 
-        
-        System.out.println("Loading employees from: " + path);
+        System.out.println("Loading employees from file: " + path);
     }
 }

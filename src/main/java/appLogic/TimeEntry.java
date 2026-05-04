@@ -1,40 +1,42 @@
-package appLogic;
+package appLogic; //s244813
 
 import java.time.LocalDateTime;
 
 public class TimeEntry {
-    private Employee employee;
-    private Activity activity;
+
+    private final Employee employee;
+    private final Activity activity;
     private LocalDateTime entryStartTime;
     private double hoursWorked;
 
-    public TimeEntry(Employee employee, Activity activity) {
+    public TimeEntry(Employee employee, Activity activity, LocalDateTime entryStartTime, double hoursWorked) {
         this.employee = employee;
         this.activity = activity;
+        this.entryStartTime = entryStartTime;
+        this.hoursWorked = hoursWorked;
     }
 
-    public void setEntryStartTime(LocalDateTime time) {
-        this.entryStartTime = time;
-    }
-
-    public void setHoursWorked(double hours) {
-        this.hoursWorked = hours;
-    }
-
-    public double getHoursWorked() {
-        return hoursWorked;
+    public Employee getEmployee() {
+        return employee;
     }
 
     public Activity getActivity() {
         return activity;
     }
 
-    // Optional getters
-    public Employee getEmployee() {
-        return employee;
-    }
-
     public LocalDateTime getEntryStartTime() {
         return entryStartTime;
+    }
+
+    public void setEntryStartTime(LocalDateTime entryStartTime) {
+        this.entryStartTime = entryStartTime;
+    }
+
+    public double getHoursWorked() {
+        return hoursWorked;
+    }
+
+    public void setHoursWorked(double hoursWorked) {
+        this.hoursWorked = hoursWorked;
     }
 }

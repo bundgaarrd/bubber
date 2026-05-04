@@ -10,7 +10,7 @@ import static io.cucumber.junit.platform.engine.Constants.*;
 @Suite
 @IncludeEngines("cucumber")
 @SelectPackages("appLogic")
-@ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "summary")
+@ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "summary, html:target/cucumber-reports/report.html")
 @ConfigurationParameter(key = FEATURES_PROPERTY_NAME, value = "features")
 @ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "appLogic")
 @ConfigurationParameter(key = SNIPPET_TYPE_PROPERTY_NAME, value = "camelcase")

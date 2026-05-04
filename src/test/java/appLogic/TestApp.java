@@ -2,7 +2,9 @@ package appLogic;
 
 public class TestApp {
     private static TestApp instance;
-    private final App app;
+    private App app;
+    private Project project;
+    private Activity activity;
 
     public static TestApp getInstance() {
         if(instance == null) {
@@ -12,12 +14,30 @@ public class TestApp {
     }
 
     private TestApp() {
-        this.app = new App();
-        app.setAdminLoggedIn(true);
-
+        reset();
     }
+
+    public void reset() {
+        this.app = new App();
+}   
 
     public App getApp() {
         return app;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setActivity(Activity activity) {
+        this.activity = activity;
+    }
+
+    public Activity getActivity() {
+        return activity;
     }
 }
