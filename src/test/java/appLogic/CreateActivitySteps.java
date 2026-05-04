@@ -32,7 +32,6 @@ public class CreateActivitySteps {
     @When("I create an activity named {string}")
     public void iCreateAnActivityNamed(String name) {
         Project project = TestApp.getInstance().getProject();
-        ensureLoggedInUserIsLeaderForProject(project);
         try {
             Activity activity = TestApp.getInstance().getApp().getActivityService()
                     .createProjectActivity(new CreateProjectActivity(
@@ -60,7 +59,6 @@ public class CreateActivitySteps {
     @Given("There is already an activity named {string} in this project")
     public void thereIsAlreadyAnActivityNamedInThisProject(String name) {
         Project project = TestApp.getInstance().getProject();
-        ensureLoggedInUserIsLeaderForProject(project);
         Activity activity;
         try {
             activity = TestApp.getInstance().getApp().getActivityService()
@@ -199,12 +197,5 @@ public class CreateActivitySteps {
                 || previousEndYear != endYear
                 || previousStartWeek != startWeek
                 || previousEndWeek != endWeek);
-    }
-
-    private void ensureLoggedInUserIsLeaderForProject(appLogic.project.Project project) {
-        Employee employee = TestApp.getInstance().getApp().getLoggedInUser();
-        if (employee != null && !employee.equals(project.getProjectLeader())) {
-            project.assignProjectLeader(employee);
-        }
     }
 }
