@@ -40,8 +40,19 @@ public final class ProjectRegistry {
         projects.add(project);
     }
 
-    public void deleteProject(String id) {
+    public void deleteProjectById(String id) {
         projects.removeIf(project -> project.getProjectID().equals(id));
+    }
+
+    public void deleteProjectByName(String name) {
+        Set<Project> toRemove = new HashSet<>();
+        for(Project project : projects) {
+            if(project.getProjectName().equals(name)) {
+                toRemove.add(project);
+            }
+        }
+        if(toRemove.isEmpty()) throw new IllegalStateException("No project with the given name exists.");
+        else projects.removeAll(toRemove);
     }
 
     public Project getProjectById(String id) {

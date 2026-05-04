@@ -2,6 +2,8 @@ package appLogic;
 
 import appLogic.activity.command.CreateProjectActivity;
 import appLogic.activity.exception.ActivityNotFoundException;
+import appLogic.activity.exception.DuplicateActivityException;
+import appLogic.project.Project;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -15,10 +17,18 @@ public class DeleteActivitySteps {
 
     @Given("There is an activity named {string} in this project")
     public void thereIsAnActivityNamedInThisProject(String name) {
-        var project = TestApp.getInstance().getProject();
-        Activity activity = TestApp.getInstance().getApp().getActivityService()
-                .createProjectActivity(new CreateProjectActivity(
-                        UUID.fromString(project.getProjectID()), name, "", "", LocalDate.now()));
+        Project project = TestApp.getInstance().getProject();
+        Activity activity;
+        try {
+            activity = TestApp.getInstance().getApp().getActivityService()
+                    .createProjectActivity(new CreateProjectActivity(
+                            UUID.fromString(project.getProjectID()), name, "", "", LocalDate.now()
+                    ));
+        } catch (DuplicateActivityException e) {
+            activity = TestApp.getInstance().getApp().getActivityService().findByProjectAndName(
+                    UUID.fromString(project.getProjectID()), name
+            );
+        }
         TestApp.getInstance().setActivity(activity);
         Assertions.assertNotNull(activity);
     }

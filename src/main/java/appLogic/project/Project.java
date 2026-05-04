@@ -1,6 +1,5 @@
 package appLogic.project;
 
-import appLogic.App;
 import appLogic.Customer;
 import appLogic.Report;
 import appLogic.TimeEntry;
@@ -31,8 +30,6 @@ public class Project {
         // Use ProjectIdGenerator instead of UUID. This is temporary.
         this.projectUUID = UUID.randomUUID();
         this.projectID = projectUUID.toString();
-        //TODO: Default huba project leader?
-        assignProjectLeader(App.getInstance().getEmployeeRepository().findByInitials("huba"));
     }
 
     // Status true
@@ -45,9 +42,11 @@ public class Project {
     }
 
     public void assignProjectLeader(Employee empl) {
-        if(projectLeader != null) projectLeader.removeProjectAsLeader(this);
+        if (projectLeader != null) {
+            throw new IllegalStateException("Project already has a project leader.");
+        }
         this.projectLeader = empl;
-        empl.addProjectAsLeader(this);
+        if(empl != null) empl.addProjectAsLeader(this);
     }
 
     public Report generateReport() {

@@ -16,6 +16,7 @@ public class AssignLeadSteps {
         if (project == null) {
             project = TestApp.getInstance().getProjectRegistry().createProject(projectName);
         }
+        project.assignProjectLeader(null);
         Assertions.assertNull(project.getProjectLeader(),
                 "Expected project to have no leader, but it already has one");
         TestApp.getInstance().setProject(project);
@@ -31,7 +32,8 @@ public class AssignLeadSteps {
         Employee leader = TestApp.getInstance().getEmployeeByInitials(initials);
         Assertions.assertNotNull(leader, "Employee not found");
 
-        project.assignProjectLeader(leader);
+        Assertions.assertEquals(leader, project.getProjectLeader());
+
         TestApp.getInstance().setProject(project);
     }
 

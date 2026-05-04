@@ -11,6 +11,7 @@ public class ProjectSteps {
 
     @And("A project with the name {string} does not exist in the system")
     public void aProjectWithTheNameDoesNotExistInTheSystem(String name) {
+        TestApp.getInstance().getApp().getProjectRegistry().deleteProjectByName(name);
         Project check = TestApp.getInstance().getProjectRegistry().getProjectByName(name);
         Assertions.assertNull(check, "A project with the name " + name + " already exists in the system.");
     }

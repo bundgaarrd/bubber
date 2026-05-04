@@ -68,6 +68,10 @@ public class App {
         return instance;
     }
 
+    public static void resetInstanceForTests() {
+        instance = null;
+    }
+
     public List<Employee> getAvailableEmployees(int week, int year) {
         return null; // placeholder 
         // Hvordan skal det laves?

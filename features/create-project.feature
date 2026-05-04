@@ -4,15 +4,15 @@ Feature: Create project
 
 
   Scenario: Create project
-    Given I am logged in as an employee or a project leader with the initials "huba"
-    And A project with the name "Hansen ApS" does not exist in the system
-    When I create a project with the name "Hansen ApS"
+    Given I am logged in as an employee or a project leader with the initials "laha"
+    And A project with the name "KBHShop" does not exist in the system
+    When I create a project with the name "KBHShop"
     Then the project exists in the system
     And the project is assigned a project number
 
 
   Scenario: Create preexisting project
-    Given I am logged in as an employee or a project leader with the initials "huba"
+    Given I am logged in as an employee or a project leader with the initials "laha"
     And A project with the name "KBHShop" exists in the system
     When I create a project with the name "KBHShop"
     Then an error message is shown indicating that a project with the same name already exists
