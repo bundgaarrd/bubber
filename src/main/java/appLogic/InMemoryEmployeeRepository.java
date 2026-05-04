@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Set;
 
 public class InMemoryEmployeeRepository implements EmployeeRepository {
-
     private final Map<String, Employee> employees = new HashMap<>();
 
     @Override

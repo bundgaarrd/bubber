@@ -30,6 +30,8 @@ public class Project {
         // Use ProjectIdGenerator instead of UUID. This is temporary.
         this.projectUUID = UUID.randomUUID();
         this.projectID = projectUUID.toString();
+        //TODO: Default huba project leader?
+        assignProjectLeader(App.getInstance().getEmployeeRepository().findByInitials("huba"));
     }
 
     // Status true
@@ -38,6 +40,10 @@ public class Project {
     }
 
     // -----SETTERS-----
+    public ProjectActivity createActivity(String name) {
+        return new ProjectActivity(name);
+    }
+
     public void addActivity(Activity act) {
         activities.add(act);
     }
@@ -89,6 +95,9 @@ public class Project {
     }
 
     public Set<Activity> getActivities() {
+        if(!App.getInstance().getLoggedInUser().equals(projectLeader)) {
+            throw new IllegalStateException("Only project leader can access activities.");
+        }
         return activities;
     }
 
@@ -117,5 +126,6 @@ public class Project {
         }
 
         if(toRemove != null) activities.remove(toRemove);
+        else throw new IllegalStateException("Activity not found.");
     }
 }

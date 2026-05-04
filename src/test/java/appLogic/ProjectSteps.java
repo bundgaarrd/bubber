@@ -1,12 +1,13 @@
 package appLogic;
 
 import io.cucumber.java.en.And;
-import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.jupiter.api.Assertions;
 
 public class ProjectSteps {
+    private Exception exception;
+
     @And("A project with the name {string} does not exist in the system")
     public void aProjectWithTheNameDoesNotExistInTheSystem(String name) {
         Project check = TestApp.getInstance().getApp().getProjectByName(name);
@@ -15,16 +16,19 @@ public class ProjectSteps {
 
     @When("I create a project with the name {string}")
     public void iCreateAProjectWithTheName(String name) {
-        TestApp.getInstance().setProject(TestApp.getInstance().getApp().createProject(name));
+        try {
+            Project newProject = TestApp.getInstance().getApp().createProject(name);
+            TestApp.getInstance().setProject(newProject);
+        } catch (Exception e) {
+            exception = e;
+        }
     }
 
     @Then("the project exists in the system")
     public void theProjectExistsInTheSystem() {
         Project current = TestApp.getInstance().getProject();
         Project check = TestApp.getInstance().getApp().getProjectById(current.getProjectID());
-        if (check == null) {
-            throw new IllegalStateException("The project does not exist in the system.");
-        }
+        Assertions.assertNotNull(check, "The project does not exist in the system.");
     }
 
     @And("the project is assigned a project number")
@@ -39,13 +43,13 @@ public class ProjectSteps {
     @And("A project with the name {string} exists in the system")
     public void aProjectWithTheNameExistsInTheSystem(String name) {
         Project existingProject = TestApp.getInstance().getApp().getProjectByName(name);
+        TestApp.getInstance().setProject(existingProject);
         Assertions.assertNotNull(existingProject, "A project with the name " + name + " does not exist in the system.");
     }
 
     @Then("an error message is shown indicating that a project with the same name already exists")
     public void anErrorMessageIsShownIndicatingThatAProjectWithTheSameNameAlreadyExists() {
-        Project project = TestApp.getInstance().getProject();
-        TestApp.getInstance().getApp().getProjectById(project.getProjectID());
+        Assertions.assertNotNull(exception, "Expected an error message to be shown indicating that a project with the same name already exists, but no exception was thrown.");
     }
 
     @And("the project is not duplicated in the system")

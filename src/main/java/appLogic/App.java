@@ -13,8 +13,7 @@ public class App {
 
     public static void main(String[] args) { // Has to be run from mvn javafx:run
         System.out.println("Starting the application ...");
-        instance = new App();
-        instance.run();
+        instance = getInstance();
     }
 
     private void run() {
@@ -25,12 +24,11 @@ public class App {
         }
     }
 
-    public App() {
+    private App() {
         this.employeeRepository = new InMemoryEmployeeRepository();
         this.employees = new HashMap<>();
         this.projects = new HashSet<>();
         this.appActive = true;
-        initializeUsers();
     }
 
     private void initializeUsers() {
@@ -48,6 +46,7 @@ public class App {
     public static App getInstance() {
         if(instance == null) {
             instance = new App();
+            instance.initializeUsers();
             instance.run();
         }
         return instance;
@@ -56,7 +55,7 @@ public class App {
     public Project createProject(String name) { // Create project
         Project newProject = new Project(name);
         // Check if a project with the same name already exists
-        projects.stream().filter(predicate -> predicate.getProjectID().equals(newProject.getProjectID())).findFirst().ifPresent(project -> {
+        projects.stream().filter(predicate -> predicate.getProjectName().equals(newProject.getProjectName())).findFirst().ifPresent(project -> {
             throw new IllegalStateException("A project with the name " + name + " already exists in the system.");
         });
         this.projects.add(newProject);
@@ -109,6 +108,10 @@ public class App {
         }
 
         this.loggedInUser = emp;
+    }
+
+    public EmployeeRepository getEmployeeRepository() {
+        return employeeRepository;
     }
 
     // Check login

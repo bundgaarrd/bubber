@@ -5,6 +5,7 @@ Feature: Delete activity
 
   Scenario: Delete activity
     Given I am logged in as an employee or a project leader with the initials "huba"
+    And A project with the name "Hansen ApS" exists in the system
     And There is an activity named "Analysis" in this project
     When I delete the activity named "Analysis"
     Then the activity no longer exists in the project
@@ -12,6 +13,7 @@ Feature: Delete activity
 
   Scenario: Delete non-existent activity
     Given I am logged in as an employee or a project leader with the initials "huba"
+    And A project with the name "Hansen ApS" exists in the system
     And There is no activity named "Analysis" in this project
     When I delete the activity named "Analysis"
     Then an error message is shown indicating that the activity does not exist in the project
