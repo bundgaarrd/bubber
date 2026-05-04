@@ -22,7 +22,7 @@ public class MainView {
         RegisterTimeView timeView = new RegisterTimeView(scene);
         btn.setOnAction(e -> scene.setRoot(timeView.getView()));
         VBox center = new VBox(btn);
-        
+
         center.setAlignment(Pos.CENTER);
         root.setCenter(center);
 
