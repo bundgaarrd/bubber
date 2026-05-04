@@ -19,12 +19,6 @@ public class FixedActivitySteps {
     private boolean checkDates;
     private Timesheet timesheet = TestApp.getInstance().getApp().getTimesheet();
 
-    @Given("I am logged in as project leader or employee")
-    public void iAmLoggedInAsProjectLeaderOrEmployee(){
-        boolean admin = TestApp.getInstance().getApp().isAdminLoggedIn();
-        assertTrue(admin, "User is logged in as a projectleader or employee");
-    }  
-
         
     @And("There is no other fixed activity on the same dates")
     public void fixedActivityOtherDates(){
