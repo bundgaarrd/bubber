@@ -32,8 +32,19 @@ public class ActivitySteps{
     }
 
     @Then("the activity now exists in the project")
-    public void activityExists() {
-        Activity activity = TestApp.getInstance().getActivity();
-        Assertions.assertNotNull(activity, "Expected activity to exist but it was null");
+    public void activityExists(){
+        assertTrue(activity != null);
     }
+
+    // creating preexisting activity
+
+    @Given("I am logged in as project leader or employee")
+
+    @And("And there is already an activity named {string} in this project")
+    public void activityAlreadyExisting(String name){
+        existingActivity = TestApp.getInstance.getActivity(name);
+        
+
+    }
+
 }
