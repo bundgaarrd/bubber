@@ -1,5 +1,7 @@
 package ui;
 
+import appLogic.App;
+import io.cucumber.messages.types.Exception;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -19,6 +21,8 @@ public class LoginView {
     }
 
     public Parent getView() {
+        App app = App.getInstance();
+
         VBox root = new VBox(15);
         root.setAlignment(Pos.CENTER);
 
@@ -35,12 +39,13 @@ public class LoginView {
             String initials = initialsField.getText().trim();
 
             // TODO: Mangler at lave et reelt opslag på om brugeren findes. -> Artur?
-            boolean userExists = initials.equals("huba");
-
-            if (!initials.isEmpty() && userExists) {
+            try {
+                app.login(initials);
+                System.out.println("User " + initials + " logged in!");
                 MainView mainView = new MainView(scene);
                 scene.setRoot(mainView.getView());
-            } else {
+            } catch (IllegalArgumentException | IllegalStateException exception) {
+                errorLabel.setText(exception.getMessage());
                 errorLabel.setVisible(true);
             }
         });
