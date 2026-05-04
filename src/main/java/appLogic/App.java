@@ -66,8 +66,13 @@ public class App {
     }
 
     public void deleteProject(String id) {
-        projects.removeIf(project -> project.getProjectID().equals(id)); // Antager at Project har en projectID() metode
+    boolean removed = projects.removeIf(project -> project.getProjectID().equals(id));
+
+    if (!removed) {
+        throw new IllegalStateException("Project does not exist");
     }
+}
+
 
     public List<Employee> getAvailableEmployees(int week, int year) {
         return null; // placeholder 
