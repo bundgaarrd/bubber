@@ -1,4 +1,4 @@
-package appLogic;
+package appLogic.employee;
 
 import java.util.HashMap;
 import java.util.Map;

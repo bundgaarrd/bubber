@@ -1,8 +1,11 @@
 package appLogic;
 
+import appLogic.employee.Employee;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.jupiter.api.Assertions;
+
+import java.util.UUID;
 
 /**
  * Scenario: Viewing the overall schedule of activities
@@ -13,7 +16,8 @@ public class OverallScheduleSteps {
     @When("I attempt to access overview of all employee schedules")
     public void iAttemptToAccessOverviewOfAllEmployeeSchedules() {
         try {
-            TestApp.getInstance().getProject().getActivities();
+            TestApp.getInstance().getApp().getActivityService()
+                    .findByProject(UUID.fromString(TestApp.getInstance().getProject().getProjectID()));
         } catch (Exception e) {
             exception = e;
         }
@@ -36,7 +40,8 @@ public class OverallScheduleSteps {
     @Then("I can view the schedule of all employees")
     public void iCanViewTheScheduleOfAllEmployees() {
         try {
-            TestApp.getInstance().getProject().getActivities();
+            TestApp.getInstance().getApp().getActivityService()
+                    .findByProject(UUID.fromString(TestApp.getInstance().getProject().getProjectID()));
         } catch (Exception e) {
             Assertions.fail("Expected to be able to view the schedule of all employees, but an exception was thrown: " + e.getMessage());
         }

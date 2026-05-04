@@ -1,5 +1,7 @@
 package appLogic; //s244813
 
+import appLogic.employee.Employee;
+
 import java.time.LocalDateTime;
 
 public class TimeEntry {

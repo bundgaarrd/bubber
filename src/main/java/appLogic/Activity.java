@@ -1,5 +1,7 @@
 package appLogic;
 
+import appLogic.employee.Employee;
+
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;

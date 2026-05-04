@@ -1,4 +1,7 @@
-package appLogic;
+package appLogic.project;
+
+import appLogic.Activity;
+import appLogic.employee.Employee;
 
 import java.time.LocalDate;
 import java.util.Set;

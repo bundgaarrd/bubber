@@ -1,4 +1,10 @@
-package appLogic;
+package appLogic.project;
+
+import appLogic.App;
+import appLogic.Customer;
+import appLogic.Report;
+import appLogic.TimeEntry;
+import appLogic.employee.Employee;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,7 +17,6 @@ public class Project {
     private String name;
     private boolean hasCustomer;
     private Employee projectLeader;
-    private Set<Activity> activities = new HashSet<>();
     private boolean isCompleted = false;
     private Set<Customer> customerList;
     private int expectedHours;
@@ -33,15 +38,6 @@ public class Project {
     // Status true
     public void setCompletedStatus(boolean status) {
         this.isCompleted = status;
-    }
-
-    // -----SETTERS-----
-    public ProjectActivity createActivity(String name) {
-        return new ProjectActivity(name);
-    }
-
-    public void addActivity(Activity act) {
-        activities.add(act);
     }
 
     public Employee getProjectLeader() {
@@ -90,38 +86,4 @@ public class Project {
         return name;
     }
 
-    public Set<Activity> getActivities() {
-        if(!App.getInstance().getLoggedInUser().equals(projectLeader)) {
-            throw new IllegalStateException("Only project leader can access activities.");
-        }
-        return activities;
-    }
-
-    public Activity getActivity(String name) {
-        if(!App.getInstance().getLoggedInUser().equals(projectLeader)) {
-            throw new IllegalStateException("Only project leader can access activities.");
-        }
-        for(Activity activity : activities) {
-            if(activity.getName().equals(name)) {
-                return activity;
-            }
-        }
-
-        return null;
-    }
-
-    public void deleteActivity(String name) {
-        if(!App.getInstance().getLoggedInUser().equals(projectLeader)) {
-            throw new IllegalStateException("Only project leader can delete activities.");
-        }
-        Activity toRemove = null;
-        for(Activity activity : activities) {
-            if(activity.getName().equals(name)) {
-                toRemove = activity;
-            }
-        }
-
-        if(toRemove != null) activities.remove(toRemove);
-        else throw new IllegalStateException("Activity not found.");
-    }
 }

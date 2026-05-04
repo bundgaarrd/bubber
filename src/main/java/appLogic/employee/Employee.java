@@ -1,4 +1,7 @@
-package appLogic; 
+package appLogic.employee;
+
+import appLogic.Activity;
+import appLogic.project.Project;
 
 import java.time.LocalDate;
 import java.time.temporal.WeekFields;

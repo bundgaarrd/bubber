@@ -1,5 +1,7 @@
 package appLogic;
 
+import appLogic.employee.Employee;
+import appLogic.project.Project;
 import io.cucumber.java.en.*;
 import org.junit.jupiter.api.Assertions;
 
@@ -10,9 +12,9 @@ public class AssignLeadSteps {
 
     @Given("there is a project named {string} without a project leader")
     public void thereIsAProjectWithoutAProjectLeader(String projectName) {
-        Project project = TestApp.getInstance().getApp().getProjectByName(projectName);
+        Project project = TestApp.getInstance().getProjectRegistry().getProjectByName(projectName);
         if (project == null) {
-            project = TestApp.getInstance().getApp().createProject(projectName);
+            project = TestApp.getInstance().getProjectRegistry().createProject(projectName);
         }
         Assertions.assertNull(project.getProjectLeader(),
                 "Expected project to have no leader, but it already has one");
@@ -21,9 +23,9 @@ public class AssignLeadSteps {
 
     @Given("there is a project named {string} with a project leader {string}")
     public void thereIsAProjectWithAProjectLeader(String projectName, String initials) {
-        Project project = TestApp.getInstance().getApp().getProjectByName(projectName);
+        Project project = TestApp.getInstance().getProjectRegistry().getProjectByName(projectName);
         if (project == null) {
-            project = TestApp.getInstance().getApp().createProject(projectName);
+            project = TestApp.getInstance().getProjectRegistry().createProject(projectName);
         }
 
         Employee leader = TestApp.getInstance().getEmployeeByInitials(initials);
@@ -38,7 +40,7 @@ public class AssignLeadSteps {
         candidate = TestApp.getInstance().getEmployeeByInitials(initials);
         Assertions.assertNotNull(candidate, "Employee " + initials + " not found");
 
-        Project project = TestApp.getInstance().getApp().getProjectByName(projectName);
+        Project project = TestApp.getInstance().getProjectRegistry().getProjectByName(projectName);
         Assertions.assertNotNull(project, "Project not found");
 
         try {

@@ -11,6 +11,7 @@ public class LoginSteps {
 
     @Before
     public void setUp() {
+        TestApp.getInstance().reset();
         app = TestApp.getInstance().getApp();
     }
 
