@@ -18,11 +18,7 @@ public class App {
     }
 
     private void run() {
-        while (appActive) {
-            System.out.println("Application started!");
-            appActive = false;
-            System.out.println("Quitting!");
-        }
+
     }
 
     public App() {
@@ -43,6 +39,13 @@ public class App {
         Project KBHShop = new Project("KBHShop");
         this.projects.add(KBHShop);
         KBHShop.assignProjectLeader(laha);
+
+        Employee alla = new Employee("alla", "Allan Lassen", true);
+        employeeRepository.save(alla);
+
+        Project DTU = new Project("DTU");
+        this.projects.add(DTU);
+        DTU.assignProjectLeader(alla);
     }
 
     public static App getInstance() {
@@ -133,5 +136,14 @@ public class App {
         }
 
         return activities;
+    }
+
+    public EmployeeRepository getEmployeeRepository() {
+        return employeeRepository;
+}
+  
+
+    public void testMethod() {
+        System.out.println("This is a testmethod from App.java\nThis means that the UI and app talks together");
     }
 }
