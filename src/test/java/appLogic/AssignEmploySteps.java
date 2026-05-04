@@ -10,16 +10,5 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AssignEmploySteps {
-
-    private App app;
-    private Activity selectedActivity;
-    private Exception thrownException;
-
-    @Before
-    public void setUp() {
-        TestApp.getInstance().reset();
-        app = TestApp.getInstance().getApp();
-    }
-
     
 }

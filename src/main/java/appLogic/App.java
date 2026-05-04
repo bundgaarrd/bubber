@@ -37,6 +37,7 @@ public class App {
         employeeRepository.save(new Employee("huba", "Hubert Baumeister", true));
         employeeRepository.save(new Employee("wilo", "William Lopez", true));
         employeeRepository.save(new Employee("anda", "Annemette A. Damgaard", true));
+        employeeRepository.save(new Employee("laha", "Lars Hansen", true));
     }
 
     public static App getInstance() {

@@ -1,15 +1,13 @@
 package appLogic;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LoginSteps {
 
     private App app;
-    private Activity selectedActivity;
-    private Exception thrownException;
 
     @Before
     public void setUp() {
@@ -17,10 +15,25 @@ public class LoginSteps {
         app = TestApp.getInstance().getApp();
     }
 
-   @Given("I am logged in as an employee or a project leader with the initials {string}")
-    public void loggedInWithInitials(String initials) {
+    @Given("I am logged in as an employee or a project leader with the initials {string}")
+    public void loggedInAsEither(String initials) {
         app.login(initials);
         assertTrue(app.isUserLoggedIn(), "User was not logged in successfully");
     }
-    
+
+    @Given("I am logged in as an employee with the initials {string}")
+    public void loggedInAsEmployee(String initials) {
+        app.login(initials);
+        assertTrue(app.isUserLoggedIn(), "User was not logged in successfully");
+        assertTrue(app.getLoggedInUser().getLeaderProjects().isEmpty(),
+                "Expected a plain employee but " + initials + " is a project leader");
+    }
+
+    @Given("I am logged in as a project leader with the initials {string}")
+    public void loggedInAsProjectLeader(String initials) {
+        app.login(initials);
+        assertTrue(app.isUserLoggedIn(), "User was not logged in successfully");
+        assertFalse(app.getLoggedInUser().getLeaderProjects().isEmpty(),
+                "Expected a project leader but " + initials + " has no leader projects");
+    }
 }

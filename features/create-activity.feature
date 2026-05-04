@@ -5,14 +5,14 @@ Feature: Create activity
 
 
   Scenario: Create activity
-    Given I am logged in as project leader or employee with the initials "huba"
+    Given I am logged in as an employee or a project leader with the initials "huba"
     And There is no activity named "Analysis" in this project
     When I create an activity named "Analysis"
     Then the activity now exists in the project
 
 
   Scenario: Create preexisting activity
-    Given I am logged in as project leader or employee with the initials "huba"
+    Given I am logged in as an employee or a project leader with the initials "huba"
     And There is already an activity named "Analysis" in this project
     When I create an activity named "Analysis"
     Then an error message is shown indicating that an activity with the same name already exists in this project
@@ -27,7 +27,7 @@ Feature: Create activity
 
 
   Scenario: Register working hours for activity as project leader
-    Given I am logged in as a project leader with the initials "huba"
+    Given I am logged in as a project leader with the initials "laha"
     When I create an activity
     And add how many hours needed for the activity
     Then the needed hours are registered
