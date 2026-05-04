@@ -44,7 +44,7 @@ public class ActivitySteps{
 
     @And("And there is already an activity named {string} in this project")
     public void activityAlreadyExisting(String name){
-        existingActivity = TestApp.getInstance.getActivity(name)
+        existingActivity = TestApp.getInstance.getActivity(name);
         
 
     }

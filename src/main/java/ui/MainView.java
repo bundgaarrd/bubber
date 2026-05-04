@@ -1,5 +1,7 @@
 package ui; 
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -16,7 +18,10 @@ public class MainView {
     public Parent getView() {
 
         VBox root = new VBox(15);
+        root.setAlignment(Pos.CENTER);
+        root.setPadding(new Insets(20));
 
+        Button logoutBtn = new Button("Log out");
         Button timeBtn = new Button("Register Time");
         RegisterTimeView timeView = new RegisterTimeView(scene);
         timeBtn.setOnAction(e -> scene.setRoot(timeView.getView()));
@@ -24,8 +29,9 @@ public class MainView {
         Button employeeBtn = new Button("Create Employee");
         CreateEmployeeView employeeView = new CreateEmployeeView(scene);
         employeeBtn.setOnAction(e -> scene.setRoot(employeeView.getView()));
+        logoutBtn.setOnAction(e -> scene.setRoot(new LoginView(scene).getView()));
 
-        root.getChildren().addAll(timeBtn, employeeBtn);
+        root.getChildren().addAll(timeBtn, employeeBtn, logoutBtn);
 
         return root;
     }
