@@ -12,11 +12,6 @@ import org.junit.jupiter.api.Assertions;
 public class OverallScheduleSteps {
     private Exception exception;
 
-    @Given("I am logged in as an employee")
-    public void iAmLoggedInAsAnEmployee() {
-        TestApp.getInstance().getApp().login("wilo");
-    }
-
     @When("I attempt to access overview of all employee schedules")
     public void iAttemptToAccessOverviewOfAllEmployeeSchedules() {
         try {
@@ -30,13 +25,8 @@ public class OverallScheduleSteps {
     public void accessIsDenied() {
         Assertions.assertNotNull(exception, "Expected an exception to be thrown when an employee tries to access the overall schedule, but no exception was thrown.");
     }
+    
 
-    @Given("I am logged in as a project leader")
-    public void iAmLoggedInAsAProjectLeader() {
-        Employee currentUser = TestApp.getInstance().getApp().getLoggedInUser();
-        boolean isLeader = !currentUser.getLeaderProjects().isEmpty();
-        Assertions.assertTrue(isLeader, "User is not logged in as a project leader.");
-    }
     @Then("access is approved")
     public void accessIsApproved() {
         Assertions.assertNull(exception, "Expected no exception to be thrown when a project leader tries to access the overall schedule, but an exception was thrown: " + exception.getMessage());

@@ -7,22 +7,6 @@ import io.cucumber.java.en.When;
 import org.junit.jupiter.api.Assertions;
 
 public class ProjectSteps {
-    @Given("I am logged in as project leader or employee with the initials {string}")
-    public void iAmLoggedInAsProjectLeaderOrEmployeeWithTheInitials(String initials) {
-        TestApp.getInstance().getApp().login(initials);
-    }
-
-    @Given("I am logged in as project leader or employee")
-    public void iAmLoggedInAsProjectLeaderOrEmployee() {
-        App app = TestApp.getInstance().getApp();
-
-        app.login("huba");
-
-        if(!app.isAdminLoggedIn()) {
-            throw new IllegalStateException("User is not logged in...");
-        }
-    }
-
     @And("A project with the name {string} does not exist in the system")
     public void aProjectWithTheNameDoesNotExistInTheSystem(String name) {
         Project check = TestApp.getInstance().getApp().getProjectByName(name);

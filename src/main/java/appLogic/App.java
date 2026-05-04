@@ -27,16 +27,22 @@ public class App {
 
     public App() {
         this.employeeRepository = new InMemoryEmployeeRepository();
-        initializeUsers();
         this.employees = new HashMap<>();
         this.projects = new HashSet<>();
         this.appActive = true;
+        initializeUsers();
     }
 
     private void initializeUsers() {
         employeeRepository.save(new Employee("huba", "Hubert Baumeister", true));
         employeeRepository.save(new Employee("wilo", "William Lopez", true));
         employeeRepository.save(new Employee("anda", "Annemette A. Damgaard", true));
+        Employee laha = new Employee("laha", "Lars Hansen", true);
+        employeeRepository.save(laha);
+
+        Project KBHShop = new Project("KBHShop");
+        this.projects.add(KBHShop);
+        KBHShop.assignProjectLeader(laha);
     }
 
     public static App getInstance() {
