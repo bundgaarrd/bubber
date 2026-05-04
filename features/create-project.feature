@@ -13,7 +13,7 @@ Feature: Create project
 
   Scenario: Create preexisting project
     Given I am logged in as an employee or a project leader with the initials "huba"
-    And A project with the name "Hansen ApS" exists in the system
-    When I create a project with the name "Hansen ApS"
+    And A project with the name "KBHShop" exists in the system
+    When I create a project with the name "KBHShop"
     Then an error message is shown indicating that a project with the same name already exists
     And the project is not duplicated in the system
