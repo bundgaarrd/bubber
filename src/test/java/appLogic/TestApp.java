@@ -18,8 +18,8 @@ public class TestApp {
     }
 
     public void reset() {
-        this.app = new App();
-}   
+        this.app = App.getInstance();
+    }
 
     public App getApp() {
         return app;

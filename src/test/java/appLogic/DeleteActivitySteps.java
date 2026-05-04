@@ -9,20 +9,26 @@ import org.junit.jupiter.api.Assertions;
  * Scenario: Deleting an existing activity from a project
  */
 public class DeleteActivitySteps {
-    String errorMessage;
+    private String errorMessage;
 
     @Given("There is an activity named {string} in this project")
     public void thereIsAnActivityNamedInThisProject(String name) {
         Project project = TestApp.getInstance().getProject();
-        Activity activity = project.getActivity(name);
+        Activity activity = project.createActivity(name);
+        project.addActivity(activity);
+        TestApp.getInstance().setActivity(activity);
         Assertions.assertNotNull(activity, "Expected an activity named " + name + " to exist in the project, but it does not.");
     }
 
     @When("I delete the activity named {string}")
     public void iDeleteTheActivityNamed(String name) {
         Project project = TestApp.getInstance().getProject();
-        project.deleteActivity(name);
-        TestApp.getInstance().setActivity(null);
+        try {
+            project.deleteActivity(name);
+            TestApp.getInstance().setActivity(null);
+        } catch (Exception e) {
+            errorMessage = "An error occurred while trying to delete the activity: " + e.getMessage();
+        }
     }
 
     @Then("the activity no longer exists in the project")
