@@ -17,7 +17,7 @@ public class OverallScheduleSteps {
     public void iAttemptToAccessOverviewOfAllEmployeeSchedules() {
         try {
             TestApp.getInstance().getApp().getActivityService()
-                    .findByProject(UUID.fromString(TestApp.getInstance().getProject().getProjectID()));
+                    .findByProject(TestApp.getInstance().getProject().getProjectID());
         } catch (Exception e) {
             exception = e;
         }
@@ -41,7 +41,7 @@ public class OverallScheduleSteps {
     public void iCanViewTheScheduleOfAllEmployees() {
         try {
             TestApp.getInstance().getApp().getActivityService()
-                    .findByProject(UUID.fromString(TestApp.getInstance().getProject().getProjectID()));
+                    .findByProject(TestApp.getInstance().getProject().getProjectID());
         } catch (Exception e) {
             Assertions.fail("Expected to be able to view the schedule of all employees, but an exception was thrown: " + e.getMessage());
         }

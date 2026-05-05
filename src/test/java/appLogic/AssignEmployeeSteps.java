@@ -28,7 +28,7 @@ public class AssignEmployeeSteps {
         }
         TestApp.getInstance().setProject(project);
 
-        UUID projectId = UUID.fromString(project.getProjectID());
+        String projectId = project.getProjectID();
         try {
             targetActivity = TestApp.getInstance().getApp().getActivityService().findByProjectAndName(projectId, activityName);
         } catch (ActivityNotFoundException e) {
@@ -115,7 +115,7 @@ public class AssignEmployeeSteps {
         Project project = TestApp.getInstance().getProject();
         assertNotNull(project, "No current project is set for this scenario. Add feature setup: a project ... with an activity ... exists");
 
-        UUID projectId = UUID.fromString(project.getProjectID());
+        String projectId = project.getProjectID();
         if (targetActivity == null || !targetActivity.getName().equals(activityName)) {
             targetActivity = TestApp.getInstance().getApp().getActivityService().findByProjectAndName(projectId, activityName);
         }

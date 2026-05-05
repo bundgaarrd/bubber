@@ -52,7 +52,7 @@ public class AppContext {
         }
 
         Activity activity = activityService.createWorkActivity(new CreateWorkActivity(
-                UUID.fromString(projectId),
+                projectId,
                 initials + "-" + description,
                 description,
                 summary,

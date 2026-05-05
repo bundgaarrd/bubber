@@ -128,7 +128,7 @@ public class RegisterTimeView {
                 return;
             }
             Activity activity = activityService.createWorkActivity(new CreateWorkActivity(
-                    UUID.fromString(contextProject.getProjectID()),
+                    contextProject.getProjectID(),
                     employee.getInitials() + "-" + activityDescField.getText(),
                     activityDescField.getText(),
                     activitySummaryField.getText(),

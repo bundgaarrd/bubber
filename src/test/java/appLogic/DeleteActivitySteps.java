@@ -22,11 +22,11 @@ public class DeleteActivitySteps {
         try {
             activity = TestApp.getInstance().getApp().getActivityService()
                     .createProjectActivity(new CreateProjectActivity(
-                            UUID.fromString(project.getProjectID()), name, "", "", LocalDate.now()
+                            project.getProjectID(), name, "", "", LocalDate.now()
                     ));
         } catch (DuplicateActivityException e) {
             activity = TestApp.getInstance().getApp().getActivityService().findByProjectAndName(
-                    UUID.fromString(project.getProjectID()), name
+                    project.getProjectID(), name
             );
         }
         TestApp.getInstance().setActivity(activity);
@@ -37,7 +37,7 @@ public class DeleteActivitySteps {
     public void iDeleteTheActivityNamed(String name) {
         var project = TestApp.getInstance().getProject();
         try {
-            TestApp.getInstance().getApp().getActivityService().deleteActivity(UUID.fromString(project.getProjectID()), name);
+            TestApp.getInstance().getApp().getActivityService().deleteActivity(project.getProjectID(), name);
             TestApp.getInstance().setActivity(null);
         } catch (Exception e) {
             errorMessage = "An error occurred while trying to delete the activity: " + e.getMessage();
@@ -53,7 +53,7 @@ public class DeleteActivitySteps {
     public void thereIsNoActivityNamedInThisProject(String name) {
         var project = TestApp.getInstance().getProject();
         try {
-            TestApp.getInstance().getApp().getActivityService().findByProjectAndName(UUID.fromString(project.getProjectID()), name);
+            TestApp.getInstance().getApp().getActivityService().findByProjectAndName(project.getProjectID(), name);
             Assertions.fail("There is already an activity named " + name + " in the project.");
         } catch (ActivityNotFoundException ignored) {
         }

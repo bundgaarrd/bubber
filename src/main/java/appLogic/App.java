@@ -47,14 +47,14 @@ public class App {
         Employee laha = new Employee("laha", "Lars Hansen", true);
         employeeRepository.save(laha);
 
-        Project KBHShop = new Project("KBHShop");
+        Project KBHShop = new Project("26001", "KBHShop");
         this.projectRegistry.register(KBHShop);
         KBHShop.assignProjectLeader(laha);
 
         Employee alla = new Employee("alla", "Allan Lassen", true);
         employeeRepository.save(alla);
 
-        Project DTU = new Project("DTU");
+        Project DTU = new Project("26002", "DTU");
         this.projectRegistry.register(DTU);
         DTU.assignProjectLeader(alla);
     }

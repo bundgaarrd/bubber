@@ -7,9 +7,11 @@ import java.util.Set;
 
 public final class ProjectRegistry {
     private final Set<Project> projects = new HashSet<>();
+    private final ProjectIdGenerator idGenerator = new ProjectIdGenerator();
 
     public Project createProject(String name) {
-        Project project = new Project(name);
+        String newId = idGenerator.generateId();
+        Project project = new Project(newId, name);
         register(project);
         return project;
     }
@@ -33,6 +35,7 @@ public final class ProjectRegistry {
      * Register a project in the registry, if a project with the same name already exists it throws an exception.
      * @param project project to register
      */
+
     public void register(Project project) {
         if(lookup(project.getProjectName()) != null) {
             throw new IllegalStateException("Project with the same name already exists.");

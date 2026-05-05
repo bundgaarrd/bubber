@@ -35,7 +35,7 @@ public class CreateActivitySteps {
         try {
             Activity activity = TestApp.getInstance().getApp().getActivityService()
                     .createProjectActivity(new CreateProjectActivity(
-                            UUID.fromString(project.getProjectID()),
+                            project.getProjectID(),
                             name,
                             "",
                             "",
@@ -52,7 +52,7 @@ public class CreateActivitySteps {
     public void theActivityNowExistsInTheProject() {
         Project project = TestApp.getInstance().getProject();
         Activity activity = TestApp.getInstance().getApp().getActivityService()
-                .findByProjectAndName(UUID.fromString(project.getProjectID()), TestApp.getInstance().getActivity().getName());
+                .findByProjectAndName(project.getProjectID(), TestApp.getInstance().getActivity().getName());
         Assertions.assertNotNull(activity);
     }
 
@@ -63,7 +63,7 @@ public class CreateActivitySteps {
         try {
             activity = TestApp.getInstance().getApp().getActivityService()
                     .createProjectActivity(new CreateProjectActivity(
-                            UUID.fromString(project.getProjectID()),
+                            project.getProjectID(),
                             name,
                             "",
                             "",
@@ -71,7 +71,7 @@ public class CreateActivitySteps {
                     ));
         } catch (DuplicateActivityException e) {
             activity = TestApp.getInstance().getApp().getActivityService().findByProjectAndName(
-                    UUID.fromString(project.getProjectID()), name
+                    project.getProjectID(), name
             );
         }
         TestApp.getInstance().setActivity(activity);
@@ -87,7 +87,7 @@ public class CreateActivitySteps {
         Project project = TestApp.getInstance().getProject();
         String name = TestApp.getInstance().getActivity().getName();
         long amount = TestApp.getInstance().getApp().getActivityService()
-                .findByProject(UUID.fromString(project.getProjectID()))
+                .findByProject(project.getProjectID())
                 .stream()
                 .filter(activity -> activity.getName().equals(name))
                 .count();
@@ -105,7 +105,7 @@ public class CreateActivitySteps {
         try {
             Activity activity = TestApp.getInstance().getApp().getActivityService()
                     .createProjectActivity(new CreateProjectActivity(
-                            UUID.fromString(project.getProjectID()),
+                            project.getProjectID(),
                             "Activity-" + System.nanoTime(),
                             "",
                             "",
