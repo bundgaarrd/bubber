@@ -144,7 +144,7 @@ public class RegisterWorkSteps {
 
     private void ensureActivityExistsInCurrentProject(String name) {
         Project project = requireCurrentProject();
-        UUID projectId = UUID.fromString(project.getProjectID());
+        String projectId = project.getProjectID();
 
         try {
             activity = TestApp.getInstance().getApp().getActivityService().findByProjectAndName(projectId, name);
@@ -186,7 +186,7 @@ public class RegisterWorkSteps {
         Project project = requireCurrentProject();
         Activity created = TestApp.getInstance().getApp().getActivityService().createFixedActivity(
                 new CreateFixedActivity(
-                        UUID.fromString(project.getProjectID()),
+                        project.getProjectID(),
                         name,
                         "",
                         "",

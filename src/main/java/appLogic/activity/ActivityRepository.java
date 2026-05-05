@@ -7,13 +7,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ActivityRepository {
-    void save(UUID projectId, Activity activity);
+    void save(String projectId, Activity activity);
 
     Optional<Activity> findById(UUID activityId);
 
-    Optional<Activity> findByProjectAndName(UUID projectId, String name);
+    Optional<Activity> findByProjectAndName(String projectId, String name);
 
-    List<Activity> findByProject(UUID projectId);
+    List<Activity> findByProject(String projectId);
 
     void delete(UUID activityId);
 }

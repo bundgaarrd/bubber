@@ -64,20 +64,20 @@ public class DefaultActivityService implements ActivityService {
     }
 
     @Override
-    public Activity findByProjectAndName(UUID projectId, String activityName) {
+    public Activity findByProjectAndName(String projectId, String activityName) {
         return activityRepository.findByProjectAndName(projectId, activityName)
                 .orElseThrow(() -> new ActivityNotFoundException("Activity not found."));
     }
 
     @Override
-    public List<Activity> findByProject(UUID projectId) {
+    public List<Activity> findByProject(String projectId) {
         Project project = requireProject(projectId);
         requireProjectLeader(project);
         return activityRepository.findByProject(projectId);
     }
 
     @Override
-    public void deleteActivity(UUID projectId, String activityName) {
+    public void deleteActivity(String projectId, String activityName) {
         Project project = requireProject(projectId);
         requireProjectLeader(project);
         Activity activity = findByProjectAndName(projectId, activityName);
@@ -109,14 +109,14 @@ public class DefaultActivityService implements ActivityService {
         return entry;
     }
 
-    private void ensureUniqueName(UUID projectId, String name) {
+    private void ensureUniqueName(String projectId, String name) {
         if (activityRepository.findByProjectAndName(projectId, name).isPresent()) {
             throw new DuplicateActivityException("Activity with the same name already exists in this project.");
         }
     }
 
-    private Project requireProject(UUID projectId) {
-        Project project = projectRegistry.getProjectById(projectId.toString());
+    private Project requireProject(String projectId) {
+        Project project = projectRegistry.getProjectById(projectId);
         if (project == null) {
             throw new IllegalStateException("Project not found.");
         }

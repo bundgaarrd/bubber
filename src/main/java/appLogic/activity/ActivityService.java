@@ -18,11 +18,11 @@ public interface ActivityService {
 
     Activity createFixedActivity(CreateFixedActivity command);
 
-    Activity findByProjectAndName(UUID projectId, String activityName);
+    Activity findByProjectAndName(String projectId, String activityName);
 
-    List<Activity> findByProject(UUID projectId);
+    List<Activity> findByProject(String projectId);
 
-    void deleteActivity(UUID projectId, String activityName);
+    void deleteActivity(String projectId, String activityName);
 
     void assignEmployee(UUID activityId, Employee employee);
 
