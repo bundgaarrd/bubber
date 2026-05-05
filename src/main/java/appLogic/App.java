@@ -17,6 +17,7 @@ public class App {
     private final EmployeeRepository employeeRepository;
     private final InMemoryTimeEntryRepository timeEntryRepository;
     private final ActivityService activityService;
+    private final ActivityRepository activityRepository;
     private Employee loggedInUser;
 
     public static void main(String[] args) { // Has to be run from mvn javafx:run
@@ -32,8 +33,9 @@ public class App {
         this.employeeRepository = new InMemoryEmployeeRepository();
         this.projectRegistry = new ProjectRegistry();
         this.timeEntryRepository = new InMemoryTimeEntryRepository();
+        this.activityRepository = new InMemoryActivityRepository();
         this.activityService = new DefaultActivityService(
-                new InMemoryActivityRepository(),
+                this.activityRepository,
                 this.projectRegistry,
                 this::getLoggedInUser,
                 this.timeEntryRepository
@@ -46,16 +48,13 @@ public class App {
         employeeRepository.save(new Employee("anda", "Annemette A. Damgaard", true));
         Employee laha = new Employee("laha", "Lars Hansen", true);
         employeeRepository.save(laha);
-
-        Project KBHShop = new Project("26001", "KBHShop");
-        this.projectRegistry.register(KBHShop);
-        KBHShop.assignProjectLeader(laha);
-
         Employee alla = new Employee("alla", "Allan Lassen", true);
         employeeRepository.save(alla);
 
-        Project DTU = new Project("26002", "DTU");
-        this.projectRegistry.register(DTU);
+        Project KBHShop = projectRegistry.createProject("KBHShop"); // generates 26001
+        KBHShop.assignProjectLeader(laha);
+
+        Project DTU = projectRegistry.createProject("DTU");         // generates 26002
         DTU.assignProjectLeader(alla);
     }
 
@@ -121,5 +120,29 @@ public class App {
 
     public void testMethod() {
         System.out.println("This is a testmethod from App.java\nThis means that the UI and app talks together");
+    }
+
+    public Report generateReport(String projectId) {
+        Project project = projectRegistry.getProjectById(projectId);
+        if (project == null) {
+            throw new IllegalArgumentException("Project not found: " + projectId);
+    }
+        List<Activity> activities = activityRepository.findByProject(projectId);
+        List<TimeEntry> allEntries = timeEntryRepository.findAll();
+
+        Set<Summary> summaries = new HashSet<>();
+        double totalHoursUsed = 0;
+
+        for (Activity activity : activities) {
+            double activityHours = allEntries.stream()
+                .filter(e -> e.getActivity().getId().equals(activity.getId()))
+                .mapToDouble(TimeEntry::getHoursWorked)
+                .sum();
+            totalHoursUsed += activityHours;
+            summaries.add(new Summary(activityHours, activity.getName()));
+        }
+
+        int remainingHours = Math.max(0, project.getExpectedHours() - (int) totalHoursUsed);
+        return new Report(totalHoursUsed, summaries, remainingHours);
     }
 }

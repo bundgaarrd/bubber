@@ -1,17 +1,17 @@
 package appLogic.project;
 
+import appLogic.Activity;
 import appLogic.Customer;
 import appLogic.Report;
 import appLogic.TimeEntry;
 import appLogic.employee.Employee;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
 public class Project {
-
-    private UUID projectUUID;
     private String projectID;
     private String projectName;
     private boolean hasCustomer;
@@ -19,7 +19,6 @@ public class Project {
     private boolean isCompleted = false;
     private Set<Customer> customerList;
     private int expectedHours;
-    private Report currentReport;
     private Set<TimeEntry> events;
     private Set<Employee> employees;
 
@@ -49,9 +48,6 @@ public class Project {
         if(empl != null) empl.addProjectAsLeader(this);
     }
 
-    public Report generateReport() {
-        return currentReport;
-    }
 
     public boolean assignEmployee(Employee empl) {
         boolean b;
@@ -84,5 +80,9 @@ public class Project {
     public String getProjectName() {
         return projectName;
     }
+
+    public int getExpectedHours() {
+    return expectedHours;
+}
 
 }
