@@ -20,19 +20,17 @@ public class MainView {
         root.setAlignment(Pos.CENTER);
 
         Button timeBtn = new Button("Register Time");
-        RegisterTimeView timeView = new RegisterTimeView(scene);
         Button logoutBtn = new Button("Log out");
         Button projectsBtn = new Button("Show projects view");
-
-        timeBtn.setOnAction(e -> scene.setRoot(timeView.getView()));
-
         Button employeeBtn = new Button("Create Employee");
-        CreateEmployeeView employeeView = new CreateEmployeeView(scene);
-        employeeBtn.setOnAction(e -> scene.setRoot(employeeView.getView()));
+
+        // ActionEvents
+        employeeBtn.setOnAction(e -> scene.setRoot(new CreateEmployeeView(scene).getView()));
         logoutBtn.setOnAction(e -> scene.setRoot(new LoginView(scene).getView()));
         projectsBtn.setOnAction(e -> scene.setRoot(new ChooseProjectView(scene).getView()));
+        timeBtn.setOnAction(e -> scene.setRoot(new RegisterTimeView(scene).getView()));
 
-        root.getChildren().addAll(timeBtn, employeeBtn,logoutBtn, projectsBtn);
+        root.getChildren().addAll(projectsBtn, employeeBtn, timeBtn, logoutBtn);
 
         return root;
     }

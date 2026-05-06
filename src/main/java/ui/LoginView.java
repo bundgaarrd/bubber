@@ -34,6 +34,7 @@ public class LoginView {
         initialsField.setPromptText("e.g. huba");
         initialsField.setMaxWidth(150);
         Button loginBtn = new Button("Login");
+        Button quitBtn = new Button("Quit");
 
         loginBtn.setOnAction(e -> {
             String initials = initialsField.getText().trim();
@@ -49,7 +50,11 @@ public class LoginView {
             }
         });
 
-        root.getChildren().addAll(label, initialsField, loginBtn, errorLabel);
+        quitBtn.setOnAction(e -> {
+            javafx.application.Platform.exit();
+        });
+
+        root.getChildren().addAll(label, initialsField, loginBtn, errorLabel, quitBtn);
 
         return root;
     }
