@@ -1,5 +1,6 @@
 package appLogic.employee;
 
+import java.util.Map;
 import java.util.Set;
 
 public interface EmployeeRepository {
@@ -7,4 +8,5 @@ public interface EmployeeRepository {
     Set<Employee> findAll();
     void save(Employee empl);
     void loadFromFile(String path);
+    Map<String, Employee> getEmployees();
 }

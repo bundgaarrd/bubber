@@ -68,8 +68,9 @@ public class RegisterTimeView {
         Button addButton = new Button("Register Time");
         form.add(addButton, 1, 4);
 
-        Button bacKButton = new Button("Back");
-        form.add(bacKButton, 1, 5);
+        form.add(new Label("Double click on a time entry to update details"),2,0);
+        Button backButton = new Button("Back");
+        form.add(backButton, 1, 5);
 
         root.setTop(form);
 
@@ -143,7 +144,7 @@ public class RegisterTimeView {
             System.out.println("Time entry saved");
         });
 
-        bacKButton.setOnAction(e -> {
+        backButton.setOnAction(e -> {
             ChooseProjectView projectView = new ChooseProjectView(scene);
             scene.setRoot(projectView.getView());
         });
