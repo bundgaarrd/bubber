@@ -38,7 +38,6 @@ public class LoginView {
         loginBtn.setOnAction(e -> {
             String initials = initialsField.getText().trim();
 
-            // TODO: Mangler at lave et reelt opslag på om brugeren findes. -> Artur?
             try {
                 app.login(initials);
                 System.out.println("User " + initials + " logged in!");

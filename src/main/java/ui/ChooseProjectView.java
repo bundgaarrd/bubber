@@ -28,12 +28,21 @@ public class ChooseProjectView {
         BorderPane root = new BorderPane();
         GridPane grid = new GridPane();
 
+        Button backBtn = new Button("Back");
+
         grid.setPadding(new Insets(15));
         grid.setHgap(10);
         grid.setVgap(10);
+        root.setCenter(grid);
+
+        backBtn.setOnAction(e -> {
+            MainView mainView = new MainView(scene);
+            scene.setRoot(mainView.getView());
+        });
 
         grid.add(new Label("This is a test label"),0,0);
-        root.setCenter(grid);
+        grid.add(backBtn, 1, 0);
+
         return root;
     }
 

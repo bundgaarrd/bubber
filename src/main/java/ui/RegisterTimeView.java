@@ -69,6 +69,9 @@ public class RegisterTimeView {
         Button addButton = new Button("Register Time");
         form.add(addButton, 1, 4);
 
+        Button bacKButton = new Button("Back");
+        form.add(bacKButton, 1, 5);
+
         root.setTop(form);
 
         TableView<TimeEntry> table = new TableView<>();
@@ -139,6 +142,11 @@ public class RegisterTimeView {
             tableData.add(entry);
 
             System.out.println("Time entry saved");
+        });
+
+        bacKButton.setOnAction(e -> {
+            MainView mainView = new MainView(scene);
+            scene.setRoot(mainView.getView());
         });
 
         return root;
