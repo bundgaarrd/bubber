@@ -19,18 +19,16 @@ public class MainView {
         VBox root = new VBox(15);
         root.setAlignment(Pos.CENTER);
 
-        Button timeBtn = new Button("Register Time");
         Button logoutBtn = new Button("Log out");
-        Button projectsBtn = new Button("Show projects view");
+        Button projectsBtn = new Button("Show projects");
         Button employeeBtn = new Button("Create Employee");
 
         // ActionEvents
         employeeBtn.setOnAction(e -> scene.setRoot(new CreateEmployeeView(scene).getView()));
         logoutBtn.setOnAction(e -> scene.setRoot(new LoginView(scene).getView()));
         projectsBtn.setOnAction(e -> scene.setRoot(new ChooseProjectView(scene).getView()));
-        timeBtn.setOnAction(e -> scene.setRoot(new RegisterTimeView(scene).getView()));
 
-        root.getChildren().addAll(projectsBtn, employeeBtn, timeBtn, logoutBtn);
+        root.getChildren().addAll(projectsBtn, employeeBtn, logoutBtn);
 
         return root;
     }

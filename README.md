@@ -8,9 +8,8 @@ To run this application, do the following steps:
 There are different ways to do this depending on which git server you use.
 
 #### Github
-Unfortunately, this repository is private. You have to be a collaborator and use ssh for cloning
 ```bash
-git clone git@github.com:bundgaarrd/SoftwareHuset.git
+git clone https://github.com/bundgaarrd/SoftwareHuset.git
 ```
 
 #### Gitlab

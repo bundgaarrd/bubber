@@ -1,4 +1,4 @@
-package ui; //s244813
+package ui; //s244813 & s244970
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,13 +18,12 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
+import javafx.stage.Modality;
+import javafx.scene.layout.VBox;
 
 public class RegisterTimeView {
 
@@ -145,8 +144,25 @@ public class RegisterTimeView {
         });
 
         bacKButton.setOnAction(e -> {
-            MainView mainView = new MainView(scene);
-            scene.setRoot(mainView.getView());
+            ChooseProjectView projectView = new ChooseProjectView(scene);
+            scene.setRoot(projectView.getView());
+        });
+
+        // When an entry is double clicked in the table
+        table.setOnMouseClicked(e -> {
+            TimeEntry selected = table.getSelectionModel().getSelectedItem();
+
+            if (e.getClickCount() == 2) {
+                if (selected != null) {
+                    Stage popupStage = new Stage();
+                    popupStage.initModality(Modality.APPLICATION_MODAL);
+                    popupStage.setTitle("Edit time entry");
+                    EditTimeEntryView editView = new EditTimeEntryView(selected);
+                    Scene popupScene = new Scene(editView.getView(), 400, 300);
+                    popupStage.setScene(popupScene);
+                    popupStage.showAndWait();
+                }
+            }
         });
 
         return root;
