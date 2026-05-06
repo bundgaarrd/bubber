@@ -82,7 +82,7 @@ public class Project {
     }
 
     public int getExpectedHours() {
-    return expectedHours;
-}
+        return expectedHours;
+    }
 
 }

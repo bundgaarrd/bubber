@@ -3,12 +3,12 @@ package ui;
 import appLogic.App;
 import appLogic.employee.EmployeeRepository;
 import appLogic.project.Project;
+import javafx.beans.binding.StringExpression;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
 
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -50,22 +50,30 @@ public class ChooseProjectView {
         idCol.setCellValueFactory(data ->
                 new javafx.beans.property.SimpleStringProperty(data.getValue().getProjectID()));
 
-        tableData.getColumns().addAll(nameCol, idCol);
+        TableColumn<Project, String> hourCol = new TableColumn<>("Expected hours");
+        hourCol.setCellValueFactory(data ->
+                // cumbersome
+                new javafx.beans.property.SimpleStringProperty(String.valueOf(data.getValue().getExpectedHours())));
+
+        tableData.getColumns().addAll(nameCol, idCol, hourCol);
 
         projectData.addAll(app.getProjectRegistry().getAllProjects());
 
         //-----End tables
 
-        // -----Begin buttons------
+        // -----Begin buttons and labels------
+        Label message = new Label("Double click on a project to edit details");
+        grid.add(message,1,0);
+
         Button backBtn = new Button("Back");
-        grid.add(backBtn, 1, 0);
+        grid.add(backBtn, 2, 0);
 
         Button addProjectBtn = new Button("Add project");
-        grid.add(addProjectBtn,2,0);
+        grid.add(addProjectBtn,3,0);
 
         // -----End buttons------
 
-        // -----Begin ActionEvents for interactive elements-----
+        // -----Begin Events for interactive elements-----
         backBtn.setOnAction(e -> {
             MainView mainView = new MainView(scene);
             scene.setRoot(mainView.getView());
@@ -84,7 +92,22 @@ public class ChooseProjectView {
                 }
             });
         });
-        // -----End ActionEvents for interactive elements-----
+
+        tableData.setOnMouseClicked(e -> {
+            Project selected = tableData.getSelectionModel().getSelectedItem();
+            if (selected != null) {
+                // Gør noget med selected
+//                System.out.println("Clicked: " + selected.getProjectName());
+            }
+
+            if (e.getClickCount() == 2) {
+                if (selected != null) {
+                    RegisterTimeView timeView = new RegisterTimeView(scene);
+                    scene.setRoot(timeView.getView());
+                }
+            }
+        });
+        // -----End Events for interactive elements-----
 
         // Layout adjustments
         root.setTop(grid);
