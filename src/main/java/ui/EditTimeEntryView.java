@@ -1,4 +1,4 @@
-package ui;
+package ui; // s244970
 
 import appLogic.App;
 import appLogic.TimeEntry;
@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public class EditTimeEntryView {
     private final TimeEntry timeEntry;
@@ -45,10 +46,16 @@ public class EditTimeEntryView {
         Button addButton = new Button("Register Time");
         grid.add(addButton, 1, 4);
 
-        Button bacKButton = new Button("Back");
-        grid.add(bacKButton, 1, 5);
+        Button closeWindow = new Button("OK");
+        grid.add(closeWindow, 1, 5);
         
         root.setCenter(grid);
+
+        // Events
+        closeWindow.setOnAction(e -> {
+            Stage stage = (Stage) closeWindow.getScene().getWindow();
+            stage.close();
+        });
 
         return root;
     }
