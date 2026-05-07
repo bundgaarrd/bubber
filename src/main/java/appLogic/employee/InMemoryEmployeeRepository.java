@@ -26,4 +26,9 @@ public class InMemoryEmployeeRepository implements EmployeeRepository {
     public void loadFromFile(String path) {
         System.out.println("Loading employees from file: " + path);
     }
+
+    @Override
+    public Map<String, Employee> getEmployees() {
+        return employees;
+    }
 }

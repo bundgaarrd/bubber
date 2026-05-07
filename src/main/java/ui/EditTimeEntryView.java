@@ -2,6 +2,7 @@ package ui; // s244970
 
 import appLogic.App;
 import appLogic.TimeEntry;
+import appLogic.employee.Employee;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -9,6 +10,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.util.List;
 
 public class EditTimeEntryView {
     private final TimeEntry timeEntry;
@@ -48,8 +51,17 @@ public class EditTimeEntryView {
 
         Button closeWindow = new Button("OK");
         grid.add(closeWindow, 1, 5);
-        
-        root.setCenter(grid);
+
+        Label availableEmployeesLabel = new Label("Available employees");
+        grid.add(availableEmployeesLabel,2,0);
+
+        ListView<String> availableEmployees = new ListView<>();
+        grid.add(availableEmployees,2,1);
+
+        List<Employee> employees= app.getAvailableEmployees();
+        for (Employee emp : employees) {
+            availableEmployees.getItems().add(emp.getName());
+        }
 
         // Events
         closeWindow.setOnAction(e -> {
@@ -57,6 +69,7 @@ public class EditTimeEntryView {
             stage.close();
         });
 
+        root.setCenter(grid);
         return root;
     }
 }

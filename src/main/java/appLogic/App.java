@@ -71,10 +71,17 @@ public class App {
         instance = null;
     }
 
-    public List<Employee> getAvailableEmployees(int week, int year) {
-        return null; // placeholder 
-        // Hvordan skal det laves?
-        // Hvornår er en employee "available"? Under hvilket antal timer på activities?
+    public List<Employee> getAvailableEmployees() {
+        Map<String, Employee> employeeMap = employeeRepository.getEmployees();
+        List<Employee> returnList = new ArrayList<>();
+
+        for (Employee emp : employeeMap.values()) {
+
+            if (emp.isAvailable()) {
+                returnList.add(emp);
+            }
+        }
+        return returnList;
     }
 
     public void importEmployeesFromFile(String path) {
