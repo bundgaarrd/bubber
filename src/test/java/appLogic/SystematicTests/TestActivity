@@ -1,0 +1,88 @@
+package appLogic.systematicTests;
+
+import appLogic.project.ProjectActivity;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class ProjectActivityTest {
+
+    @Test
+    void isOverlapWeek_yearBeforeStartYear_returnsFalse() {
+        ProjectActivity a = makeActivity(10, 2025, 20, 2026);
+        assertFalse(a.isOverlapWeek(15, 2024));
+    }
+
+    @Test
+    void isOverlapWeek_yearAfterEndYear_returnsFalse() {
+        ProjectActivity a = makeActivity(10, 2025, 20, 2026);
+        assertFalse(a.isOverlapWeek(15, 2027));
+    }
+
+    @Test
+    void isOverlapWeek_sameYearWithinRange_returnsTrue() {
+        ProjectActivity a = makeActivity(10, 2026, 20, 2026);
+        assertTrue(a.isOverlapWeek(15, 2026));
+    }
+
+    @Test
+    void isOverlapWeek_sameYearBeforeStart_returnsFalse() {
+        ProjectActivity a = makeActivity(10, 2026, 20, 2026);
+        assertFalse(a.isOverlapWeek(5, 2026));
+    }
+
+    @Test
+    void isOverlapWeek_sameYearAfterEnd_returnsFalse() {
+        ProjectActivity a = makeActivity(10, 2026, 20, 2026);
+        assertFalse(a.isOverlapWeek(25, 2026));
+    }
+
+    @Test
+    void isOverlapWeek_startYearAfterStartWeek_returnsTrue() {
+        ProjectActivity a = makeActivity(10, 2025, 20, 2026);
+        assertTrue(a.isOverlapWeek(15, 2025));
+    }
+
+    @Test
+    void isOverlapWeek_startYearBeforeStartWeek_returnsFalse() {
+        ProjectActivity a = makeActivity(10, 2025, 20, 2026);
+        assertFalse(a.isOverlapWeek(5, 2025));
+    }
+
+    @Test
+    void isOverlapWeek_endYearBeforeEndWeek_returnsTrue() {
+        ProjectActivity a = makeActivity(10, 2025, 20, 2026);
+        assertTrue(a.isOverlapWeek(15, 2026));
+    }
+
+    @Test
+    void isOverlapWeek_endYearAfterEndWeek_returnsFalse() {
+        ProjectActivity a = makeActivity(10, 2025, 20, 2026);
+        assertFalse(a.isOverlapWeek(25, 2026));
+    }
+
+    @Test
+    void isOverlapWeek_middleYear_returnsTrue() {
+        ProjectActivity a = makeActivity(10, 2024, 20, 2026);
+        assertTrue(a.isOverlapWeek(30, 2025)); // year in between
+    }
+
+    // Helper using reflection to set private fields
+    private ProjectActivity makeActivity(int startWeek, int startYear, int endWeek, int endYear) {
+        ProjectActivity a = new ProjectActivity("test");
+        try {
+            setField(a, "startWeek", startWeek);
+            setField(a, "startYear", startYear);
+            setField(a, "endWeek", endWeek);
+            setField(a, "endYear", endYear);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return a;
+    }
+
+    private void setField(Object obj, String name, int value) throws Exception {
+        var field = obj.getClass().getDeclaredField(name);
+        field.setAccessible(true);
+        field.set(obj, value);
+    }
+}
