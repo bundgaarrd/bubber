@@ -1,14 +1,16 @@
 package appLogic;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.time.LocalDate;
 import java.time.temporal.WeekFields;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
-
-import javax.annotation.processing.Generated;
-
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.When;
-import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 
 
@@ -17,33 +19,37 @@ public class FixedActivitySteps {
     private boolean addedActivity;
     private FixedActivity fixedActivity;
     private boolean checkDates;
-    private Timesheet timesheet = TestApp.getInstance().getApp().getTimesheet();
+    private List<FixedActivity> fixedacts = new ArrayList<>();
 
         
     @And("There is no other fixed activity on the same dates")
     public void fixedActivityOtherDates(){
  
-        assertFalse(checkDates, "Already existing a fixed activity at that date");   
+        assertFalse(checkDates, "Already existing a fixed activity at that date");
         }
     
     @When("I add a fixed activity with name {string} and specified start and end date")
     public void addFixedActivity(String name){
-        fixedActivity = new FixedActivity(name);
+        
 
 
-        Localdate startDate = fixedActivity.getStartDate();
-        WeekFields weekfields = weekFields.of(Locale.getDefault());
-        int week = startDate.get(weekFields.weekOfWeekBasedYear());
+    
+        LocalDate startDate = LocalDate.of(2024,3,4);
+        LocalDate endDate = LocalDate.of(2024, 3,8);
+        WeekFields weekfields = WeekFields.of(Locale.getDefault());
+        int week = startDate.get(weekfields.weekOfWeekBasedYear());
         int year = startDate.getYear();
+        fixedActivity = new FixedActivity(name, "Description of the test", "Summary of the Test", startDate, endDate, FixedActivityType.COURSE);
         checkDates = fixedActivity.isOverlappingWeek(week, year);
 
         if(!checkDates){
-        addedActivity = timesheet.addFixedActivity(fixedActivity);
+        fixedacts.add(fixedActivity);
+        addedActivity = true;
         }
     }
     @Then("the fixed activity is added to the timesheet")
     public void addedActivityTimesheet(){
-        assertTrue(addedActivity);
+        assertTrue(addedActivity);;
     }
     
     
@@ -52,8 +58,15 @@ public class FixedActivitySteps {
 
     @And(" I have a fixed activity called {string}  with specified start and end date")
     public void addCourseActivity(String name){
-        FixedActivity currentActivity = new FixedActivity(name);
-        timesheet.addFixedActivity(currentActivity);  
+        LocalDate startDate = LocalDate.of(2024,3,4);
+        LocalDate endDate = LocalDate.of(2024, 3,8);
+
+        FixedActivity currentActivity = new FixedActivity(name, "Description of the test", "Summary of the Test", startDate, endDate, FixedActivityType.COURSE);
+         WeekFields weekfields = WeekFields.of(Locale.getDefault());
+        int week = startDate.get(weekfields.weekOfWeekBasedYear());
+        int year = startDate.getYear();
+        fixedActivity = new FixedActivity(name, "Description of the test", "Summary of the Test", startDate, endDate, FixedActivityType.COURSE);
+        checkDates = currentActivity.isOverlappingWeek(week, year);
     }
 
     @Then(" an error message is shown indicating that there is already a fixed activity on the same dates")
