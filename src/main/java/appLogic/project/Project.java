@@ -70,7 +70,7 @@ public class Project {
     }
 
     public Set<Customer> getCustomers() {
-        return null;
+        return customerList;
     }
 
     public String getProjectID() {
