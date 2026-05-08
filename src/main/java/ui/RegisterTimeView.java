@@ -225,7 +225,7 @@ public class RegisterTimeView {
                 employee.getInitials() + "-" + descField.getText(),
                 descField.getText(),
                 summaryField.getText(),
-                startWeek, endWeek, startYear, endYear
+                startWeek, endWeek, startYear, endYear, 5
             ));
 
             TimeEntry entry = activityService.registerWork(

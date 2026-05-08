@@ -86,11 +86,8 @@ public abstract class Activity {
         return endYear;
     }
 
-    public int getDuration() {
-        return 0;
-    }
-
-    public int getHoursExpected() {
-        return 0;
+    public int getDuration() { //TODO Add to UI
+        int totalWeeks = (endYear - startYear) * 52 + (endWeek - startWeek) + 1;
+        return Math.max(totalWeeks, 0);
     }
 }
