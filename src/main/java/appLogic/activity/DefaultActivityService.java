@@ -18,6 +18,8 @@ import appLogic.project.Project;
 import appLogic.project.ProjectRegistry;
 
 import java.time.LocalDateTime;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,7 +49,7 @@ public class DefaultActivityService implements ActivityService {
         requireProjectLeader(project);
         ensureUniqueName(command.projectId(), command.name());
         Activity activity = new WorkActivity(command.name(), command.description(), command.summary(),
-                command.startDate(), command.endDate(), command.expectedHours());
+                command.startDate(), command.endDate(), command.expectedHours(), command.projectId());
         activityRepository.save(command.projectId(), activity);
         return activity;
     }
@@ -58,7 +60,7 @@ public class DefaultActivityService implements ActivityService {
         ensureUniqueName(command.projectId(), command.name());
         Activity activity = new WorkActivity(
                 command.name(), command.description(), command.summary(),
-                command.startDate(), command.endDate(), command.expectedHours()
+                command.startDate(), command.endDate(), command.expectedHours(), command.projectId()
         );
         activityRepository.save(command.projectId(), activity);
         return activity;
@@ -69,7 +71,7 @@ public class DefaultActivityService implements ActivityService {
         requireProject(command.projectId());
         ensureUniqueName(command.projectId(), command.name());
         Activity activity = new FixedActivity(command.name(), command.description(), command.summary(),
-                command.startDate(), command.endDate(), command.type());
+                command.startDate(), command.endDate(), command.type(), command.projectId());
         activityRepository.save(command.projectId(), activity);
         return activity;
     }
@@ -153,7 +155,6 @@ public class DefaultActivityService implements ActivityService {
                               double hours) {
 
         Employee emp = employeeRepository.findByInitials(initials);
-
         if (emp == null) {
             throw new IllegalArgumentException("No such employee when saving time entry");
         }

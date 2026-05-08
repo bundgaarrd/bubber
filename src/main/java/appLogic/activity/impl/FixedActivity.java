@@ -12,7 +12,7 @@ public class FixedActivity extends Activity {
 
     public FixedActivity(String name, String description, String summary,
                          LocalDateTime startDate, LocalDateTime endDate,
-                         FixedActivityType type) {
+                         FixedActivityType type, String projectId) {
         super(name, description, summary, startDate, endDate, null);
         this.startDate = startDate;
         this.endDate = endDate;

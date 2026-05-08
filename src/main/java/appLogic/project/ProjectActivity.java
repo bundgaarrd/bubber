@@ -16,12 +16,12 @@ public class ProjectActivity extends Activity {
     private int endYear;
 
     public ProjectActivity(String name) {
-        this(name, "", "", LocalDateTime.now(), LocalDateTime.now().plusDays(7));
+        this(name, "", "", LocalDateTime.now(), LocalDateTime.now().plusDays(7), null);
     }
 
     public ProjectActivity(String name, String description, String summary,
-                           LocalDateTime startDate, LocalDateTime endDate) {
-        super(name, description, summary, startDate, endDate, null);
+                           LocalDateTime startDate, LocalDateTime endDate, String projectId) {
+        super(name, description, summary, startDate, endDate, projectId);
     }
 
     public ActivityStatus getStatus() {
@@ -33,24 +33,11 @@ public class ProjectActivity extends Activity {
     }
 
     public boolean isOverlapWeek(int week, int year) {
-        
-        if (year < startYear || year > endYear) {
-            return false;
-        }
-
-        if (startYear == endYear) {
-            return week >= startWeek && week <= endWeek;
-        }
-
-        if (year == startYear) {
-            return week >= startWeek;
-        }
-
-        if (year == endYear) {
-            return week <= endWeek;
-        }
-
-        return true; 
+        if (year < startYear || year > endYear) return false;
+        if (startYear == endYear) return week >= startWeek && week <= endWeek;
+        if (year == startYear) return week >= startWeek;
+        if (year == endYear) return week <= endWeek;
+        return true;
     }
 }
 

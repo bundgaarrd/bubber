@@ -172,7 +172,7 @@ public class ChooseProjectView {
             Project selected = tableData.getSelectionModel().getSelectedItem();
 
             if (e.getClickCount() == 2 && selected != null) {
-                RegisterTimeView timeView = new RegisterTimeView(scene, selected); // pass project
+                RegisterActivityTimeView timeView = new RegisterActivityTimeView(scene, selected); // pass project
                 scene.setRoot(timeView.getView());
                 }
 });
