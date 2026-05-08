@@ -6,24 +6,19 @@ import appLogic.employee.Employee;
 import appLogic.employee.EmployeeRepository;
 import appLogic.project.Project;
 import appLogic.project.ProjectRegistry;
-import javafx.beans.binding.StringExpression;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.scene.layout.VBox;
+import javafx.event.ActionEvent;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-
-import javafx.scene.layout.VBox;
 
 public class ChooseProjectView {
 
@@ -101,8 +96,14 @@ public class ChooseProjectView {
             dialog.setHeaderText(null);
             dialog.getDialogPane().setMinWidth(300);
 
+            Label errorLabel = new Label("Error adding project");
+            errorLabel.setVisible(false);
+
             TextField nameField = new TextField();
             nameField.setPromptText("Project name");
+
+            TextField expectedHoursField = new TextField();
+            expectedHoursField.setPromptText("Expected hours (e.g. 40.5)");
 
             // Get employee names as a string
             List<String> allEmployees = new ArrayList<>();
@@ -116,19 +117,45 @@ public class ChooseProjectView {
 
             VBox content = new VBox(20,
                     new Label("Project name:"), nameField,
-                    new Label("Choose project leader:"), projectLeaderChoice
+                    new Label("Expected hours:"), expectedHoursField,
+                    new Label("Choose project leader:"), projectLeaderChoice,
+                    errorLabel
             );
             dialog.getDialogPane().setContent(content);
             dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
+            // Added input validation fields in createproject dialog
+            Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+            okButton.addEventFilter(ActionEvent.ACTION, event -> {
+                boolean hasError = false;
+
+                if (nameField.getText().isBlank()) {
+                    errorLabel.setText("Project name cannot be empty.");
+                    hasError = true;
+                } else {
+                    try {
+                        Double.parseDouble(expectedHoursField.getText().replace(",", "."));
+                    } catch (NumberFormatException ex) {
+                        errorLabel.setText("Expected hours must be a valid number.");
+                        hasError = true;
+                    }
+                }
+
+                if (hasError) {
+                    errorLabel.setVisible(true);
+                    event.consume();
+                }
+            });
+
             dialog.showAndWait().ifPresent(result -> {
-                if (result == ButtonType.OK && !nameField.getText().isBlank()) {
+                if (result == ButtonType.OK) {
                     ProjectRegistry projectRegistry = appContext.getProjectRegistry();
                     Project project = projectRegistry.createProject(nameField.getText());
                     EmployeeRepository employeeRepository = appContext.getEmployeeRepository();
                     String projectLeaderString = projectLeaderChoice.getValue();
-
+                    double expectedHours = Double.parseDouble(expectedHoursField.getText().replace(",", "."));
                     project.assignProjectLeader(employeeRepository.findByName(projectLeaderString));
+                    project.setExpectedHours(expectedHours);
                     projectData.add(project);
                 }
             });

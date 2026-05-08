@@ -5,3 +5,4 @@ jool, John Olsen, true
 tux, Toby Uxillary, false
 laha, Lars Hansen, true
 alla, Gud, true
+fede, Fede Foster, true

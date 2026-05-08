@@ -46,7 +46,7 @@ public class ReportService {
             summaries.add(new Summary(activityHours, activity.getName()));
         }
 
-        int remainingHours = Math.max(0, project.getExpectedHours() - (int) totalHoursUsed);
+        double remainingHours = Math.max(0, project.getExpectedHours() - totalHoursUsed);
         return new Report(totalHoursUsed, summaries, remainingHours);
     }
 }
