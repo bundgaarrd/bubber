@@ -1,17 +1,14 @@
 package ui; //s244813 & s244970
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.UUID;
-
 import appLogic.Activity;
+import appLogic.App;
 import appLogic.AppContext;
-import appLogic.employee.Employee;
-import appLogic.employee.EmployeeRepository;
-import appLogic.employee.InMemoryTimeEntryRepository;
 import appLogic.TimeEntry;
 import appLogic.activity.ActivityService;
 import appLogic.activity.command.CreateWorkActivity;
+import appLogic.employee.Employee;
+import appLogic.employee.EmployeeRepository;
+import appLogic.employee.InMemoryTimeEntryRepository;
 import appLogic.project.Project;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,21 +18,29 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 import javafx.stage.Modality;
-import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class RegisterTimeView {
 
     private final Scene scene;
-    private final EmployeeRepository employeeRepository = AppContext.employeeRepository;
-    private final InMemoryTimeEntryRepository timeEntryRepository = AppContext.timeEntryRepository;
-    private final ActivityService activityService = AppContext.activityService;
+    private final EmployeeRepository employeeRepository;
+    private final InMemoryTimeEntryRepository timeEntryRepository;
+    private final ActivityService activityService;
 
     private final ObservableList<TimeEntry> tableData = FXCollections.observableArrayList();
 
     public RegisterTimeView(Scene scene) {
         this.scene = scene;
+
+        AppContext appContext = App.getInstance().getAppContext();
+        this.employeeRepository = appContext.getEmployeeRepository();
+        this.activityService = appContext.getActivityService();
+        this.timeEntryRepository = appContext.getTimeEntryRepository();
+
         tableData.addAll(timeEntryRepository.findAll());
     }
 
@@ -125,7 +130,8 @@ public class RegisterTimeView {
                 return;
             }
 
-            Project contextProject = AppContext.projectRegistry.getProjectByName("AppContext");
+            AppContext appContext = App.getInstance().getAppContext();
+            Project contextProject = appContext.getProjectRegistry().getProjectByName("AppContext");
             if (contextProject == null) {
                 System.out.println("Project not found");
                 return;
@@ -153,16 +159,12 @@ public class RegisterTimeView {
         table.setOnMouseClicked(e -> {
             TimeEntry selected = table.getSelectionModel().getSelectedItem();
 
-            if (e.getClickCount() == 2) {
-                if (selected != null) {
-                    Stage popupStage = new Stage();
-                    popupStage.initModality(Modality.APPLICATION_MODAL);
-                    popupStage.setTitle("Edit time entry");
-                    EditTimeEntryView editView = new EditTimeEntryView(selected);
-                    Scene popupScene = new Scene(editView.getView(), 400, 300);
-                    popupStage.setScene(popupScene);
-                    popupStage.showAndWait();
-                }
+            if (e.getClickCount() == 2 && selected != null) {
+                Dialog<ButtonType> dialog = new Dialog<>();
+                dialog.setTitle("Edit time entry");
+                dialog.getDialogPane().setContent(new EditTimeEntryView(selected).getView());
+                dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+                dialog.showAndWait();
             }
         });
 

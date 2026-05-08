@@ -1,5 +1,6 @@
-package ui; 
+package ui;
 
+import appLogic.App;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -10,9 +11,11 @@ import javafx.scene.layout.VBox;
 public class MainView {
 
     private Scene scene;
+    private App app;
 
     public MainView(Scene scene) {
         this.scene = scene;
+        this.app = App.getInstance();
     }
 
     public Parent getView() {
@@ -22,7 +25,7 @@ public class MainView {
         Button logoutBtn = new Button("Log out");
         Button projectsBtn = new Button("Show projects");
         Button employeeBtn = new Button("Create Employee");
-        Label loggedInUser = new Label("Logged in as <user>" );
+        Label loggedInUser = new Label("Logged in as " + app.getLoggedInUser().getName());
 
         // ActionEvents
         employeeBtn.setOnAction(e -> scene.setRoot(new CreateEmployeeView(scene).getView()));

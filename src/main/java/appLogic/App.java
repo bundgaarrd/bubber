@@ -1,19 +1,20 @@
 package appLogic;
 
+import appLogic.activity.ActivityService;
 import appLogic.employee.Employee;
 import appLogic.employee.EmployeeRepository;
-import appLogic.employee.InMemoryEmployeeRepository;
 import appLogic.employee.InMemoryTimeEntryRepository;
-import appLogic.activity.*;
 import appLogic.project.Project;
 import appLogic.project.ProjectRegistry;
 import appLogic.report.Report;
 import appLogic.report.ReportService;
+import appLogic.activity.ActivityRepository;
 
 import java.util.*;
 
 public class App {
     private static App instance;
+    private AppContext appContext;
 
     private final ProjectRegistry projectRegistry;
     private final EmployeeRepository employeeRepository;
@@ -28,10 +29,6 @@ public class App {
         instance = getInstance();
     }
 
-    private void run() {
-
-    }
-
     private App() {
         this.employeeRepository = new InMemoryEmployeeRepository();
         this.projectRegistry = new ProjectRegistry();
@@ -43,6 +40,7 @@ public class App {
                 this::getLoggedInUser,
                 this.timeEntryRepository
         );
+
         this.reportService = new ReportService(
                 this.projectRegistry,
                 this.activityRepository,
@@ -64,14 +62,14 @@ public class App {
 
         Project DTU = projectRegistry.createProject("DTU");         // generates 26002
         DTU.assignProjectLeader(alla);
+        appContext = AppContext.initialize();
     }
 
     public static App getInstance() {
         if(instance == null) {
             instance = new App();
-            instance.initializeUsers();
-            instance.run();
         }
+
         return instance;
     }
 
@@ -80,7 +78,7 @@ public class App {
     }
 
     public List<Employee> getAvailableEmployees() {
-        Map<String, Employee> employeeMap = employeeRepository.getEmployees();
+        Map<String, Employee> employeeMap = appContext.getEmployeeRepository().getEmployees();
         List<Employee> returnList = new ArrayList<>();
 
         for (Employee emp : employeeMap.values()) {
@@ -92,41 +90,33 @@ public class App {
         return returnList;
     }
 
-    public void importEmployeesFromFile(String path) {
+    public AppContext getAppContext() {
+        return appContext;
     }
 
     public void login(String initials) {
-        if (initials == null || initials.length() > 4) {
-            throw new IllegalArgumentException("Initials must be 1-4 characters");
-        }
-
-        Employee emp = employeeRepository.findByInitials(initials);
-        if (emp == null) {
-            throw new IllegalStateException("Employee not found");
-        }
-
-        this.loggedInUser = emp;
+        appContext.login(initials);
     }
 
     public EmployeeRepository getEmployeeRepository() {
-        return employeeRepository;
+        return appContext.getEmployeeRepository();
     }
 
     // Check login
     public boolean isUserLoggedIn() {
-        return loggedInUser != null;
+        return appContext.getLoggedInUser() != null;
     }
 
     public Employee getLoggedInUser() {
-        return loggedInUser;
+        return appContext.getLoggedInUser();
     }
 
     public ProjectRegistry getProjectRegistry() {
-        return projectRegistry;
+        return appContext.getProjectRegistry();
     }
 
     public ActivityService getActivityService() {
-        return activityService;
+        return appContext.getActivityService();
     }
 
     public InMemoryTimeEntryRepository getTimeEntryRepository() {
