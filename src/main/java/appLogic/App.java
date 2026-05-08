@@ -6,7 +6,6 @@ import appLogic.employee.EmployeeRepository;
 import appLogic.employee.InMemoryTimeEntryRepository;
 import appLogic.project.ProjectRegistry;
 import appLogic.report.Report;
-import appLogic.report.ReportService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +14,6 @@ import java.util.Map;
 public class App {
     private static App instance;
     private AppContext appContext;
-    private final ReportService reportService;
 
     public static void main(String[] args) { // Has to be run from mvn javafx:run
         System.out.println("Starting the application ...");
@@ -24,12 +22,6 @@ public class App {
 
     private App() {
         appContext = AppContext.initialize();
-
-        this.reportService = new ReportService(
-                appContext.getProjectRegistry(),
-                appContext.getActivityRepository(),
-                appContext.getTimeEntryRepository()
-        );
     }
 
     public static App getInstance() {
@@ -87,6 +79,6 @@ public class App {
     }
 
     public Report getReport(String projectId) {
-        return reportService.generateReport(projectId);
+        return appContext.getReportService().generateReport(projectId);
     }
 }

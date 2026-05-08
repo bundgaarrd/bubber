@@ -9,6 +9,7 @@ import appLogic.employee.InMemoryEmployeeRepository;
 import appLogic.employee.InMemoryTimeEntryRepository;
 import appLogic.project.Project;
 import appLogic.project.ProjectRegistry;
+import appLogic.report.ReportService;
 
 public class AppContext {
     private static AppContext instance = null;
@@ -19,6 +20,7 @@ public class AppContext {
     private ProjectRegistry projectRegistry;
     private Employee loggedInUser;
     private ActivityService activityService;
+    private ReportService reportService;
 
     private AppContext() {
         instance = this;
@@ -44,6 +46,11 @@ public class AppContext {
                 () -> loggedInUser,
                 timeEntryRepository,
                 employeeRepository
+        );
+        reportService = new ReportService(
+                projectRegistry,
+                activityRepository,
+                timeEntryRepository
         );
     }
 
@@ -98,6 +105,10 @@ public class AppContext {
 
     public Employee getLoggedInUser() {
         return loggedInUser;
+    }
+
+    public ReportService getReportService() {
+        return reportService;
     }
 
     public void reset() {
