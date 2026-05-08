@@ -1,7 +1,6 @@
 package ui; //s244813
 
 import appLogic.App;
-import appLogic.AppContext;
 import appLogic.employee.Employee;
 import appLogic.employee.EmployeeRepository;
 import javafx.geometry.Insets;
@@ -82,7 +81,7 @@ public class CreateEmployeeView {
             
             employeeRepository.save(employee);
 
-            
+
             messageLabel.setText("Employee created!");
 
             initialsField.clear();
