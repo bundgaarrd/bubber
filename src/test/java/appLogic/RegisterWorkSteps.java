@@ -44,11 +44,11 @@ public class RegisterWorkSteps {
         assignLoggedInUserToActivity(name);
     }
 
-    @When("I log that I have worked 5 hours")
-    public void logHoursWorked() {
+    @When("I log that I have worked {int} hours")
+    public void logHoursWorked(int hours) {
         Employee employee = requireLoggedInUser();
         lastTimeEntry = TestApp.getInstance().getApp().getActivityService()
-                .registerWork(activity.getId(), employee, LocalDateTime.now(), 5);
+                .registerWork(activity.getId(), employee, LocalDateTime.now(), hours);
     }
 
     @Then("5 working hours are registered")

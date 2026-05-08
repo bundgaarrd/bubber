@@ -121,4 +121,9 @@ public class AppContext {
     public Employee getLoggedInUser() {
         return loggedInUser;
     }
+
+    public void reset() {
+        instance = null;
+        initialize();
+    }
 }

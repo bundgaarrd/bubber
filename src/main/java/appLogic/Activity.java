@@ -1,5 +1,6 @@
 package appLogic;
 
+import appLogic.activity.exception.UnavailableEmployeeException;
 import appLogic.employee.Employee;
 
 import java.time.LocalDate;
@@ -41,7 +42,12 @@ public abstract class Activity {
     }
 
     public boolean assignEmployee(Employee emp) {
+        if(!emp.isAvailable()) throw new UnavailableEmployeeException("Employee is unavailable.");
         return assignedEmployees.add(emp);
+    }
+
+    public boolean removeEmployee(Employee emp) {
+        return assignedEmployees.remove(emp);
     }
 
     public String getDescription() {

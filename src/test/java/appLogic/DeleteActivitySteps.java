@@ -10,7 +10,6 @@ import io.cucumber.java.en.When;
 import org.junit.jupiter.api.Assertions;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 public class DeleteActivitySteps {
     private String errorMessage;

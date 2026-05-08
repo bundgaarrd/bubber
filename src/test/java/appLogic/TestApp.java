@@ -24,6 +24,7 @@ public class TestApp {
     public void reset() {
         App.resetInstanceForTests();
         this.app = App.getInstance();
+        this.app.getAppContext().reset();
         this.project = null;
         this.activity = null;
     }
