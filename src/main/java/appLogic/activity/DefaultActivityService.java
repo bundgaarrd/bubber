@@ -22,7 +22,6 @@ import appLogic.project.Project;
 import appLogic.project.ProjectActivity;
 import appLogic.project.ProjectRegistry;
 
-
 public class DefaultActivityService implements ActivityService {
     private final ActivityRepository activityRepository;
     private final ProjectRegistry projectRegistry;
@@ -47,8 +46,11 @@ public class DefaultActivityService implements ActivityService {
         Project project = requireProject(command.projectId());
         requireProjectLeader(project);
         ensureUniqueName(command.projectId(), command.name());
-        Activity activity = new ProjectActivity(command.name(), command.description(), command.summary(),
-                command.startWeek(), command.endWeek(), command.startYear(), command.endYear());
+        Activity activity = new ProjectActivity(
+                command.name(), command.description(), command.summary(),
+                command.startWeek(), command.endWeek(), command.startYear(), command.endYear(),
+                command.projectId()
+        );
         activityRepository.save(command.projectId(), activity);
         return activity;
     }
@@ -59,7 +61,9 @@ public class DefaultActivityService implements ActivityService {
         ensureUniqueName(command.projectId(), command.name());
         Activity activity = new WorkActivity(
                 command.name(), command.description(), command.summary(),
-                command.startWeek(), command.endWeek(), command.startYear(), command.endYear(), command.expectedHours()
+                command.startWeek(), command.endWeek(), command.startYear(), command.endYear(),
+                command.expectedHours(),
+                command.projectId()
         );
         activityRepository.save(command.projectId(), activity);
         return activity;
@@ -69,8 +73,12 @@ public class DefaultActivityService implements ActivityService {
     public Activity createFixedActivity(CreateFixedActivity command) {
         requireProject(command.projectId());
         ensureUniqueName(command.projectId(), command.name());
-        Activity activity = new FixedActivity(command.name(), command.description(), command.summary(),
-                command.startWeek(), command.endWeek(), command.startYear(), command.endYear(), command.type());
+        Activity activity = new FixedActivity(
+                command.name(), command.description(), command.summary(),
+                command.startWeek(), command.endWeek(), command.startYear(), command.endYear(),
+                command.type(),
+                command.projectId()
+        );
         activityRepository.save(command.projectId(), activity);
         return activity;
     }
@@ -144,17 +152,16 @@ public class DefaultActivityService implements ActivityService {
 
     @Override
     public void saveTimeEntry(String projectId,
-                                      String initials,
-                                      String description,
-                                      String summary,
-                                      int startWeek,
-                                      int endWeek,
-                                      int startYear,
-                                      int endYear,
-                                      double hours) {
+                              String initials,
+                              String description,
+                              String summary,
+                              int startWeek,
+                              int endWeek,
+                              int startYear,
+                              int endYear,
+                              double hours) {
 
         Employee emp = employeeRepository.findByInitials(initials);
-
         if (emp == null) {
             throw new IllegalArgumentException("No such employee when saving time entry");
         }
@@ -164,14 +171,10 @@ public class DefaultActivityService implements ActivityService {
                 initials + "-" + description,
                 description,
                 summary,
-                startWeek,
-                endWeek,
-                startYear,
-                endYear,
+                startWeek, endWeek, startYear, endYear,
                 (int) hours
         ));
 
         registerWork(activity.getId(), emp, LocalDateTime.now(), hours);
     }
-    
 }
