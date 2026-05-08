@@ -1,18 +1,19 @@
 package appLogic.employee;
 
-import appLogic.activity.impl.Activity;
+import appLogic.TimeEntry;
 import appLogic.project.Project;
 
-import java.time.LocalDate;
-import java.time.temporal.WeekFields;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class Employee {
 
     private final String initials;
     private final String name;
     private boolean isAvailable;
-    private final List<Activity> activities = new ArrayList<>();
+    private final List<TimeEntry> entries = new ArrayList<>();
 
     /**
      * Projects where this employee is a leader
@@ -41,31 +42,19 @@ public class Employee {
         this.isAvailable = isAvailable;
     }
 
-    public void addActivity(Activity activity) {
-        activities.add(activity);
-        activity.assignEmployee(this);
+    public void addEntry(TimeEntry entry) {
+        entries.add(entry);
     }
 
-    public List<Activity> getActivities() {
-        return activities;
+    public List<TimeEntry> getEntries() {
+        return entries;
     }
 
     public int getActiveActivityCount(int week, int year) {
         int count = 0;
 
-        for (Activity activity : activities) {
-            if(week < activity.getStartWeek() || week > activity.getEndWeek()) continue;
+        for (TimeEntry entry : entries) {
 
-            String projectReferenceId = activity.getProjectReferenceId();
-
-            if(projectReferenceId == null) {
-                count++;
-                continue;
-            }
-
-            if(projectReferenceId.startsWith(String.valueOf(year))) {
-                count++;
-            }
         }
 
         return count;

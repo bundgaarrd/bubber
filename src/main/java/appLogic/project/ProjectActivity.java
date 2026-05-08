@@ -1,9 +1,10 @@
 package appLogic.project;
 
-import java.util.Set;
-
 import appLogic.activity.impl.Activity;
 import appLogic.employee.Employee;
+
+import java.time.LocalDateTime;
+import java.util.Set;
 
 public class ProjectActivity extends Activity {
     private Set<Employee> assignedEmployees;
@@ -15,12 +16,12 @@ public class ProjectActivity extends Activity {
     private int endYear;
 
     public ProjectActivity(String name) {
-        this(name, "", "", 0, 0, 0, 0);
+        this(name, "", "", LocalDateTime.now(), LocalDateTime.now().plusDays(7));
     }
 
     public ProjectActivity(String name, String description, String summary,
-                           int startWeek, int endWeek, int startYear, int endYear) {
-        super(name, description, summary, startWeek, endWeek, startYear, endYear, null);
+                           LocalDateTime startDate, LocalDateTime endDate) {
+        super(name, description, summary, startDate, endDate, null);
     }
 
     public ActivityStatus getStatus() {

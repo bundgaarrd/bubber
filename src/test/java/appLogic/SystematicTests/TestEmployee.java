@@ -1,5 +1,6 @@
 package appLogic.SystematicTests;
 
+import appLogic.TimeEntry;
 import appLogic.employee.Employee;
 import appLogic.project.Project;
 import org.junit.jupiter.api.Test;
@@ -7,6 +8,7 @@ import appLogic.activity.impl.Activity;
 import appLogic.App;
 import appLogic.activity.impl.WorkActivity;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.AfterEach;
@@ -35,7 +37,8 @@ public class TestEmployee {
         Employee emp = new Employee("test", "Test User", true);
         LocalDate date = LocalDate.of(2026, 1, 5); // week 2, 2026
         Activity activity = new WorkActivity("task", "", "", 0, 0, 0, 0, 10);
-        emp.addActivity(activity);
+        TimeEntry entry = new TimeEntry(emp, activity, LocalDateTime.now(), LocalDateTime.now().plusDays(5), 5);
+        emp.addActivity(entry);
 
         int week = date.get(java.time.temporal.WeekFields.of(java.util.Locale.getDefault()).weekOfWeekBasedYear());
         assertEquals(1, emp.getActiveActivityCount(week, 2026));

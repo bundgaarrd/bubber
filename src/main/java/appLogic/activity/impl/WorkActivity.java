@@ -1,15 +1,17 @@
 package appLogic.activity.impl; //s244813
 
+import java.time.LocalDateTime;
+
 public class WorkActivity extends Activity {
-    private final int expectedHours;
+    private final double expectedHours;
 
     public WorkActivity(String name, String description, String summary,
-                        int startWeek, int endWeek, int startYear, int endYear, int expectedHours) {
-        super(name, description, summary, startWeek, endWeek, startYear, endYear, null);
+                        LocalDateTime startDate, LocalDateTime endDate, double expectedHours) {
+        super(name, description, summary, startDate, endDate, null);
         this.expectedHours = expectedHours;
     }
 
-    public int getExpectedHours() {
+    public double getExpectedHours() {
         return expectedHours;
     }
 }

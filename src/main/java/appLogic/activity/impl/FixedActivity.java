@@ -2,18 +2,20 @@ package appLogic.activity.impl;
 
 import appLogic.FixedActivityType;
 
+import java.time.LocalDateTime;
+
 public class FixedActivity extends Activity {
 
-    private final int startWeek;
-    private final int endWeek;
+    private final LocalDateTime startDate;
+    private final LocalDateTime endDate;
     private final FixedActivityType type;
 
     public FixedActivity(String name, String description, String summary,
-                         int startWeek, int endWeek, int startYear, int endYear,
+                         LocalDateTime startDate, LocalDateTime endDate,
                          FixedActivityType type) {
-        super(name, description, summary, startWeek, endWeek, startYear, endYear, null);
-        this.startWeek = startWeek;
-        this.endWeek = endWeek;
+        super(name, description, summary, startDate, endDate, null);
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.type = type;
     }
 
@@ -21,11 +23,11 @@ public class FixedActivity extends Activity {
         return type;
     }
 
-    public int getStartWeek() {
-        return startWeek;
+    public LocalDateTime getStartDate() {
+        return startDate;
     }
 
-    public int getEndWeek() {
-        return endWeek;
+    public LocalDateTime getEndDate() {
+        return endDate;
     }
 }

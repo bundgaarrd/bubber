@@ -166,7 +166,7 @@ public class RegisterWorkSteps {
         } catch (ActivityNotFoundException notFound) {
             try {
                 activity = TestApp.getInstance().getApp().getActivityService().createProjectActivity(
-                        new CreateProjectActivity(projectId, name, "", "", 0, 0, 0, 0)
+                        new CreateProjectActivity(projectId, name, "", "", 0, 0, 0, 0, 5)
                 );
             } catch (DuplicateActivityException duplicate) {
                 activity = TestApp.getInstance().getApp().getActivityService().findByProjectAndName(projectId, name);

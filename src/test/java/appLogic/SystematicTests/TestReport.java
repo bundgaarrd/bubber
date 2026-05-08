@@ -5,10 +5,8 @@ import appLogic.AppContext;
 import appLogic.employee.Employee;
 import appLogic.project.Project;
 import appLogic.report.Report;
-
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -56,7 +54,8 @@ public class TestReport {
         Employee laha = app.getLoggedInUser();
         var activity = app.getActivityService().createProjectActivity(
                 new appLogic.activity.command.CreateProjectActivity(
-                        p.getProjectID(), "TestTask", "desc", "summary", 0, 0, 0, 0
+                        p.getProjectID(), "TestTask", "desc", "summary",
+                        0, 0, 0, 0, 5
                 )
         );
         app.getActivityService().registerWork(
@@ -85,7 +84,8 @@ public class TestReport {
         Employee laha = app.getLoggedInUser();
         var activity = app.getActivityService().createProjectActivity(
                 new appLogic.activity.command.CreateProjectActivity(
-                        p.getProjectID(), "BigTask", "desc", "summary", 0, 0, 0, 0
+                        p.getProjectID(), "BigTask", "desc", "summary",
+                        0, 0, 0, 0, 5
                 )
         );
         app.getActivityService().registerWork(
