@@ -23,7 +23,7 @@ public class AppUI extends Application{
         scene = new Scene(root, 860, 640);
         scene.setRoot(new LoginView(scene).getView());
         stage.setScene(scene);
-        stage.setTitle("Timeregistrering");
+        stage.setTitle("Time and project management");
         stage.show();
     }
 }

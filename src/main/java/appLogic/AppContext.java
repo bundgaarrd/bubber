@@ -62,7 +62,7 @@ public class AppContext {
         KBHShop.assignProjectLeader(employeeRepository.findByInitials("laha"));
 
         Project DTU = projectRegistry.createProject("DTU");         // generates 26002
-        DTU.assignProjectLeader(employeeRepository.findByInitials("alla"));
+        DTU.assignProjectLeader(employeeRepository.findByInitials("huba"));
     }
 
     public void login(String initials) {

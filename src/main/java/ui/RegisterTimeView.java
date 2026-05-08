@@ -70,7 +70,7 @@ public class RegisterTimeView {
         form.add(new Label("Hours worked:"), 0, 3);
         form.add(hoursField, 1, 3);
 
-        Button addButton = new Button("Register Time");
+        Button addButton = new Button("Add time entry");
         form.add(addButton, 1, 4);
 
         form.add(new Label("Double click on a time entry to update details"),2,0);

@@ -46,7 +46,7 @@ public class EditTimeEntryView {
         grid.add(new Label("Hours worked:"), 0, 3);
         grid.add(hoursField, 1, 3);
 
-        Button addButton = new Button("Register Time");
+        Button addButton = new Button("Update time entry");
         grid.add(addButton, 1, 4);
 
         Label availableEmployeesLabel = new Label("Available employees");
