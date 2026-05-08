@@ -1,6 +1,7 @@
 package appLogic.SystematicTests;
 
 import appLogic.App;
+import appLogic.AppContext;
 import appLogic.employee.Employee;
 import appLogic.project.Project;
 import appLogic.report.Report;
@@ -47,14 +48,15 @@ public class TestReport {
     @Test
     void generateReport_withActivities_hoursUnderBudget_returnsCorrectSummary() {
         App app = App.getInstance();
-        app.login("laha");
+        AppContext appContext = app.getAppContext();
+        appContext.login("laha");
         Project p = app.getProjectRegistry().getProjectByName("KBHShop");
         p.setExpectedHours(10);
 
         Employee laha = app.getLoggedInUser();
         var activity = app.getActivityService().createProjectActivity(
                 new appLogic.activity.command.CreateProjectActivity(
-                        p.getProjectID(), "TestTask", "desc", "summary", LocalDate.now()
+                        p.getProjectID(), "TestTask", "desc", "summary", 0, 0, 0, 0
                 )
         );
         app.getActivityService().registerWork(
@@ -75,14 +77,15 @@ public class TestReport {
     @Test
     void generateReport_hoursOverBudget_remainingHoursClampsToZero() {
         App app = App.getInstance();
-        app.login("laha");
+        AppContext appContext = app.getAppContext();
+        appContext.login("laha");
         Project p = app.getProjectRegistry().getProjectByName("KBHShop");
         p.setExpectedHours(10);
 
         Employee laha = app.getLoggedInUser();
         var activity = app.getActivityService().createProjectActivity(
                 new appLogic.activity.command.CreateProjectActivity(
-                        p.getProjectID(), "BigTask", "desc", "summary", LocalDate.now()
+                        p.getProjectID(), "BigTask", "desc", "summary", 0, 0, 0, 0
                 )
         );
         app.getActivityService().registerWork(

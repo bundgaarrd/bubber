@@ -1,6 +1,5 @@
 package appLogic.activity.impl;
 
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -14,21 +13,28 @@ public abstract class Activity {
     private final String name;
     private final String description;
     private final String summary;
-    private final LocalDate date;
-     private final String projectId;
+    private final int startWeek;
+    private final int endWeek;
+    private final int startYear;
+    private final int endYear;
     private final Set<Employee> assignedEmployees = new HashSet<>();
+    private final String projectId;
 
-    public Activity(String name, String description, String summary, LocalDate date, String projectId) {
+    public Activity(String name, String description, String summary, int startWeek, int endWeek, int startYear, int endYear, String projectId) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.description = description;
         this.summary = summary;
-        this.date = date;
+        this.startWeek = startWeek;
+        this.endWeek = endWeek;
+        this.startYear = startYear;
+        this.endYear = endYear;
         this.projectId = projectId;
     }
 
     public String getProjectId() {
         return projectId; 
+
     }
 
     public UUID getId() {
@@ -64,8 +70,20 @@ public abstract class Activity {
         return summary;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public int getStartWeek() {
+        return startWeek;
+    }
+
+    public int getEndWeek() {
+        return endWeek;
+    }
+
+    public int getStartYear() {
+        return startYear;
+    }
+
+    public int getEndYear() {
+        return endYear;
     }
 
     public int getDuration() {

@@ -61,10 +61,6 @@ public class App {
         return appContext;
     }
 
-    public void login(String initials) {
-        appContext.login(initials);
-    }
-
     public EmployeeRepository getEmployeeRepository() {
         return appContext.getEmployeeRepository();
     }

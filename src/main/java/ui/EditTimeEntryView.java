@@ -1,6 +1,7 @@
 package ui; // s244970
 
 import appLogic.App;
+import appLogic.AppContext;
 import appLogic.TimeEntry;
 import appLogic.employee.Employee;
 import javafx.geometry.Insets;
@@ -16,10 +17,12 @@ import java.util.List;
 public class EditTimeEntryView {
     private final TimeEntry timeEntry;
     private App app;
+    private AppContext appContext;
 
     public EditTimeEntryView(TimeEntry timeEntry) {
         this.timeEntry = timeEntry;
         this.app = App.getInstance();
+        this.appContext = app.getAppContext();
     }
 
     public Parent getView() {

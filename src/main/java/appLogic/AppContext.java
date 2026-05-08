@@ -10,6 +10,10 @@ import appLogic.employee.InMemoryTimeEntryRepository;
 import appLogic.project.Project;
 import appLogic.project.ProjectRegistry;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 public class AppContext {
     private static AppContext instance = null;
 
@@ -53,14 +57,14 @@ public class AppContext {
         Project contextProject = projectRegistry.createProject("SoftwareHuset initialisering");
         contextProject.assignProjectLeader(loggedInUser);
 
-        activityService.saveTimeEntry(contextProject.getProjectID(), "huba", "Being a good teacher", "TDD/BDD forelæsning", 2.5);
-        activityService.saveTimeEntry(contextProject.getProjectID(), "wilo", "Being a good TA", "Explaining TDD issues", 1.5);
+        activityService.saveTimeEntry(contextProject.getProjectID(), "huba", "Being a good teacher", "TDD/BDD forelæsning", 20, 21, 26, 26, 2.5);
+        activityService.saveTimeEntry(contextProject.getProjectID(), "wilo", "Being a good TA", "Explaining TDD issues", 33, 34, 26, 26, 1.5);
 
         Project KBHShop = projectRegistry.createProject("KBHShop"); // generates 26001
         KBHShop.assignProjectLeader(employeeRepository.findByInitials("laha"));
 
         Project DTU = projectRegistry.createProject("DTU");         // generates 26002
-        DTU.assignProjectLeader(employeeRepository.findByInitials("huba"));
+        DTU.assignProjectLeader(employeeRepository.findByInitials("alla"));
     }
 
     public void login(String initials) {

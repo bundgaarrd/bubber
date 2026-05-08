@@ -1,23 +1,19 @@
 package appLogic.activity.impl;
 
-import java.time.LocalDate;
-import java.time.temporal.WeekFields;
-import java.util.Locale;
-
 import appLogic.FixedActivityType;
 
 public class FixedActivity extends Activity {
 
-    private final LocalDate startDate;
-    private final LocalDate endDate;
+    private final int startWeek;
+    private final int endWeek;
     private final FixedActivityType type;
 
     public FixedActivity(String name, String description, String summary,
-                     LocalDate startDate, LocalDate endDate,
-                     FixedActivityType type) {
-        super(name, description, summary, startDate, null);
-        this.startDate = startDate;
-        this.endDate = endDate;
+                         int startWeek, int endWeek, int startYear, int endYear,
+                         FixedActivityType type) {
+        super(name, description, summary, startWeek, endWeek, startYear, endYear, null);
+        this.startWeek = startWeek;
+        this.endWeek = endWeek;
         this.type = type;
     }
 
@@ -25,24 +21,11 @@ public class FixedActivity extends Activity {
         return type;
     }
 
-    public LocalDate getStartDate() {
-        return startDate;
+    public int getStartWeek() {
+        return startWeek;
     }
 
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public boolean isOverlappingWeek(int week, int year) {
-        WeekFields weekFields = WeekFields.of(Locale.getDefault());
-
-        LocalDate startOfWeek = LocalDate.now()
-                .withYear(year)
-                .with(weekFields.weekOfWeekBasedYear(), week)
-                .with(weekFields.dayOfWeek(), 1);
-
-        LocalDate endOfWeek = startOfWeek.plusDays(6);
-
-        return !(endDate.isBefore(startOfWeek) || startDate.isAfter(endOfWeek));
+    public int getEndWeek() {
+        return endWeek;
     }
 }

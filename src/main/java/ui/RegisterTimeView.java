@@ -1,6 +1,5 @@
 package ui; //s244813 & s244970
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,20 +45,19 @@ public class RegisterTimeView {
     private final ObservableList<TimeEntry> tableData = FXCollections.observableArrayList();
 
     public RegisterTimeView(Scene scene, Project selectedProject) {
-    this.scene = scene;
-    this.selectedProject = selectedProject;
-    AppContext appContext = App.getInstance().getAppContext();
-    this.employeeRepository = appContext.getEmployeeRepository();
-    this.activityService = appContext.getActivityService();
-    this.timeEntryRepository = appContext.getTimeEntryRepository();
-    this.projectRegistry = appContext.getProjectRegistry();
+        this.scene = scene;
+        this.selectedProject = selectedProject;
+        AppContext appContext = App.getInstance().getAppContext();
+        this.employeeRepository = appContext.getEmployeeRepository();
+        this.activityService = appContext.getActivityService();
+        this.timeEntryRepository = appContext.getTimeEntryRepository();
+        this.projectRegistry = appContext.getProjectRegistry();
 
-    timeEntryRepository.findAll().stream()
-    .filter(entry -> selectedProject.getProjectID()
-        .equals(entry.getActivity().getProjectId()))
-    .forEach(tableData::add);
-        
-}
+        timeEntryRepository.findAll().stream()
+            .filter(entry -> selectedProject.getProjectID()
+                .equals(entry.getActivity().getProjectId()))
+            .forEach(tableData::add);
+    }
 
     public Parent getView() {
 
@@ -73,35 +71,44 @@ public class RegisterTimeView {
 
         // Employee dropdown
         List<String> initials = new ArrayList<>();
-        employeeRepository.getAllAvailableEmployees().stream().map(Employee::getInitials).forEach(initials::add);
+        employeeRepository.getAllAvailableEmployees().stream()
+            .map(Employee::getInitials)
+            .forEach(initials::add);
         ChoiceBox<String> employeeBox = new ChoiceBox<>();
         employeeBox.getItems().addAll(initials);
         if (!initials.isEmpty()) employeeBox.setValue(initials.get(0));
 
-        // Project dropdown
+        // Project dropdown (locked to selected project)
         ChoiceBox<String> projectBox = new ChoiceBox<>();
         projectBox.getItems().add(selectedProject.getProjectID());
         projectBox.setValue(selectedProject.getProjectID());
         projectBox.setDisable(true);
 
-        TextField descField    = new TextField();
-        TextField summaryField = new TextField();
-        TextField hoursField   = new TextField();
+        TextField descField      = new TextField();
+        TextField summaryField   = new TextField();
+        TextField startWeekField = new TextField();
+        TextField endWeekField   = new TextField();
+        TextField startYearField = new TextField();
+        TextField endYearField   = new TextField();
+        TextField hoursField     = new TextField();
 
         Label messageLabel = new Label();
 
-        form.add(new Label("Employee:"),    0, 0); form.add(employeeBox,  1, 0);
-        form.add(new Label("Project ID:"),  0, 1); form.add(projectBox,   1, 1);
-        form.add(new Label("Description:"), 0, 2); form.add(descField,    1, 2);
-        form.add(new Label("Summary:"),     0, 3); form.add(summaryField, 1, 3);
-        form.add(new Label("Hours:"),       0, 4); form.add(hoursField,   1, 4);
+        form.add(new Label("Employee:"),   0, 0); form.add(employeeBox,    1, 0);
+        form.add(new Label("Project ID:"), 0, 1); form.add(projectBox,     1, 1);
+        form.add(new Label("Description:"),0, 2); form.add(descField,      1, 2);
+        form.add(new Label("Summary:"),    0, 3); form.add(summaryField,   1, 3);
+        form.add(new Label("Start week:"), 0, 4); form.add(startWeekField, 1, 4);
+        form.add(new Label("End week:"),   0, 5); form.add(endWeekField,   1, 5);
+        form.add(new Label("Start year:"), 0, 6); form.add(startYearField, 1, 6);
+        form.add(new Label("End year:"),   0, 7); form.add(endYearField,   1, 7);
+        form.add(new Label("Hours:"),      0, 8); form.add(hoursField,     1, 8);
 
         Button addButton  = new Button("Add Entry");
         Button backButton = new Button("Back");
         HBox buttons = new HBox(10, addButton, backButton);
-        form.add(buttons,      1, 5);
-        form.add(messageLabel, 1, 6);
-
+        form.add(buttons,      1, 9);
+        form.add(messageLabel, 1, 10);
         form.add(new Label("Double-click a row to edit"), 2, 0);
 
         root.setTop(form);
@@ -111,15 +118,11 @@ public class RegisterTimeView {
         table.setItems(tableData);
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        // ↓↓ COLUMNS START HERE ↓↓
-
         TableColumn<TimeEntry, String> colEmployee = new TableColumn<>("Employee");
         colEmployee.setCellValueFactory(d ->
             new javafx.beans.property.SimpleStringProperty(
                 d.getValue().getEmployee().getInitials()
             ));
-
-        // colProject was here — removed because Activity has no getProjectId()
 
         TableColumn<TimeEntry, String> colActivity = new TableColumn<>("Description");
         colActivity.setCellValueFactory(d ->
@@ -152,10 +155,7 @@ public class RegisterTimeView {
             }
         });
 
-        // ↓ colProject removed from here — was: colEmployee, colProject, colActivity, colHours, colDelete
         table.getColumns().addAll(colEmployee, colActivity, colHours, colDelete);
-
-        // ↑↑ COLUMNS END HERE ↑↑
 
         root.setCenter(table);
 
@@ -168,6 +168,17 @@ public class RegisterTimeView {
             if (projectId == null) { messageLabel.setText("Select a project"); return; }
 
             if (descField.getText().isBlank()) { messageLabel.setText("Description required"); return; }
+
+            int startWeek, endWeek, startYear, endYear;
+            try {
+                startWeek = Integer.parseInt(startWeekField.getText().trim());
+                endWeek   = Integer.parseInt(endWeekField.getText().trim());
+                startYear = Integer.parseInt(startYearField.getText().trim());
+                endYear   = Integer.parseInt(endYearField.getText().trim());
+            } catch (NumberFormatException ex) {
+                messageLabel.setText("Invalid week/year values");
+                return;
+            }
 
             double hours;
             try {
@@ -182,7 +193,10 @@ public class RegisterTimeView {
                 employee.getInitials() + "-" + descField.getText(),
                 descField.getText(),
                 summaryField.getText(),
-                LocalDate.now()
+                startWeek,
+                endWeek,
+                startYear,
+                endYear
             ));
 
             TimeEntry entry = activityService.registerWork(
@@ -191,6 +205,8 @@ public class RegisterTimeView {
             tableData.add(entry);
             messageLabel.setText("Entry saved!");
             descField.clear(); summaryField.clear(); hoursField.clear();
+            startWeekField.clear(); endWeekField.clear();
+            startYearField.clear(); endYearField.clear();
         });
 
         backButton.setOnAction(e -> {

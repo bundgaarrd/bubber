@@ -1,6 +1,5 @@
 package appLogic.activity;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -48,7 +47,8 @@ public class DefaultActivityService implements ActivityService {
         Project project = requireProject(command.projectId());
         requireProjectLeader(project);
         ensureUniqueName(command.projectId(), command.name());
-        Activity activity = new ProjectActivity(command.name(), command.description(), command.summary(), command.date());
+        Activity activity = new ProjectActivity(command.name(), command.description(), command.summary(),
+                command.startWeek(), command.endWeek(), command.startYear(), command.endYear());
         activityRepository.save(command.projectId(), activity);
         return activity;
     }
@@ -57,7 +57,10 @@ public class DefaultActivityService implements ActivityService {
     public Activity createWorkActivity(CreateWorkActivity command) {
         requireProject(command.projectId());
         ensureUniqueName(command.projectId(), command.name());
-        Activity activity = new WorkActivity(command.name(), command.description(), command.summary(), command.date());
+        Activity activity = new WorkActivity(
+                command.name(), command.description(), command.summary(),
+                command.startWeek(), command.endWeek(), command.startYear(), command.endYear()
+        );
         activityRepository.save(command.projectId(), activity);
         return activity;
     }
@@ -67,7 +70,7 @@ public class DefaultActivityService implements ActivityService {
         requireProject(command.projectId());
         ensureUniqueName(command.projectId(), command.name());
         Activity activity = new FixedActivity(command.name(), command.description(), command.summary(),
-                command.startDate(), command.endDate(), command.type());
+                command.startWeek(), command.endWeek(), command.startYear(), command.endYear(), command.type());
         activityRepository.save(command.projectId(), activity);
         return activity;
     }
@@ -144,6 +147,10 @@ public class DefaultActivityService implements ActivityService {
                                       String initials,
                                       String description,
                                       String summary,
+                                      int startWeek,
+                                      int endWeek,
+                                      int startYear,
+                                      int endYear,
                                       double hours) {
 
         Employee emp = employeeRepository.findByInitials(initials);
@@ -157,7 +164,10 @@ public class DefaultActivityService implements ActivityService {
                 initials + "-" + description,
                 description,
                 summary,
-                LocalDate.now()
+                startWeek,
+                endWeek,
+                startYear,
+                endYear
         ));
 
         registerWork(activity.getId(), emp, LocalDateTime.now(), hours);
