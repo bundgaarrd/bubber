@@ -10,6 +10,7 @@ import java.util.Locale;
 import appLogic.App;
 import appLogic.AppContext;
 import appLogic.TimeEntry;
+import appLogic.activity.ActivityRepository;
 import appLogic.activity.ActivityService;
 import appLogic.activity.command.CreateWorkActivity;
 import appLogic.activity.impl.Activity;
@@ -35,29 +36,36 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.util.StringConverter;
 
-public class RegisterTimeView {
+public class RegisterActivityTimeView {
 
     private final Scene scene;
     private final EmployeeRepository employeeRepository;
     private final InMemoryTimeEntryRepository timeEntryRepository;
+    private final ActivityRepository activityRepository;
     private final ActivityService activityService;
     private final ProjectRegistry projectRegistry;
     private final Project selectedProject;
 
-    private final ObservableList<TimeEntry> tableData = FXCollections.observableArrayList();
+    private final ObservableList<TimeEntry> tableData     = FXCollections.observableArrayList();
+    private final ObservableList<Activity>  activityList  = FXCollections.observableArrayList();
 
-    public RegisterTimeView(Scene scene, Project selectedProject) {
+    public RegisterActivityTimeView(Scene scene, Project selectedProject) {
         this.scene = scene;
         this.selectedProject = selectedProject;
         AppContext appContext = App.getInstance().getAppContext();
-        this.employeeRepository = appContext.getEmployeeRepository();
-        this.activityService = appContext.getActivityService();
+        this.employeeRepository  = appContext.getEmployeeRepository();
+        this.activityService     = appContext.getActivityService();
         this.timeEntryRepository = appContext.getTimeEntryRepository();
-        this.projectRegistry = appContext.getProjectRegistry();
+        this.projectRegistry     = appContext.getProjectRegistry();
+        this.activityRepository  = appContext.getActivityRepository();
+
+        activityList.addAll(activityRepository.findByProject(selectedProject.getProjectID()));
 
         timeEntryRepository.findAll().stream()
             .filter(entry -> selectedProject.getProjectID()
@@ -72,14 +80,21 @@ public class RegisterTimeView {
 
         Label title = new Label("Register Time — " + selectedProject.getProjectName());
         title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-
         Label subtitle = new Label("Project ID: " + selectedProject.getProjectID());
         subtitle.setStyle("-fx-text-fill: #777; -fx-font-size: 12px;");
-
         VBox header = new VBox(2, title, subtitle);
         header.setPadding(new Insets(0, 0, 15, 0));
         root.setTop(header);
 
+        ChoiceBox<Activity> activityBox = new ChoiceBox<>(activityList);
+        activityBox.setConverter(new StringConverter<>() {
+            @Override public String toString(Activity a) { return a == null ? "" : a.getDescription(); }
+            @Override public Activity fromString(String s) { return null; }
+        });
+        if (!activityList.isEmpty()) activityBox.setValue(activityList.get(0));
+        activityBox.setMaxWidth(Double.MAX_VALUE);
+
+        Button newActivityBtn = new Button("+ New activity");
 
         List<String> initials = new ArrayList<>();
         employeeRepository.getAllAvailableEmployees().stream()
@@ -89,38 +104,30 @@ public class RegisterTimeView {
         employeeBox.getItems().addAll(initials);
         if (!initials.isEmpty()) employeeBox.setValue(initials.get(0));
 
-        TextField descField    = new TextField(); descField.setPromptText("e.g. Implement login");
-        TextField summaryField = new TextField(); summaryField.setPromptText("Short summary");
-        DatePicker startDate   = new DatePicker(LocalDate.now());
-        DatePicker endDate     = new DatePicker(LocalDate.now());
-        TextField hoursField   = new TextField(); hoursField.setPromptText("e.g. 2.5");
-        hoursField.setPrefWidth(70);
+        TextField hoursField = new TextField();
+        hoursField.setPromptText("e.g. 2.5");
+        hoursField.setPrefWidth(80);
 
-        HBox row = new HBox(12,
-            field("Employee",    employeeBox),
-            field("Description", descField),
-            field("Summary",     summaryField),
-            field("Start date",  startDate),
-            field("End date",    endDate),
-            field("Hours",       hoursField)
-        );
+        Button logTimeBtn = new Button("Log Time");
+        logTimeBtn.setStyle("-fx-base: #4f8ef7; -fx-text-fill: white; -fx-font-weight: bold;");
 
-        HBox.setHgrow(descField,    Priority.ALWAYS);
-        HBox.setHgrow(summaryField, Priority.ALWAYS);
-        descField.setMaxWidth(Double.MAX_VALUE);
-        summaryField.setMaxWidth(Double.MAX_VALUE);
-
-        Button addButton  = new Button("Add Entry");
-        addButton.setStyle("-fx-base: #4f8ef7; -fx-text-fill: white; -fx-font-weight: bold;");
         Button backButton = new Button("Back");
-
-        HBox actions = new HBox(8, addButton, backButton);
-        actions.setAlignment(Pos.CENTER_RIGHT);
 
         Label messageLabel = new Label();
         messageLabel.setStyle("-fx-text-fill: #c94444;");
 
-        VBox formBlock = new VBox(10, row, actions, messageLabel);
+        VBox activityField = field("Activity",  activityBox);
+        VBox employeeField = field("Employee",  employeeBox);
+        VBox hoursFieldBox = field("Hours",     hoursField);
+        VBox newActField   = field(" ",         newActivityBtn);
+        VBox logField      = field(" ",         logTimeBtn);
+        VBox backField     = field(" ",         backButton);
+
+        HBox.setHgrow(activityField, Priority.ALWAYS);
+        HBox row = new HBox(12, activityField, newActField, employeeField, hoursFieldBox, logField, backField);
+        row.setAlignment(Pos.BOTTOM_LEFT);
+
+        VBox formBlock = new VBox(10, row, messageLabel);
         formBlock.setPadding(new Insets(12));
         formBlock.setStyle(
             "-fx-background-color: #f5f5f7;" +
@@ -132,25 +139,27 @@ public class RegisterTimeView {
         TableView<TimeEntry> table = new TableView<>();
         table.setItems(tableData);
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        table.setPlaceholder(new Label("No time entries for this project yet"));
+        table.setPlaceholder(new Label("No time logged for this project yet"));
 
         TableColumn<TimeEntry, String> colEmployee = new TableColumn<>("Employee");
         colEmployee.setCellValueFactory(d ->
             new javafx.beans.property.SimpleStringProperty(
-                d.getValue().getEmployee().getInitials()
-            ));
+                d.getValue().getEmployee().getInitials()));
 
-        TableColumn<TimeEntry, String> colActivity = new TableColumn<>("Description");
+        TableColumn<TimeEntry, String> colActivity = new TableColumn<>("Activity");
         colActivity.setCellValueFactory(d ->
             new javafx.beans.property.SimpleStringProperty(
-                d.getValue().getActivity().getDescription()
-            ));
+                d.getValue().getActivity().getDescription()));
+
+        TableColumn<TimeEntry, String> colDate = new TableColumn<>("Logged on");
+        colDate.setCellValueFactory(d ->
+            new javafx.beans.property.SimpleStringProperty(
+                d.getValue().getEntryStartTime().toLocalDate().toString()));
 
         TableColumn<TimeEntry, String> colHours = new TableColumn<>("Hours");
         colHours.setCellValueFactory(d ->
             new javafx.beans.property.SimpleStringProperty(
-                String.valueOf(d.getValue().getHoursWorked())
-            ));
+                String.valueOf(d.getValue().getHoursWorked())));
 
         TableColumn<TimeEntry, Void> colDelete = new TableColumn<>("");
         colDelete.setMinWidth(80);
@@ -172,31 +181,28 @@ public class RegisterTimeView {
             }
         });
 
-        table.getColumns().addAll(colEmployee, colActivity, colHours, colDelete);
+        table.getColumns().addAll(colEmployee, colActivity, colDate, colHours, colDelete);
 
         Label hint = new Label("Double-click a row to edit");
         hint.setStyle("-fx-text-fill: #888; -fx-font-size: 11px;");
 
         VBox tableBlock = new VBox(8, table, hint);
         VBox.setVgrow(table, Priority.ALWAYS);
-        VBox.setVgrow(tableBlock, Priority.ALWAYS);
 
         VBox center = new VBox(15, formBlock, tableBlock);
         VBox.setVgrow(tableBlock, Priority.ALWAYS);
         root.setCenter(center);
 
-        addButton.setOnAction(e -> {
+        newActivityBtn.setOnAction(e -> openNewActivityDialog(activityBox, messageLabel));
+
+        logTimeBtn.setOnAction(e -> {
             messageLabel.setStyle("-fx-text-fill: #c94444;");
 
+            Activity activity = activityBox.getValue();
+            if (activity == null) { messageLabel.setText("Create or select an activity first"); return; }
+
             Employee employee = employeeRepository.findByInitials(employeeBox.getValue());
-            if (employee == null) { messageLabel.setText("Employee not found"); return; }
-            if (descField.getText().isBlank()) { messageLabel.setText("Description required"); return; }
-            if (startDate.getValue() == null || endDate.getValue() == null) {
-                messageLabel.setText("Pick start and end dates"); return;
-            }
-            if (endDate.getValue().isBefore(startDate.getValue())) {
-                messageLabel.setText("End date cannot be before start date"); return;
-            }
+            if (employee == null) { messageLabel.setText("Pick an employee"); return; }
 
             double hours;
             try {
@@ -207,31 +213,13 @@ public class RegisterTimeView {
                 return;
             }
 
-            WeekFields wf = WeekFields.of(Locale.getDefault());
-            int startWeek = startDate.getValue().get(wf.weekOfWeekBasedYear());
-            int endWeek   = endDate.getValue().get(wf.weekOfWeekBasedYear());
-            int startYear = startDate.getValue().getYear();
-            int endYear   = endDate.getValue().getYear();
-
-            Activity activity = activityService.createWorkActivity(new CreateWorkActivity(
-                selectedProject.getProjectID(),
-                employee.getInitials() + "-" + descField.getText(),
-                descField.getText(),
-                summaryField.getText(),
-                startWeek, endWeek, startYear, endYear, 5
-            ));
-
             TimeEntry entry = activityService.registerWork(
-                activity.getId(), employee, LocalDateTime.now(), hours
-            );
+                activity.getId(), employee, LocalDateTime.now(), hours);
             tableData.add(entry);
 
             messageLabel.setStyle("-fx-text-fill: #2e8b57;");
-            messageLabel.setText("Entry saved!");
-
-            descField.clear(); summaryField.clear(); hoursField.clear();
-            startDate.setValue(LocalDate.now());
-            endDate.setValue(LocalDate.now());
+            messageLabel.setText("Time logged!");
+            hoursField.clear();
         });
 
         backButton.setOnAction(e -> {
@@ -249,10 +237,69 @@ public class RegisterTimeView {
         return root;
     }
 
+    private void openNewActivityDialog(ChoiceBox<Activity> activityBox, Label messageLabel) {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("New Activity");
+        dialog.setHeaderText("Create activity for " + selectedProject.getProjectName());
+
+        TextField descField    = new TextField(); descField.setPromptText("Description");
+        TextField summaryField = new TextField(); summaryField.setPromptText("Summary");
+        DatePicker startDate   = new DatePicker(LocalDate.now());
+        DatePicker endDate     = new DatePicker(LocalDate.now());
+        TextField expectedHrs  = new TextField(); expectedHrs.setPromptText("Expected hours");
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10); grid.setVgap(10); grid.setPadding(new Insets(10));
+        grid.add(new Label("Description:"),    0, 0); grid.add(descField,    1, 0);
+        grid.add(new Label("Summary:"),        0, 1); grid.add(summaryField, 1, 1);
+        grid.add(new Label("Start date:"),     0, 2); grid.add(startDate,    1, 2);
+        grid.add(new Label("End date:"),       0, 3); grid.add(endDate,      1, 3);
+        grid.add(new Label("Expected hours:"), 0, 4); grid.add(expectedHrs,  1, 4);
+
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        dialog.showAndWait().ifPresent(result -> {
+            if (result != ButtonType.OK) return;
+
+            if (descField.getText().isBlank()) {
+                messageLabel.setText("Description required"); return;
+            }
+            if (endDate.getValue().isBefore(startDate.getValue())) {
+                messageLabel.setText("End date before start date"); return;
+            }
+
+            double hours;
+            try {
+                hours = Double.parseDouble(expectedHrs.getText().trim());
+            } catch (NumberFormatException ex) {
+                messageLabel.setText("Invalid expected hours"); return;
+            }
+
+            WeekFields wf = WeekFields.of(Locale.getDefault());
+            int sw = startDate.getValue().get(wf.weekOfWeekBasedYear());
+            int ew = endDate.getValue().get(wf.weekOfWeekBasedYear());
+            int sy = startDate.getValue().getYear();
+            int ey = endDate.getValue().getYear();
+
+            Activity activity = activityService.createWorkActivity(new CreateWorkActivity(
+                selectedProject.getProjectID(),
+                descField.getText(),              
+                descField.getText(),               
+                summaryField.getText(),
+                sw, ew, sy, ey, hours
+            ));
+
+            activityList.add(activity);
+            activityBox.setValue(activity);
+            messageLabel.setStyle("-fx-text-fill: #2e8b57;");
+            messageLabel.setText("Activity created!");
+        });
+    }
+
     private VBox field(String label, javafx.scene.Node input) {
         Label l = new Label(label);
         l.setStyle("-fx-font-size: 11px; -fx-text-fill: #555; -fx-font-weight: bold;");
-        VBox box = new VBox(4, l, input);
-        return box;
+        return new VBox(4, l, input);
     }
 }
