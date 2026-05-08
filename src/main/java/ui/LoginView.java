@@ -2,15 +2,13 @@ package ui;
 
 import appLogic.App;
 import appLogic.AppContext;
-import io.cucumber.messages.types.Exception;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-
-import javafx.scene.control.Label;
 
 
 public class LoginView {
@@ -55,7 +53,7 @@ public class LoginView {
             javafx.application.Platform.exit();
         });
 
-        root.getChildren().addAll(label, initialsField, loginBtn, errorLabel, quitBtn);
+        root.getChildren().addAll(label, initialsField, loginBtn, quitBtn, errorLabel);
 
         return root;
     }
