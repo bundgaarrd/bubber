@@ -15,12 +15,13 @@ public class ProjectActivity extends Activity {
     private int endYear;
 
     public ProjectActivity(String name) {
-        this(name, "", "", 0, 0, 0, 0);
+        this(name, "", "", 0, 0, 0, 0, null);
     }
 
     public ProjectActivity(String name, String description, String summary,
-                           int startWeek, int endWeek, int startYear, int endYear) {
-        super(name, description, summary, startWeek, endWeek, startYear, endYear, null);
+                           int startWeek, int endWeek, int startYear, int endYear,
+                           String projectId) {
+        super(name, description, summary, startWeek, endWeek, startYear, endYear, projectId);
     }
 
     public ActivityStatus getStatus() {
@@ -32,24 +33,11 @@ public class ProjectActivity extends Activity {
     }
 
     public boolean isOverlapWeek(int week, int year) {
-        
-        if (year < startYear || year > endYear) {
-            return false;
-        }
-
-        if (startYear == endYear) {
-            return week >= startWeek && week <= endWeek;
-        }
-
-        if (year == startYear) {
-            return week >= startWeek;
-        }
-
-        if (year == endYear) {
-            return week <= endWeek;
-        }
-
-        return true; 
+        if (year < startYear || year > endYear) return false;
+        if (startYear == endYear) return week >= startWeek && week <= endWeek;
+        if (year == startYear) return week >= startWeek;
+        if (year == endYear) return week <= endWeek;
+        return true;
     }
 }
 
