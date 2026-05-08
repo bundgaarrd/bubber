@@ -1,10 +1,10 @@
-package appLogic.systematicTests;
+package appLogic.SystematicTests;
 
 import appLogic.project.ProjectActivity;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ProjectActivityTest {
+public class TestActivity {
 
     @Test
     void isOverlapWeek_yearBeforeStartYear_returnsFalse() {
