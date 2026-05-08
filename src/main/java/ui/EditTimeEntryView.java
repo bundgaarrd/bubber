@@ -49,9 +49,6 @@ public class EditTimeEntryView {
         Button addButton = new Button("Register Time");
         grid.add(addButton, 1, 4);
 
-        Button closeWindow = new Button("OK");
-        grid.add(closeWindow, 1, 5);
-
         Label availableEmployeesLabel = new Label("Available employees");
         grid.add(availableEmployeesLabel,2,0);
 
@@ -64,10 +61,7 @@ public class EditTimeEntryView {
         }
 
         // Events
-        closeWindow.setOnAction(e -> {
-            Stage stage = (Stage) closeWindow.getScene().getWindow();
-            stage.close();
-        });
+
 
         root.setCenter(grid);
         return root;

@@ -84,7 +84,7 @@ public class ChooseProjectView {
             MainView mainView = new MainView(scene);
             scene.setRoot(mainView.getView());
         });
-        
+
         addProjectBtn.setOnAction(e -> {
             Dialog<ButtonType> dialog = new Dialog<>();
             dialog.setTitle("Add project information");
@@ -95,13 +95,14 @@ public class ChooseProjectView {
             nameField.setPromptText("Project name");
 
             // Get employee names as a string
-            List<String> allEmployees = app.getEmployeeRepository().findAll().stream().map(Employee::getName).toList();
+            List<String> allEmployees = new ArrayList<>();
+            allEmployees.add("(none)");
+            app.getEmployeeRepository().findAll().stream().map(Employee::getName).forEach(allEmployees::add);
 
             ChoiceBox<String> projectLeaderChoice = new ChoiceBox<>();
 
             projectLeaderChoice.getItems().addAll(allEmployees);
             projectLeaderChoice.setValue(allEmployees.getFirst());
-
 
             VBox content = new VBox(20,
                     new Label("Project name:"), nameField,
@@ -118,13 +119,8 @@ public class ChooseProjectView {
             });
         });
 
-
         tableData.setOnMouseClicked(e -> {
             Project selected = tableData.getSelectionModel().getSelectedItem();
-            if (selected != null) {
-                // Gør noget med selected
-//                System.out.println("Clicked: " + selected.getProjectName());
-            }
 
             if (e.getClickCount() == 2) {
                 if (selected != null) {

@@ -25,10 +25,6 @@ public class App {
         instance = getInstance();
     }
 
-    private void run() {
-
-    }
-
     private App() {
         this.employeeRepository = new InMemoryEmployeeRepository();
         this.projectRegistry = new ProjectRegistry();
@@ -62,7 +58,6 @@ public class App {
         if(instance == null) {
             instance = new App();
             instance.initializeUsers();
-            instance.run();
         }
         return instance;
     }
