@@ -1,28 +1,30 @@
 package ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import appLogic.App;
 import appLogic.AppContext;
 import appLogic.employee.Employee;
 import appLogic.employee.EmployeeRepository;
 import appLogic.project.Project;
 import appLogic.project.ProjectRegistry;
-import javafx.beans.binding.StringExpression;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
+import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
 public class ChooseProjectView {
@@ -101,8 +103,14 @@ public class ChooseProjectView {
             dialog.setHeaderText(null);
             dialog.getDialogPane().setMinWidth(300);
 
+            Label errorLabel = new Label("Error adding project");
+            errorLabel.setVisible(false);
+
             TextField nameField = new TextField();
             nameField.setPromptText("Project name");
+
+            TextField expectedHoursField = new TextField();
+            expectedHoursField.setPromptText("Expected hours (e.g. 40.5)");
 
             // Get employee names as a string
             List<String> allEmployees = new ArrayList<>();
@@ -116,19 +124,45 @@ public class ChooseProjectView {
 
             VBox content = new VBox(20,
                     new Label("Project name:"), nameField,
-                    new Label("Choose project leader:"), projectLeaderChoice
+                    new Label("Expected hours:"), expectedHoursField,
+                    new Label("Choose project leader:"), projectLeaderChoice,
+                    errorLabel
             );
             dialog.getDialogPane().setContent(content);
             dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
+            // Added input validation fields in createproject dialog
+            Button okButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.OK);
+            okButton.addEventFilter(ActionEvent.ACTION, event -> {
+                boolean hasError = false;
+
+                if (nameField.getText().isBlank()) {
+                    errorLabel.setText("Project name cannot be empty.");
+                    hasError = true;
+                } else {
+                    try {
+                        Double.parseDouble(expectedHoursField.getText().replace(",", "."));
+                    } catch (NumberFormatException ex) {
+                        errorLabel.setText("Expected hours must be a valid number.");
+                        hasError = true;
+                    }
+                }
+
+                if (hasError) {
+                    errorLabel.setVisible(true);
+                    event.consume();
+                }
+            });
+
             dialog.showAndWait().ifPresent(result -> {
-                if (result == ButtonType.OK && !nameField.getText().isBlank()) {
+                if (result == ButtonType.OK) {
                     ProjectRegistry projectRegistry = appContext.getProjectRegistry();
                     Project project = projectRegistry.createProject(nameField.getText());
                     EmployeeRepository employeeRepository = appContext.getEmployeeRepository();
                     String projectLeaderString = projectLeaderChoice.getValue();
-
+                    double expectedHours = Double.parseDouble(expectedHoursField.getText().replace(",", "."));
                     project.assignProjectLeader(employeeRepository.findByName(projectLeaderString));
+                    project.setExpectedHours(expectedHours);
                     projectData.add(project);
                 }
             });
@@ -137,13 +171,11 @@ public class ChooseProjectView {
         tableData.setOnMouseClicked(e -> {
             Project selected = tableData.getSelectionModel().getSelectedItem();
 
-            if (e.getClickCount() == 2) {
-                if (selected != null) {
-                    RegisterTimeView timeView = new RegisterTimeView(scene);
-                    scene.setRoot(timeView.getView());
+            if (e.getClickCount() == 2 && selected != null) {
+                RegisterTimeView timeView = new RegisterTimeView(scene, selected); // pass project
+                scene.setRoot(timeView.getView());
                 }
-            }
-        });
+});
         // -----End Events for interactive elements-----
 
         // Layout adjustments

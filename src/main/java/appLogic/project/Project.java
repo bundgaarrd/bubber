@@ -1,11 +1,11 @@
 package appLogic.project;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import appLogic.Customer;
 import appLogic.TimeEntry;
 import appLogic.employee.Employee;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public class Project {
     private String projectID;
@@ -14,7 +14,7 @@ public class Project {
     private Employee projectLeader;
     private boolean isCompleted = false;
     private Set<Customer> customerList;
-    private int expectedHours;
+    private double expectedHours;
     private Set<TimeEntry> events;
     private Set<Employee> employees;
 
@@ -56,7 +56,7 @@ public class Project {
         return b;
     }
 
-    public void setExpectedHours(int hours) {
+    public void setExpectedHours(double hours) {
         this.expectedHours = hours;
     }
 
@@ -77,7 +77,7 @@ public class Project {
         return projectName;
     }
 
-    public int getExpectedHours() {
+    public double getExpectedHours() {
         return expectedHours;
     }
 

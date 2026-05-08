@@ -1,11 +1,11 @@
 package appLogic.activity.impl;
 
-import appLogic.activity.exception.UnavailableEmployeeException;
-import appLogic.employee.Employee;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+
+import appLogic.activity.exception.UnavailableEmployeeException;
+import appLogic.employee.Employee;
 
 public abstract class Activity {
 
@@ -18,8 +18,9 @@ public abstract class Activity {
     private final int startYear;
     private final int endYear;
     private final Set<Employee> assignedEmployees = new HashSet<>();
+    private final String projectId;
 
-    public Activity(String name, String description, String summary, int startWeek, int endWeek, int startYear, int endYear) {
+    public Activity(String name, String description, String summary, int startWeek, int endWeek, int startYear, int endYear, String projectId) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.description = description;
@@ -28,6 +29,12 @@ public abstract class Activity {
         this.endWeek = endWeek;
         this.startYear = startYear;
         this.endYear = endYear;
+        this.projectId = projectId;
+    }
+
+    public String getProjectId() {
+        return projectId; 
+
     }
 
     public UUID getId() {

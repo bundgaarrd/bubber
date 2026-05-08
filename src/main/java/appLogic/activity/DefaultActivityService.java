@@ -1,5 +1,9 @@
 package appLogic.activity;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
 import appLogic.TimeEntry;
 import appLogic.activity.command.CreateFixedActivity;
 import appLogic.activity.command.CreateProjectActivity;
@@ -17,10 +21,6 @@ import appLogic.employee.InMemoryTimeEntryRepository;
 import appLogic.project.Project;
 import appLogic.project.ProjectActivity;
 import appLogic.project.ProjectRegistry;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
 
 
 public class DefaultActivityService implements ActivityService {
@@ -142,6 +142,7 @@ public class DefaultActivityService implements ActivityService {
         }
     }
 
+    @Override
     public void saveTimeEntry(String projectId,
                                       String initials,
                                       String description,

@@ -11,6 +11,10 @@ import appLogic.project.Project;
 import appLogic.project.ProjectRegistry;
 import appLogic.report.ReportService;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 public class AppContext {
     private static AppContext instance = null;
 
@@ -41,7 +45,7 @@ public class AppContext {
         activityRepository = new InMemoryActivityRepository();
         projectRegistry = new ProjectRegistry();
         activityService = new DefaultActivityService(
-                new InMemoryActivityRepository(),
+                activityRepository,
                 projectRegistry,
                 () -> loggedInUser,
                 timeEntryRepository,
