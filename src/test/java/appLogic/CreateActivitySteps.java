@@ -39,7 +39,7 @@ public class CreateActivitySteps {
                             name,
                             "",
                             "",
-                            LocalDate.now()
+                            0, 0, 0, 0
                     ));
             TestApp.getInstance().setActivity(activity);
             lastException = null;
@@ -67,7 +67,7 @@ public class CreateActivitySteps {
                             name,
                             "",
                             "",
-                            LocalDate.now()
+                            0, 0, 0, 0
                     ));
         } catch (DuplicateActivityException e) {
             activity = TestApp.getInstance().getApp().getActivityService().findByProjectAndName(
@@ -109,7 +109,7 @@ public class CreateActivitySteps {
                             "Activity-" + System.nanoTime(),
                             "",
                             "",
-                            LocalDate.now()
+                            0, 0, 0, 0
                     ));
             TestApp.getInstance().setActivity(activity);
             lastException = null;

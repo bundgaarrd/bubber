@@ -3,7 +3,6 @@ package appLogic.project;
 import appLogic.activity.impl.Activity;
 import appLogic.employee.Employee;
 
-import java.time.LocalDate;
 import java.util.Set;
 
 public class ProjectActivity extends Activity {
@@ -16,11 +15,12 @@ public class ProjectActivity extends Activity {
     private int endYear;
 
     public ProjectActivity(String name) {
-        this(name, "", "", null);
+        this(name, "", "", 0, 0, 0, 0);
     }
 
-    public ProjectActivity(String name, String description, String summary, LocalDate date) {
-        super(name, description, summary, date);
+    public ProjectActivity(String name, String description, String summary,
+                           int startWeek, int endWeek, int startYear, int endYear) {
+        super(name, description, summary, startWeek, endWeek, startYear, endYear);
     }
 
     public ActivityStatus getStatus() {

@@ -56,7 +56,7 @@ public class TestReport {
         Employee laha = app.getLoggedInUser();
         var activity = app.getActivityService().createProjectActivity(
                 new appLogic.activity.command.CreateProjectActivity(
-                        p.getProjectID(), "TestTask", "desc", "summary", LocalDate.now()
+                        p.getProjectID(), "TestTask", "desc", "summary", 0, 0, 0, 0
                 )
         );
         app.getActivityService().registerWork(
@@ -85,7 +85,7 @@ public class TestReport {
         Employee laha = app.getLoggedInUser();
         var activity = app.getActivityService().createProjectActivity(
                 new appLogic.activity.command.CreateProjectActivity(
-                        p.getProjectID(), "BigTask", "desc", "summary", LocalDate.now()
+                        p.getProjectID(), "BigTask", "desc", "summary", 0, 0, 0, 0
                 )
         );
         app.getActivityService().registerWork(
