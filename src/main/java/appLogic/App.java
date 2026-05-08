@@ -40,7 +40,8 @@ public class App {
                 this.activityRepository,
                 this.projectRegistry,
                 this::getLoggedInUser,
-                this.timeEntryRepository
+                this.timeEntryRepository,
+                this.employeeRepository
         );
 
         this.reportService = new ReportService(

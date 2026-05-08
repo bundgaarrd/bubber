@@ -14,6 +14,7 @@ import appLogic.activity.command.CreateProjectActivity;
 import appLogic.activity.command.CreateWorkActivity;
 import appLogic.activity.exception.*;
 import appLogic.employee.Employee;
+import appLogic.employee.EmployeeRepository;
 import appLogic.employee.InMemoryEmployeeRepository;
 import appLogic.employee.InMemoryTimeEntryRepository;
 import appLogic.project.Project;
@@ -26,13 +27,13 @@ public class DefaultActivityService implements ActivityService {
     private final ProjectRegistry projectRegistry;
     private final CurrentUserProvider currentUserProvider;
     private final InMemoryTimeEntryRepository timeEntryRepository;
-    private final InMemoryEmployeeRepository employeeRepository;
+    private final EmployeeRepository employeeRepository;
 
     public DefaultActivityService(ActivityRepository activityRepository,
                                   ProjectRegistry projectRegistry,
                                   CurrentUserProvider currentUserProvider,
                                   InMemoryTimeEntryRepository timeEntryRepository,
-                                  InMemoryEmployeeRepository employeeRepository) {
+                                  EmployeeRepository employeeRepository) {
         this.activityRepository = activityRepository;
         this.projectRegistry = projectRegistry;
         this.currentUserProvider = currentUserProvider;
