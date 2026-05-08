@@ -1,12 +1,5 @@
 package ui; //s244813 & s244970
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.WeekFields;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
 import appLogic.App;
 import appLogic.AppContext;
 import appLogic.TimeEntry;
@@ -25,22 +18,16 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import javafx.util.StringConverter;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.WeekFields;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class RegisterActivityTimeView {
 
@@ -214,7 +201,7 @@ public class RegisterActivityTimeView {
             }
 
             TimeEntry entry = activityService.registerWork(
-                activity.getId(), employee, LocalDateTime.now(), hours);
+                activity.getId(), employee, LocalDateTime.now(), LocalDateTime.now().plusDays(5), hours); //TODO Add to UI
             tableData.add(entry);
 
             messageLabel.setStyle("-fx-text-fill: #2e8b57;");
@@ -287,7 +274,7 @@ public class RegisterActivityTimeView {
                 descField.getText(),              
                 descField.getText(),               
                 summaryField.getText(),
-                sw, ew, sy, ey, hours
+                LocalDateTime.now(), LocalDateTime.now().plusDays(5), hours //TODO Fix in UI
             ));
 
             activityList.add(activity);
