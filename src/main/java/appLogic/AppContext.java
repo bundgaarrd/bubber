@@ -1,5 +1,6 @@
 package appLogic; //s244813
 
+import appLogic.activity.ActivityRepository;
 import appLogic.activity.ActivityService;
 import appLogic.activity.DefaultActivityService;
 import appLogic.activity.InMemoryActivityRepository;
@@ -89,6 +90,10 @@ public class AppContext {
 
     public ActivityService getActivityService() {
         return activityService;
+    }
+
+    public ActivityRepository getActivityRepository() {
+        return activityRepository;
     }
 
     public Employee getLoggedInUser() {

@@ -3,27 +3,18 @@ package appLogic;
 import appLogic.activity.ActivityService;
 import appLogic.employee.Employee;
 import appLogic.employee.EmployeeRepository;
-import appLogic.employee.InMemoryEmployeeRepository;
 import appLogic.employee.InMemoryTimeEntryRepository;
-import appLogic.project.Project;
 import appLogic.project.ProjectRegistry;
 import appLogic.report.Report;
 import appLogic.report.ReportService;
-import appLogic.activity.*;
-import appLogic.activity.DefaultActivityService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class App {
     private static App instance;
     private AppContext appContext;
-
-    private final ProjectRegistry projectRegistry;
-    private final EmployeeRepository employeeRepository;
-    private final InMemoryTimeEntryRepository timeEntryRepository;
-    private final ActivityService activityService;
-    private final ActivityRepository activityRepository;
-    private Employee loggedInUser;
     private final ReportService reportService;
 
     public static void main(String[] args) { // Has to be run from mvn javafx:run
@@ -32,40 +23,13 @@ public class App {
     }
 
     private App() {
-        this.employeeRepository = new InMemoryEmployeeRepository();
-        this.projectRegistry = new ProjectRegistry();
-        this.timeEntryRepository = new InMemoryTimeEntryRepository();
-        this.activityRepository = new InMemoryActivityRepository();
-        this.activityService = new DefaultActivityService(
-                this.activityRepository,
-                this.projectRegistry,
-                this::getLoggedInUser,
-                this.timeEntryRepository,
-                this.employeeRepository
-        );
+        appContext = AppContext.initialize();
 
         this.reportService = new ReportService(
-                this.projectRegistry,
-                this.activityRepository,
-                this.timeEntryRepository
+                appContext.getProjectRegistry(),
+                appContext.getActivityRepository(),
+                appContext.getTimeEntryRepository()
         );
-    }
-
-    private void initializeUsers() {
-        employeeRepository.save(new Employee("huba", "Hubert Baumeister", true));
-        employeeRepository.save(new Employee("wilo", "William Lopez", true));
-        employeeRepository.save(new Employee("anda", "Annemette A. Damgaard", true));
-        Employee laha = new Employee("laha", "Lars Hansen", true);
-        employeeRepository.save(laha);
-        Employee alla = new Employee("alla", "Allan Lassen", true);
-        employeeRepository.save(alla);
-
-        Project KBHShop = projectRegistry.createProject("KBHShop"); // generates 26001
-        KBHShop.assignProjectLeader(laha);
-
-        Project DTU = projectRegistry.createProject("DTU");         // generates 26002
-        DTU.assignProjectLeader(alla);
-        appContext = AppContext.initialize();
     }
 
     public static App getInstance() {
@@ -123,14 +87,10 @@ public class App {
     }
 
     public InMemoryTimeEntryRepository getTimeEntryRepository() {
-        return timeEntryRepository;
+        return appContext.getTimeEntryRepository();
     }
 
     public Report getReport(String projectId) {
         return reportService.generateReport(projectId);
-    }
-
-    public void testMethod() {
-        System.out.println("This is a testmethod from App.java\nThis means that the UI and app talks together");
     }
 }
