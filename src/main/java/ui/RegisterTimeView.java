@@ -70,7 +70,6 @@ public class RegisterTimeView {
         BorderPane root = new BorderPane();
         root.setPadding(new Insets(20));
 
-        // ── Header ────────────────────────────────────────────────────────
         Label title = new Label("Register Time — " + selectedProject.getProjectName());
         title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
 
@@ -81,8 +80,7 @@ public class RegisterTimeView {
         header.setPadding(new Insets(0, 0, 15, 0));
         root.setTop(header);
 
-        // ── Form (horizontal) ─────────────────────────────────────────────
-        // Employee dropdown
+
         List<String> initials = new ArrayList<>();
         employeeRepository.getAllAvailableEmployees().stream()
             .map(Employee::getInitials)
@@ -98,7 +96,6 @@ public class RegisterTimeView {
         TextField hoursField   = new TextField(); hoursField.setPromptText("e.g. 2.5");
         hoursField.setPrefWidth(70);
 
-        // Build labeled columns
         HBox row = new HBox(12,
             field("Employee",    employeeBox),
             field("Description", descField),
@@ -132,7 +129,6 @@ public class RegisterTimeView {
             "-fx-border-radius: 8;"
         );
 
-        // ── Table ─────────────────────────────────────────────────────────
         TableView<TimeEntry> table = new TableView<>();
         table.setItems(tableData);
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -185,12 +181,10 @@ public class RegisterTimeView {
         VBox.setVgrow(table, Priority.ALWAYS);
         VBox.setVgrow(tableBlock, Priority.ALWAYS);
 
-        // Center: form on top, table below
         VBox center = new VBox(15, formBlock, tableBlock);
         VBox.setVgrow(tableBlock, Priority.ALWAYS);
         root.setCenter(center);
 
-        // ── Events ────────────────────────────────────────────────────────
         addButton.setOnAction(e -> {
             messageLabel.setStyle("-fx-text-fill: #c94444;");
 
@@ -213,7 +207,6 @@ public class RegisterTimeView {
                 return;
             }
 
-            // Convert dates → ISO week + year
             WeekFields wf = WeekFields.of(Locale.getDefault());
             int startWeek = startDate.getValue().get(wf.weekOfWeekBasedYear());
             int endWeek   = endDate.getValue().get(wf.weekOfWeekBasedYear());
