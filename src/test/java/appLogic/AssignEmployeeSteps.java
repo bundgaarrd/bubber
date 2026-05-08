@@ -3,6 +3,7 @@ package appLogic;
 import appLogic.activity.command.CreateWorkActivity;
 import appLogic.activity.exception.ActivityNotFoundException;
 import appLogic.activity.exception.DuplicateActivityException;
+import appLogic.activity.impl.Activity;
 import appLogic.employee.Employee;
 import appLogic.project.Project;
 import io.cucumber.java.en.Given;
@@ -10,7 +11,6 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -2,7 +2,7 @@ package appLogic.report;
 
 import appLogic.employee.InMemoryTimeEntryRepository;
 import appLogic.activity.*;
-import appLogic.Activity;
+import appLogic.activity.impl.Activity;
 import appLogic.TimeEntry;
 import appLogic.project.Project;
 import appLogic.project.ProjectRegistry;

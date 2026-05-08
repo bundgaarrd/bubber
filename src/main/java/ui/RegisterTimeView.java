@@ -3,7 +3,7 @@ package ui; //s244813 & s244970
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import appLogic.Activity;
+import appLogic.activity.impl.Activity;
 import appLogic.App;
 import appLogic.AppContext;
 import appLogic.TimeEntry;

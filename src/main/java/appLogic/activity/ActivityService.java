@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import appLogic.Activity;
+import appLogic.activity.impl.Activity;
 import appLogic.TimeEntry;
 import appLogic.activity.command.CreateFixedActivity;
 import appLogic.activity.command.CreateProjectActivity;

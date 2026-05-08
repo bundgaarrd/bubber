@@ -1,4 +1,4 @@
-package appLogic; //s244813
+package appLogic.activity.impl; //s244813
 
 import java.time.LocalDate;
 

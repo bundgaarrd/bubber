@@ -1,4 +1,4 @@
-package appLogic;
+package appLogic.activity.impl;
 
 import appLogic.activity.exception.UnavailableEmployeeException;
 import appLogic.employee.Employee;

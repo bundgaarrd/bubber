@@ -5,10 +5,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import appLogic.Activity;
-import appLogic.FixedActivity;
+import appLogic.activity.impl.Activity;
+import appLogic.activity.impl.FixedActivity;
 import appLogic.TimeEntry;
-import appLogic.WorkActivity;
+import appLogic.activity.impl.WorkActivity;
 import appLogic.activity.command.CreateFixedActivity;
 import appLogic.activity.command.CreateProjectActivity;
 import appLogic.activity.command.CreateWorkActivity;

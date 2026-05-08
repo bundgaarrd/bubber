@@ -1,5 +1,6 @@
 package appLogic;
 
+import appLogic.activity.impl.Activity;
 import appLogic.employee.Employee;
 import appLogic.project.Project;
 import appLogic.project.ProjectRegistry;

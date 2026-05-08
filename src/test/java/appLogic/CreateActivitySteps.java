@@ -2,6 +2,7 @@ package appLogic;
 
 import appLogic.activity.command.CreateProjectActivity;
 import appLogic.activity.exception.DuplicateActivityException;
+import appLogic.activity.impl.Activity;
 import appLogic.employee.Employee;
 import appLogic.project.Project;
 import io.cucumber.java.en.Given;
@@ -12,7 +13,6 @@ import org.junit.jupiter.api.Assertions;
 import java.time.LocalDate;
 import java.time.temporal.WeekFields;
 import java.util.Locale;
-import java.util.UUID;
 
 public class CreateActivitySteps {
     private Exception lastException;

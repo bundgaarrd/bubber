@@ -1,6 +1,6 @@
 package appLogic.employee;
 
-import appLogic.Activity;
+import appLogic.activity.impl.Activity;
 import appLogic.project.Project;
 
 import java.time.LocalDate;
