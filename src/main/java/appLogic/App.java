@@ -7,6 +7,8 @@ import appLogic.employee.InMemoryTimeEntryRepository;
 import appLogic.activity.*;
 import appLogic.project.Project;
 import appLogic.project.ProjectRegistry;
+import appLogic.report.Report;
+import appLogic.report.ReportService;
 
 import java.util.*;
 
@@ -19,6 +21,7 @@ public class App {
     private final ActivityService activityService;
     private final ActivityRepository activityRepository;
     private Employee loggedInUser;
+    private final ReportService reportService;
 
     public static void main(String[] args) { // Has to be run from mvn javafx:run
         System.out.println("Starting the application ...");
@@ -38,6 +41,11 @@ public class App {
                 this.activityRepository,
                 this.projectRegistry,
                 this::getLoggedInUser,
+                this.timeEntryRepository
+        );
+        this.reportService = new ReportService(
+                this.projectRegistry,
+                this.activityRepository,
                 this.timeEntryRepository
         );
     }
@@ -125,31 +133,11 @@ public class App {
         return timeEntryRepository;
     }
 
+    public Report getReport(String projectId) {
+        return reportService.generateReport(projectId);
+    }
+
     public void testMethod() {
         System.out.println("This is a testmethod from App.java\nThis means that the UI and app talks together");
-    }
-
-    public Report generateReport(String projectId) {
-        Project project = projectRegistry.getProjectById(projectId);
-        if (project == null) {
-            throw new IllegalArgumentException("Project not found: " + projectId);
-    }
-        List<Activity> activities = activityRepository.findByProject(projectId);
-        List<TimeEntry> allEntries = timeEntryRepository.findAll();
-
-        Set<Summary> summaries = new HashSet<>();
-        double totalHoursUsed = 0;
-
-        for (Activity activity : activities) {
-            double activityHours = allEntries.stream()
-                .filter(e -> e.getActivity().getId().equals(activity.getId()))
-                .mapToDouble(TimeEntry::getHoursWorked)
-                .sum();
-            totalHoursUsed += activityHours;
-            summaries.add(new Summary(activityHours, activity.getName()));
-        }
-
-        int remainingHours = Math.max(0, project.getExpectedHours() - (int) totalHoursUsed);
-        return new Report(totalHoursUsed, summaries, remainingHours);
     }
 }

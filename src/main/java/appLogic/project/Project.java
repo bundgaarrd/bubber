@@ -2,9 +2,9 @@ package appLogic.project;
 
 import appLogic.Activity;
 import appLogic.Customer;
-import appLogic.Report;
 import appLogic.TimeEntry;
 import appLogic.employee.Employee;
+import appLogic.report.Report;
 
 import java.util.HashSet;
 import java.util.List;
