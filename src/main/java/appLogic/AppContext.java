@@ -11,10 +11,6 @@ import appLogic.project.Project;
 import appLogic.project.ProjectRegistry;
 import appLogic.report.ReportService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 public class AppContext {
     private static AppContext instance = null;
 
@@ -31,19 +27,20 @@ public class AppContext {
     }
 
     public static AppContext initialize() {
-         if(instance == null) {
-             instance = new AppContext();
-             instance.loadContext();
-             instance.loadEmployees();
-         }
-         return instance;
+        if (instance == null) {
+            instance = new AppContext();
+            instance.loadContext();
+            instance.loadEmployees();
+        }
+        return instance;
     }
 
     private void loadContext() {
-        employeeRepository = new InMemoryEmployeeRepository();
+        employeeRepository  = new InMemoryEmployeeRepository();
         timeEntryRepository = new InMemoryTimeEntryRepository();
-        activityRepository = new InMemoryActivityRepository();
-        projectRegistry = new ProjectRegistry();
+        activityRepository  = new InMemoryActivityRepository();
+        projectRegistry     = new ProjectRegistry();
+
         activityService = new DefaultActivityService(
                 activityRepository,
                 projectRegistry,
@@ -51,6 +48,7 @@ public class AppContext {
                 timeEntryRepository,
                 employeeRepository
         );
+
         reportService = new ReportService(
                 projectRegistry,
                 activityRepository,
@@ -67,10 +65,10 @@ public class AppContext {
         activityService.saveTimeEntry(contextProject.getProjectID(), "huba", "Being a good teacher", "TDD/BDD forelæsning", 20, 21, 26, 26, 2.5);
         activityService.saveTimeEntry(contextProject.getProjectID(), "wilo", "Being a good TA", "Explaining TDD issues", 33, 34, 26, 26, 1.5);
 
-        Project KBHShop = projectRegistry.createProject("KBHShop"); // generates 26001
+        Project KBHShop = projectRegistry.createProject("KBHShop");
         KBHShop.assignProjectLeader(employeeRepository.findByInitials("laha"));
 
-        Project DTU = projectRegistry.createProject("DTU");         // generates 26002
+        Project DTU = projectRegistry.createProject("DTU");
         DTU.assignProjectLeader(employeeRepository.findByInitials("alla"));
     }
 
@@ -83,37 +81,16 @@ public class AppContext {
         if (emp == null) {
             throw new IllegalStateException("Employee not found");
         }
-
         this.loggedInUser = emp;
     }
 
-    public InMemoryEmployeeRepository getEmployeeRepository() {
-        return employeeRepository;
-    }
-
-    public InMemoryTimeEntryRepository getTimeEntryRepository() {
-        return timeEntryRepository;
-    }
-
-    public ProjectRegistry getProjectRegistry() {
-        return projectRegistry;
-    }
-
-    public ActivityService getActivityService() {
-        return activityService;
-    }
-
-    public ActivityRepository getActivityRepository() {
-        return activityRepository;
-    }
-
-    public Employee getLoggedInUser() {
-        return loggedInUser;
-    }
-
-    public ReportService getReportService() {
-        return reportService;
-    }
+    public InMemoryEmployeeRepository getEmployeeRepository() { return employeeRepository; }
+    public InMemoryTimeEntryRepository getTimeEntryRepository() { return timeEntryRepository; }
+    public ProjectRegistry              getProjectRegistry()   { return projectRegistry; }
+    public ActivityService              getActivityService()   { return activityService; }
+    public ActivityRepository           getActivityRepository(){ return activityRepository; }
+    public Employee                     getLoggedInUser()      { return loggedInUser; }
+    public ReportService                getReportService()     { return reportService; }
 
     public void reset() {
         instance = null;

@@ -96,13 +96,13 @@ public class RegisterActivityTimeView {
 
         Button newActivityBtn = new Button("+ New activity");
 
-        List<String> initials = new ArrayList<>();
+        List<String> name = new ArrayList<>();
         employeeRepository.getAllAvailableEmployees().stream()
-            .map(Employee::getInitials)
-            .forEach(initials::add);
+            .map(Employee::getName)
+            .forEach(name::add);
         ChoiceBox<String> employeeBox = new ChoiceBox<>();
-        employeeBox.getItems().addAll(initials);
-        if (!initials.isEmpty()) employeeBox.setValue(initials.get(0));
+        employeeBox.getItems().addAll(name);
+        if (!name.isEmpty()) employeeBox.setValue(name.get(0));
 
         TextField hoursField = new TextField();
         hoursField.setPromptText("e.g. 2.5");
@@ -144,7 +144,7 @@ public class RegisterActivityTimeView {
         TableColumn<TimeEntry, String> colEmployee = new TableColumn<>("Employee");
         colEmployee.setCellValueFactory(d ->
             new javafx.beans.property.SimpleStringProperty(
-                d.getValue().getEmployee().getInitials()));
+                d.getValue().getEmployee().getName()));
 
         TableColumn<TimeEntry, String> colActivity = new TableColumn<>("Activity");
         colActivity.setCellValueFactory(d ->
@@ -201,7 +201,7 @@ public class RegisterActivityTimeView {
             Activity activity = activityBox.getValue();
             if (activity == null) { messageLabel.setText("Create or select an activity first"); return; }
 
-            Employee employee = employeeRepository.findByInitials(employeeBox.getValue());
+            Employee employee = employeeRepository.findByName(employeeBox.getValue());
             if (employee == null) { messageLabel.setText("Pick an employee"); return; }
 
             double hours;
