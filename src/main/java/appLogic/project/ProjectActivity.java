@@ -1,10 +1,10 @@
 package appLogic.project;
 
-import appLogic.activity.impl.Activity;
-import appLogic.employee.Employee;
-
 import java.time.LocalDate;
 import java.util.Set;
+
+import appLogic.activity.impl.Activity;
+import appLogic.employee.Employee;
 
 public class ProjectActivity extends Activity {
     private Set<Employee> assignedEmployees;
@@ -20,7 +20,7 @@ public class ProjectActivity extends Activity {
     }
 
     public ProjectActivity(String name, String description, String summary, LocalDate date) {
-        super(name, description, summary, date);
+        super(name, description, summary, date, null);
     }
 
     public ActivityStatus getStatus() {

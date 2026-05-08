@@ -1,28 +1,29 @@
 package ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import appLogic.App;
 import appLogic.AppContext;
 import appLogic.employee.Employee;
 import appLogic.employee.EmployeeRepository;
 import appLogic.project.Project;
 import appLogic.project.ProjectRegistry;
-import javafx.beans.binding.StringExpression;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
+import javafx.geometry.Insets;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
 public class ChooseProjectView {
@@ -137,13 +138,11 @@ public class ChooseProjectView {
         tableData.setOnMouseClicked(e -> {
             Project selected = tableData.getSelectionModel().getSelectedItem();
 
-            if (e.getClickCount() == 2) {
-                if (selected != null) {
-                    RegisterTimeView timeView = new RegisterTimeView(scene);
-                    scene.setRoot(timeView.getView());
+            if (e.getClickCount() == 2 && selected != null) {
+                RegisterTimeView timeView = new RegisterTimeView(scene, selected); // pass project
+                scene.setRoot(timeView.getView());
                 }
-            }
-        });
+});
         // -----End Events for interactive elements-----
 
         // Layout adjustments

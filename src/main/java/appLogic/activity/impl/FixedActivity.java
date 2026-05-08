@@ -1,10 +1,10 @@
 package appLogic.activity.impl;
 
-import appLogic.FixedActivityType;
-
 import java.time.LocalDate;
 import java.time.temporal.WeekFields;
 import java.util.Locale;
+
+import appLogic.FixedActivityType;
 
 public class FixedActivity extends Activity {
 
@@ -13,9 +13,9 @@ public class FixedActivity extends Activity {
     private final FixedActivityType type;
 
     public FixedActivity(String name, String description, String summary,
-                         LocalDate startDate, LocalDate endDate,
-                         FixedActivityType type) {
-        super(name, description, summary, startDate);
+                     LocalDate startDate, LocalDate endDate,
+                     FixedActivityType type) {
+        super(name, description, summary, startDate, null);
         this.startDate = startDate;
         this.endDate = endDate;
         this.type = type;
