@@ -1,5 +1,9 @@
 package appLogic;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import appLogic.activity.ActivityService;
 import appLogic.employee.Employee;
 import appLogic.employee.EmployeeRepository;
@@ -7,10 +11,6 @@ import appLogic.employee.InMemoryTimeEntryRepository;
 import appLogic.project.ProjectRegistry;
 import appLogic.report.Report;
 import appLogic.report.ReportService;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class App {
     private static App instance;

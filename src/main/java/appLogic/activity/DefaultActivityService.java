@@ -5,17 +5,19 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import appLogic.activity.impl.Activity;
-import appLogic.activity.impl.FixedActivity;
 import appLogic.TimeEntry;
-import appLogic.activity.impl.WorkActivity;
 import appLogic.activity.command.CreateFixedActivity;
 import appLogic.activity.command.CreateProjectActivity;
 import appLogic.activity.command.CreateWorkActivity;
-import appLogic.activity.exception.*;
+import appLogic.activity.exception.ActivityNotFoundException;
+import appLogic.activity.exception.DuplicateActivityException;
+import appLogic.activity.exception.InvalidHoursException;
+import appLogic.activity.exception.UnauthorizedActivityAccessException;
+import appLogic.activity.impl.Activity;
+import appLogic.activity.impl.FixedActivity;
+import appLogic.activity.impl.WorkActivity;
 import appLogic.employee.Employee;
 import appLogic.employee.EmployeeRepository;
-import appLogic.employee.InMemoryEmployeeRepository;
 import appLogic.employee.InMemoryTimeEntryRepository;
 import appLogic.project.Project;
 import appLogic.project.ProjectActivity;
@@ -137,6 +139,7 @@ public class DefaultActivityService implements ActivityService {
         }
     }
 
+    @Override
     public void saveTimeEntry(String projectId,
                                       String initials,
                                       String description,

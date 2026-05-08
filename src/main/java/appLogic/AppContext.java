@@ -39,7 +39,7 @@ public class AppContext {
         activityRepository = new InMemoryActivityRepository();
         projectRegistry = new ProjectRegistry();
         activityService = new DefaultActivityService(
-                new InMemoryActivityRepository(),
+                activityRepository,
                 projectRegistry,
                 () -> loggedInUser,
                 timeEntryRepository,

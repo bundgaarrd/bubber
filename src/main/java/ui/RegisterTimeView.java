@@ -2,13 +2,15 @@ package ui; //s244813 & s244970
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-import appLogic.activity.impl.Activity;
 import appLogic.App;
 import appLogic.AppContext;
 import appLogic.TimeEntry;
 import appLogic.activity.ActivityService;
 import appLogic.activity.command.CreateWorkActivity;
+import appLogic.activity.impl.Activity;
 import appLogic.employee.Employee;
 import appLogic.employee.EmployeeRepository;
 import appLogic.employee.InMemoryTimeEntryRepository;
@@ -20,6 +22,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -57,7 +60,12 @@ public class RegisterTimeView {
         form.setHgap(10);
         form.setVgap(10);
 
-        TextField employeeField = new TextField();
+        List<String> allEmployees = new ArrayList<>();
+        employeeRepository.findAll().stream().map(Employee::getInitials).forEach(allEmployees::add);
+        ChoiceBox<String> employeeField = new ChoiceBox<>();
+        employeeField.getItems().addAll(allEmployees);
+        if (!allEmployees.isEmpty()) employeeField.setValue(allEmployees.get(0));
+
         TextField activityDescField = new TextField();
         TextField activitySummaryField = new TextField();
         TextField hoursField = new TextField();
@@ -119,7 +127,7 @@ public class RegisterTimeView {
 
         addButton.setOnAction(e -> {
 
-            Employee employee = employeeRepository.findByInitials(employeeField.getText());
+            Employee employee = employeeRepository.findByInitials(employeeField.getValue());
 
             if (employee == null) {
                 System.out.println("Employee not found");
