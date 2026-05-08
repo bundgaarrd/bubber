@@ -1,5 +1,6 @@
 package appLogic;
 
+import appLogic.activity.impl.Activity;
 import appLogic.employee.Employee;
 import appLogic.project.Project;
 import appLogic.project.ProjectRegistry;
@@ -24,6 +25,7 @@ public class TestApp {
     public void reset() {
         App.resetInstanceForTests();
         this.app = App.getInstance();
+        this.app.getAppContext().reset();
         this.project = null;
         this.activity = null;
     }

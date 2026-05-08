@@ -5,6 +5,8 @@ import appLogic.activity.command.CreateFixedActivity;
 import appLogic.activity.exception.ActivityNotFoundException;
 import appLogic.activity.exception.DuplicateActivityException;
 import appLogic.activity.exception.InvalidHoursException;
+import appLogic.activity.impl.Activity;
+import appLogic.activity.impl.FixedActivity;
 import appLogic.employee.Employee;
 import appLogic.project.Project;
 import io.cucumber.java.en.And;
@@ -16,7 +18,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,11 +45,11 @@ public class RegisterWorkSteps {
         assignLoggedInUserToActivity(name);
     }
 
-    @When("I log that I have worked 5 hours")
-    public void logHoursWorked() {
+    @When("I log that I have worked {int} hours")
+    public void logHoursWorked(int hours) {
         Employee employee = requireLoggedInUser();
         lastTimeEntry = TestApp.getInstance().getApp().getActivityService()
-                .registerWork(activity.getId(), employee, LocalDateTime.now(), 5);
+                .registerWork(activity.getId(), employee, LocalDateTime.now(), hours);
     }
 
     @Then("5 working hours are registered")

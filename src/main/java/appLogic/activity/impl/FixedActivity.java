@@ -1,4 +1,6 @@
-package appLogic;
+package appLogic.activity.impl;
+
+import appLogic.FixedActivityType;
 
 import java.time.LocalDate;
 import java.time.temporal.WeekFields;

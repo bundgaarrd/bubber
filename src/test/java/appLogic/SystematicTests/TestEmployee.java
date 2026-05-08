@@ -3,9 +3,9 @@ package appLogic.SystematicTests;
 import appLogic.employee.Employee;
 import appLogic.project.Project;
 import org.junit.jupiter.api.Test;
-import appLogic.Activity;
+import appLogic.activity.impl.Activity;
 import appLogic.App;
-import appLogic.WorkActivity;
+import appLogic.activity.impl.WorkActivity;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;

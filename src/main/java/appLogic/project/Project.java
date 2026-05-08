@@ -1,15 +1,11 @@
 package appLogic.project;
 
-import appLogic.Activity;
 import appLogic.Customer;
-import appLogic.Report;
 import appLogic.TimeEntry;
 import appLogic.employee.Employee;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 public class Project {
     private String projectID;

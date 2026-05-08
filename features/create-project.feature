@@ -5,8 +5,8 @@ Feature: Create project
 
   Scenario: Create project
     Given I am logged in as an employee or a project leader with the initials "laha"
-    And A project with the name "KBHShop" does not exist in the system
-    When I create a project with the name "KBHShop"
+    And A project with the name "TestProject" does not exist in the system
+    When I create a project with the name "TestProject"
     Then the project exists in the system
     And the project is assigned a project number
 

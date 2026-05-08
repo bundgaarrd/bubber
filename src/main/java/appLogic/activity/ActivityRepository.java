@@ -1,6 +1,6 @@
 package appLogic.activity;
 
-import appLogic.Activity;
+import appLogic.activity.impl.Activity;
 
 import java.util.List;
 import java.util.Optional;

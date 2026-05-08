@@ -1,5 +1,6 @@
 package appLogic; //s244813
 
+import appLogic.activity.impl.Activity;
 import appLogic.employee.Employee;
 
 import java.time.LocalDateTime;

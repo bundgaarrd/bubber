@@ -3,6 +3,7 @@ package appLogic;
 import appLogic.activity.command.CreateWorkActivity;
 import appLogic.activity.exception.ActivityNotFoundException;
 import appLogic.activity.exception.DuplicateActivityException;
+import appLogic.activity.impl.Activity;
 import appLogic.employee.Employee;
 import appLogic.project.Project;
 import io.cucumber.java.en.Given;
@@ -10,7 +11,6 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -59,15 +59,15 @@ public class AssignEmployeeSteps {
 
         ensureCurrentProjectAndActivity(activityName);
 
-        if (!targetEmployee.isAvailable()) {
+        try {
+            targetActivity.removeEmployee(targetEmployee);
+            TestApp.getInstance().getApp().getActivityService().assignEmployee(targetActivity.getId(), targetEmployee);
+            assignmentSucceeded = targetActivity.getAssignedEmployees().contains(targetEmployee);
+            errorMessage = null;
+        } catch (Exception e) {
             assignmentSucceeded = false;
-            errorMessage = "Employee is unavailable";
-            return;
+            errorMessage = "An error occurred while trying to assign the employee: " + e.getMessage();
         }
-
-        TestApp.getInstance().getApp().getActivityService().assignEmployee(targetActivity.getId(), targetEmployee);
-        assignmentSucceeded = targetEmployee.getActivities().stream().anyMatch(a -> a.getId().equals(targetActivity.getId()));
-        errorMessage = null;
     }
 
     @Then("{string} is added to the activity {string}")
