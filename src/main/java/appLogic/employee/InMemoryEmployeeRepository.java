@@ -20,6 +20,16 @@ public class InMemoryEmployeeRepository implements EmployeeRepository {
     }
 
     @Override
+    public Employee findByName(String name) {
+        for (Employee emp : employees.values()) {
+            if (emp.getName().equals(name)) {
+                return emp;
+            }
+        }
+        return null;
+    }
+
+    @Override
     public Set<Employee> findAll() {
         return Set.copyOf(employees.values());
     }

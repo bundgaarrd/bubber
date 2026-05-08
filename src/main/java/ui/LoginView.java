@@ -1,6 +1,7 @@
 package ui;
 
 import appLogic.App;
+import appLogic.AppContext;
 import io.cucumber.messages.types.Exception;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -22,6 +23,7 @@ public class LoginView {
 
     public Parent getView() {
         App app = App.getInstance();
+        AppContext appContext = app.getAppContext();
 
         VBox root = new VBox(15);
         root.setAlignment(Pos.CENTER);
@@ -40,8 +42,7 @@ public class LoginView {
             String initials = initialsField.getText().trim();
 
             try {
-                app.login(initials);
-                System.out.println("User " + initials + " logged in!");
+                appContext.login(initials);
                 MainView mainView = new MainView(scene);
                 scene.setRoot(mainView.getView());
             } catch (IllegalArgumentException | IllegalStateException exception) {

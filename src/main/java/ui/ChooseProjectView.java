@@ -1,9 +1,11 @@
 package ui;
 
 import appLogic.App;
+import appLogic.AppContext;
 import appLogic.employee.Employee;
 import appLogic.employee.EmployeeRepository;
 import appLogic.project.Project;
+import appLogic.project.ProjectRegistry;
 import javafx.beans.binding.StringExpression;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -27,12 +29,13 @@ public class ChooseProjectView {
 
     private Scene scene;
     private ObservableList<Project> projectData = FXCollections.observableArrayList();
-    private EmployeeRepository employeeRepository;
     private App app;
+    private AppContext appContext;
 
     public ChooseProjectView(Scene scene) {
         this.scene = scene;
         this.app = App.getInstance();
+        this.appContext = app.getAppContext();
     }
 
     public Parent getView() {
@@ -58,10 +61,17 @@ public class ChooseProjectView {
 
         TableColumn<Project, String> hourCol = new TableColumn<>("Expected hours");
         hourCol.setCellValueFactory(data ->
-                // cumbersome
                 new javafx.beans.property.SimpleStringProperty(String.valueOf(data.getValue().getExpectedHours())));
 
-        tableData.getColumns().addAll(nameCol, idCol, hourCol);
+        TableColumn<Project, String> projectLeaderCol = new TableColumn<>("Project leader");
+        projectLeaderCol.setCellValueFactory(data -> {
+            Employee leader = data.getValue().getProjectLeader();
+            // Ternery statement, if leader is not null set it to project leader, else "(none)"
+            String name = (leader != null) ? leader.getName() : "(none)";
+            return new javafx.beans.property.SimpleStringProperty(name);
+        });
+
+        tableData.getColumns().addAll(nameCol, idCol, hourCol, projectLeaderCol);
 
         projectData.addAll(app.getProjectRegistry().getAllProjects());
 
@@ -97,7 +107,7 @@ public class ChooseProjectView {
             // Get employee names as a string
             List<String> allEmployees = new ArrayList<>();
             allEmployees.add("(none)");
-            app.getEmployeeRepository().findAll().stream().map(Employee::getName).forEach(allEmployees::add);
+            appContext.getEmployeeRepository().findAll().stream().map(Employee::getName).forEach(allEmployees::add);
 
             ChoiceBox<String> projectLeaderChoice = new ChoiceBox<>();
 
@@ -113,7 +123,12 @@ public class ChooseProjectView {
 
             dialog.showAndWait().ifPresent(result -> {
                 if (result == ButtonType.OK && !nameField.getText().isBlank()) {
-                    Project project = app.getProjectRegistry().createProject(nameField.getText());
+                    ProjectRegistry projectRegistry = appContext.getProjectRegistry();
+                    Project project = projectRegistry.createProject(nameField.getText());
+                    EmployeeRepository employeeRepository = appContext.getEmployeeRepository();
+                    String projectLeaderString = projectLeaderChoice.getValue();
+
+                    project.assignProjectLeader(employeeRepository.findByName(projectLeaderString));
                     projectData.add(project);
                 }
             });
