@@ -11,7 +11,7 @@ public class FixedActivity extends Activity {
     public FixedActivity(String name, String description, String summary,
                          int startWeek, int endWeek, int startYear, int endYear,
                          FixedActivityType type) {
-        super(name, description, summary, startWeek, endWeek, startYear, endYear);
+        super(name, description, summary, startWeek, endWeek, startYear, endYear, null);
         this.startWeek = startWeek;
         this.endWeek = endWeek;
         this.type = type;

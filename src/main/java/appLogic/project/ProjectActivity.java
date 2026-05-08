@@ -1,9 +1,9 @@
 package appLogic.project;
 
+import java.util.Set;
+
 import appLogic.activity.impl.Activity;
 import appLogic.employee.Employee;
-
-import java.util.Set;
 
 public class ProjectActivity extends Activity {
     private Set<Employee> assignedEmployees;
@@ -20,7 +20,7 @@ public class ProjectActivity extends Activity {
 
     public ProjectActivity(String name, String description, String summary,
                            int startWeek, int endWeek, int startYear, int endYear) {
-        super(name, description, summary, startWeek, endWeek, startYear, endYear);
+        super(name, description, summary, startWeek, endWeek, startYear, endYear, null);
     }
 
     public ActivityStatus getStatus() {
