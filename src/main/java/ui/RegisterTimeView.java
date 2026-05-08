@@ -145,7 +145,7 @@ public class RegisterTimeView {
                     employee.getInitials() + "-" + activityDescField.getText(),
                     activityDescField.getText(),
                     activitySummaryField.getText(),
-                    0, 0, 0, 0 //TODO Update
+                    0, 0, 0, 0, 5
             ));
 
             TimeEntry entry = activityService.registerWork(activity.getId(), employee, LocalDateTime.now(), hours);

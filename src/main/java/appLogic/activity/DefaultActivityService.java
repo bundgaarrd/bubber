@@ -59,7 +59,7 @@ public class DefaultActivityService implements ActivityService {
         ensureUniqueName(command.projectId(), command.name());
         Activity activity = new WorkActivity(
                 command.name(), command.description(), command.summary(),
-                command.startWeek(), command.endWeek(), command.startYear(), command.endYear()
+                command.startWeek(), command.endWeek(), command.startYear(), command.endYear(), command.expectedHours()
         );
         activityRepository.save(command.projectId(), activity);
         return activity;
@@ -166,7 +166,8 @@ public class DefaultActivityService implements ActivityService {
                 startWeek,
                 endWeek,
                 startYear,
-                endYear
+                endYear,
+                (int) hours
         ));
 
         registerWork(activity.getId(), emp, LocalDateTime.now(), hours);

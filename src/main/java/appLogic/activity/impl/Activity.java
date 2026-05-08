@@ -80,10 +80,7 @@ public abstract class Activity {
     }
 
     public int getDuration() {
-        return 0;
-    }
-
-    public int getHoursExpected() {
-        return 0;
+        int totalWeeks = (endYear - startYear) * 52 + (endWeek - startWeek) + 1;
+        return Math.max(totalWeeks, 0);
     }
 }
