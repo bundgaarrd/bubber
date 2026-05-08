@@ -1,8 +1,11 @@
 package ui; //s244813 & s244970
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import appLogic.App;
 import appLogic.AppContext;
@@ -18,11 +21,13 @@ import appLogic.project.ProjectRegistry;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
@@ -30,8 +35,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 
 public class RegisterTimeView {
 
@@ -62,13 +68,20 @@ public class RegisterTimeView {
     public Parent getView() {
 
         BorderPane root = new BorderPane();
+        root.setPadding(new Insets(20));
 
-        // ── Form ──────────────────────────────────────────────────────────
-        GridPane form = new GridPane();
-        form.setPadding(new Insets(15));
-        form.setHgap(10);
-        form.setVgap(10);
+        // ── Header ────────────────────────────────────────────────────────
+        Label title = new Label("Register Time — " + selectedProject.getProjectName());
+        title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
 
+        Label subtitle = new Label("Project ID: " + selectedProject.getProjectID());
+        subtitle.setStyle("-fx-text-fill: #777; -fx-font-size: 12px;");
+
+        VBox header = new VBox(2, title, subtitle);
+        header.setPadding(new Insets(0, 0, 15, 0));
+        root.setTop(header);
+
+        // ── Form (horizontal) ─────────────────────────────────────────────
         // Employee dropdown
         List<String> initials = new ArrayList<>();
         employeeRepository.getAllAvailableEmployees().stream()
@@ -78,45 +91,52 @@ public class RegisterTimeView {
         employeeBox.getItems().addAll(initials);
         if (!initials.isEmpty()) employeeBox.setValue(initials.get(0));
 
-        // Project dropdown (locked to selected project)
-        ChoiceBox<String> projectBox = new ChoiceBox<>();
-        projectBox.getItems().add(selectedProject.getProjectID());
-        projectBox.setValue(selectedProject.getProjectID());
-        projectBox.setDisable(true);
+        TextField descField    = new TextField(); descField.setPromptText("e.g. Implement login");
+        TextField summaryField = new TextField(); summaryField.setPromptText("Short summary");
+        DatePicker startDate   = new DatePicker(LocalDate.now());
+        DatePicker endDate     = new DatePicker(LocalDate.now());
+        TextField hoursField   = new TextField(); hoursField.setPromptText("e.g. 2.5");
+        hoursField.setPrefWidth(70);
 
-        TextField descField      = new TextField();
-        TextField summaryField   = new TextField();
-        TextField startWeekField = new TextField();
-        TextField endWeekField   = new TextField();
-        TextField startYearField = new TextField();
-        TextField endYearField   = new TextField();
-        TextField hoursField     = new TextField();
+        // Build labeled columns
+        HBox row = new HBox(12,
+            field("Employee",    employeeBox),
+            field("Description", descField),
+            field("Summary",     summaryField),
+            field("Start date",  startDate),
+            field("End date",    endDate),
+            field("Hours",       hoursField)
+        );
 
-        Label messageLabel = new Label();
-
-        form.add(new Label("Employee:"),   0, 0); form.add(employeeBox,    1, 0);
-        form.add(new Label("Project ID:"), 0, 1); form.add(projectBox,     1, 1);
-        form.add(new Label("Description:"),0, 2); form.add(descField,      1, 2);
-        form.add(new Label("Summary:"),    0, 3); form.add(summaryField,   1, 3);
-        form.add(new Label("Start week:"), 0, 4); form.add(startWeekField, 1, 4);
-        form.add(new Label("End week:"),   0, 5); form.add(endWeekField,   1, 5);
-        form.add(new Label("Start year:"), 0, 6); form.add(startYearField, 1, 6);
-        form.add(new Label("End year:"),   0, 7); form.add(endYearField,   1, 7);
-        form.add(new Label("Hours:"),      0, 8); form.add(hoursField,     1, 8);
+        HBox.setHgrow(descField,    Priority.ALWAYS);
+        HBox.setHgrow(summaryField, Priority.ALWAYS);
+        descField.setMaxWidth(Double.MAX_VALUE);
+        summaryField.setMaxWidth(Double.MAX_VALUE);
 
         Button addButton  = new Button("Add Entry");
+        addButton.setStyle("-fx-base: #4f8ef7; -fx-text-fill: white; -fx-font-weight: bold;");
         Button backButton = new Button("Back");
-        HBox buttons = new HBox(10, addButton, backButton);
-        form.add(buttons,      1, 9);
-        form.add(messageLabel, 1, 10);
-        form.add(new Label("Double-click a row to edit"), 2, 0);
 
-        root.setTop(form);
+        HBox actions = new HBox(8, addButton, backButton);
+        actions.setAlignment(Pos.CENTER_RIGHT);
+
+        Label messageLabel = new Label();
+        messageLabel.setStyle("-fx-text-fill: #c94444;");
+
+        VBox formBlock = new VBox(10, row, actions, messageLabel);
+        formBlock.setPadding(new Insets(12));
+        formBlock.setStyle(
+            "-fx-background-color: #f5f5f7;" +
+            "-fx-background-radius: 8;" +
+            "-fx-border-color: #e0e0e6;" +
+            "-fx-border-radius: 8;"
+        );
 
         // ── Table ─────────────────────────────────────────────────────────
         TableView<TimeEntry> table = new TableView<>();
         table.setItems(tableData);
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        table.setPlaceholder(new Label("No time entries for this project yet"));
 
         TableColumn<TimeEntry, String> colEmployee = new TableColumn<>("Employee");
         colEmployee.setCellValueFactory(d ->
@@ -136,12 +156,13 @@ public class RegisterTimeView {
                 String.valueOf(d.getValue().getHoursWorked())
             ));
 
-        TableColumn<TimeEntry, Void> colDelete = new TableColumn<>("Delete");
+        TableColumn<TimeEntry, Void> colDelete = new TableColumn<>("");
         colDelete.setMinWidth(80);
         colDelete.setMaxWidth(80);
         colDelete.setCellFactory(col -> new TableCell<>() {
             private final Button btn = new Button("Delete");
             {
+                btn.setStyle("-fx-text-fill: #c94444;");
                 btn.setOnAction(e -> {
                     TimeEntry entry = getTableView().getItems().get(getIndex());
                     tableData.remove(entry);
@@ -157,56 +178,67 @@ public class RegisterTimeView {
 
         table.getColumns().addAll(colEmployee, colActivity, colHours, colDelete);
 
-        root.setCenter(table);
+        Label hint = new Label("Double-click a row to edit");
+        hint.setStyle("-fx-text-fill: #888; -fx-font-size: 11px;");
+
+        VBox tableBlock = new VBox(8, table, hint);
+        VBox.setVgrow(table, Priority.ALWAYS);
+        VBox.setVgrow(tableBlock, Priority.ALWAYS);
+
+        // Center: form on top, table below
+        VBox center = new VBox(15, formBlock, tableBlock);
+        VBox.setVgrow(tableBlock, Priority.ALWAYS);
+        root.setCenter(center);
 
         // ── Events ────────────────────────────────────────────────────────
         addButton.setOnAction(e -> {
+            messageLabel.setStyle("-fx-text-fill: #c94444;");
+
             Employee employee = employeeRepository.findByInitials(employeeBox.getValue());
             if (employee == null) { messageLabel.setText("Employee not found"); return; }
-
-            String projectId = projectBox.getValue();
-            if (projectId == null) { messageLabel.setText("Select a project"); return; }
-
             if (descField.getText().isBlank()) { messageLabel.setText("Description required"); return; }
-
-            int startWeek, endWeek, startYear, endYear;
-            try {
-                startWeek = Integer.parseInt(startWeekField.getText().trim());
-                endWeek   = Integer.parseInt(endWeekField.getText().trim());
-                startYear = Integer.parseInt(startYearField.getText().trim());
-                endYear   = Integer.parseInt(endYearField.getText().trim());
-            } catch (NumberFormatException ex) {
-                messageLabel.setText("Invalid week/year values");
-                return;
+            if (startDate.getValue() == null || endDate.getValue() == null) {
+                messageLabel.setText("Pick start and end dates"); return;
+            }
+            if (endDate.getValue().isBefore(startDate.getValue())) {
+                messageLabel.setText("End date cannot be before start date"); return;
             }
 
             double hours;
             try {
                 hours = Double.parseDouble(hoursField.getText().trim());
+                if (hours <= 0) throw new NumberFormatException();
             } catch (NumberFormatException ex) {
-                messageLabel.setText("Invalid hours");
+                messageLabel.setText("Enter valid hours");
                 return;
             }
 
+            // Convert dates → ISO week + year
+            WeekFields wf = WeekFields.of(Locale.getDefault());
+            int startWeek = startDate.getValue().get(wf.weekOfWeekBasedYear());
+            int endWeek   = endDate.getValue().get(wf.weekOfWeekBasedYear());
+            int startYear = startDate.getValue().getYear();
+            int endYear   = endDate.getValue().getYear();
+
             Activity activity = activityService.createWorkActivity(new CreateWorkActivity(
-                projectId,
+                selectedProject.getProjectID(),
                 employee.getInitials() + "-" + descField.getText(),
                 descField.getText(),
                 summaryField.getText(),
-                startWeek,
-                endWeek,
-                startYear,
-                endYear
+                startWeek, endWeek, startYear, endYear
             ));
 
             TimeEntry entry = activityService.registerWork(
                 activity.getId(), employee, LocalDateTime.now(), hours
             );
             tableData.add(entry);
+
+            messageLabel.setStyle("-fx-text-fill: #2e8b57;");
             messageLabel.setText("Entry saved!");
+
             descField.clear(); summaryField.clear(); hoursField.clear();
-            startWeekField.clear(); endWeekField.clear();
-            startYearField.clear(); endYearField.clear();
+            startDate.setValue(LocalDate.now());
+            endDate.setValue(LocalDate.now());
         });
 
         backButton.setOnAction(e -> {
@@ -222,5 +254,12 @@ public class RegisterTimeView {
         });
 
         return root;
+    }
+
+    private VBox field(String label, javafx.scene.Node input) {
+        Label l = new Label(label);
+        l.setStyle("-fx-font-size: 11px; -fx-text-fill: #555; -fx-font-weight: bold;");
+        VBox box = new VBox(4, l, input);
+        return box;
     }
 }
