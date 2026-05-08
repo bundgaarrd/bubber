@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import appLogic.AppContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,26 +18,27 @@ public class TestLogin {
 
     @Test
     void login_nullInitials_throwsIllegalArgument() {
-        App app = App.getInstance();
-        assertThrows(IllegalArgumentException.class, () -> app.login(null));
+        AppContext appContext = App.getInstance().getAppContext();
+        assertThrows(IllegalArgumentException.class, () -> appContext.login(null));
     }
 
     @Test
     void login_tooLongInitials_throwsIllegalArgument() {
-        App app = App.getInstance();
-        assertThrows(IllegalArgumentException.class, () -> app.login("ABCDE"));
+        AppContext appContext = App.getInstance().getAppContext();
+        assertThrows(IllegalArgumentException.class, () -> appContext.login("ABCDE"));
     }
 
     @Test
     void login_unknownEmployee_throwsIllegalState() {
-        App app = App.getInstance();
-        assertThrows(IllegalStateException.class, () -> app.login("zzzz"));
+        AppContext appContext = App.getInstance().getAppContext();
+        assertThrows(IllegalStateException.class, () -> appContext.login("zzzz"));
     }
 
     @Test
     void login_validEmployee_setsLoggedInUser() {
         App app = App.getInstance();
-        app.login("huba");
+        AppContext appContext = app.getAppContext();
+        appContext.login("huba");
         assertTrue(app.isUserLoggedIn());
         assertEquals("huba", app.getLoggedInUser().getInitials());
     }

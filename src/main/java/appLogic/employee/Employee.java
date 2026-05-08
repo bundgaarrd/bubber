@@ -52,15 +52,18 @@ public class Employee {
 
     public int getActiveActivityCount(int week, int year) {
         int count = 0;
-        WeekFields weekFields = WeekFields.of(Locale.getDefault());
 
         for (Activity activity : activities) {
-            LocalDate date = activity.getDate();
+            if(week < activity.getStartWeek() || week > activity.getEndWeek()) continue;
 
-            int activityWeek = date.get(weekFields.weekOfWeekBasedYear());
-            int activityYear = date.getYear();
+            String projectReferenceId = activity.getProjectReferenceId();
 
-            if (activityWeek == week && activityYear == year) {
+            if(projectReferenceId == null) {
+                count++;
+                continue;
+            }
+
+            if(projectReferenceId.startsWith(String.valueOf(year))) {
                 count++;
             }
         }

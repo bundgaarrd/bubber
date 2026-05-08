@@ -28,5 +28,6 @@ public interface ActivityService {
 
     TimeEntry registerWork(UUID activityId, Employee employee, LocalDateTime entryStart, double hoursWorked);
 
-    void saveTimeEntry(String projectId, String initials, String description, String summary, double hours);
+    void saveTimeEntry(String projectId, String initials, String description, String summary,
+                       int startWeek, int endWeek, int startYear, int endYear, double hours);
 }

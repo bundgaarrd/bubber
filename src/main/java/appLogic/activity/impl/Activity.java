@@ -3,7 +3,6 @@ package appLogic.activity.impl;
 import appLogic.activity.exception.UnavailableEmployeeException;
 import appLogic.employee.Employee;
 
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -14,15 +13,21 @@ public abstract class Activity {
     private final String name;
     private final String description;
     private final String summary;
-    private final LocalDate date;
+    private final int startWeek;
+    private final int endWeek;
+    private final int startYear;
+    private final int endYear;
     private final Set<Employee> assignedEmployees = new HashSet<>();
 
-    public Activity(String name, String description, String summary, LocalDate date) {
+    public Activity(String name, String description, String summary, int startWeek, int endWeek, int startYear, int endYear) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.description = description;
         this.summary = summary;
-        this.date = date;
+        this.startWeek = startWeek;
+        this.endWeek = endWeek;
+        this.startYear = startYear;
+        this.endYear = endYear;
     }
 
     public UUID getId() {
@@ -58,8 +63,20 @@ public abstract class Activity {
         return summary;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public int getStartWeek() {
+        return startWeek;
+    }
+
+    public int getEndWeek() {
+        return endWeek;
+    }
+
+    public int getStartYear() {
+        return startYear;
+    }
+
+    public int getEndYear() {
+        return endYear;
     }
 
     public int getDuration() {
