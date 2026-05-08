@@ -1,16 +1,17 @@
 package appLogic; //s244813
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import appLogic.activity.ActivityService;
+import appLogic.activity.DefaultActivityService;
+import appLogic.activity.InMemoryActivityRepository;
 import appLogic.activity.command.CreateWorkActivity;
 import appLogic.employee.Employee;
 import appLogic.employee.InMemoryEmployeeRepository;
 import appLogic.employee.InMemoryTimeEntryRepository;
-import appLogic.activity.*;
 import appLogic.project.Project;
 import appLogic.project.ProjectRegistry;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 public class AppContext {
 
@@ -26,17 +27,28 @@ public class AppContext {
     );
 
     static {
-        employeeRepository.save(new Employee("huba", "Hubert Baumeister", true));
-        employeeRepository.save(new Employee("wilo", "William Lopez", true));
-        employeeRepository.save(new Employee("anda", "Annemette A. Damgaard", true));
-        loggedInUser = employeeRepository.findByInitials("huba");
+    employeeRepository.save(new Employee("huba", "Hubert Baumeister", true));
+    employeeRepository.save(new Employee("wilo", "William Lopez", true));
+    employeeRepository.save(new Employee("anda", "Annemette A. Damgaard", true));
+    Employee laha = new Employee("laha", "Lars Hansen", true);
+    employeeRepository.save(laha);
+    Employee alla = new Employee("alla", "Allan Lassen", true);
+    employeeRepository.save(alla);
 
-        Project contextProject = projectRegistry.createProject("AppContext");
-        contextProject.assignProjectLeader(loggedInUser);
+    loggedInUser = employeeRepository.findByInitials("huba");
 
-        saveTimeEntry(contextProject.getProjectID(), "huba", "Being a good teacher", "TDD/BDD forelæsning", 2.5);
-        saveTimeEntry(contextProject.getProjectID(), "wilo", "Being a good TA", "Explaining TDD issues", 1.5);
-    }
+    Project contextProject = projectRegistry.createProject("AppContext");
+    contextProject.assignProjectLeader(loggedInUser);
+
+    Project KBHShop = projectRegistry.createProject("KBHShop");
+    KBHShop.assignProjectLeader(laha);
+
+    Project DTU = projectRegistry.createProject("DTU");
+    DTU.assignProjectLeader(alla);
+
+    saveTimeEntry(contextProject.getProjectID(), "huba", "Being a good teacher", "TDD/BDD forelæsning", 2.5);
+    saveTimeEntry(contextProject.getProjectID(), "wilo", "Being a good TA", "Explaining TDD issues", 1.5);
+}
 
     private static void saveTimeEntry(String projectId,
                                       String initials,

@@ -1,14 +1,19 @@
 package appLogic;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import appLogic.activity.ActivityRepository;
+import appLogic.activity.ActivityService;
+import appLogic.activity.InMemoryActivityRepository;
 import appLogic.employee.Employee;
 import appLogic.employee.EmployeeRepository;
-import appLogic.employee.InMemoryEmployeeRepository;
 import appLogic.employee.InMemoryTimeEntryRepository;
-import appLogic.activity.*;
 import appLogic.project.Project;
 import appLogic.project.ProjectRegistry;
-
-import java.util.*;
 
 public class App {
     private static App instance;
@@ -30,17 +35,12 @@ public class App {
     }
 
     private App() {
-        this.employeeRepository = new InMemoryEmployeeRepository();
-        this.projectRegistry = new ProjectRegistry();
-        this.timeEntryRepository = new InMemoryTimeEntryRepository();
+        this.employeeRepository = AppContext.employeeRepository;
+        this.projectRegistry = AppContext.projectRegistry;
+        this.timeEntryRepository = AppContext.timeEntryRepository;
         this.activityRepository = new InMemoryActivityRepository();
-        this.activityService = new DefaultActivityService(
-                this.activityRepository,
-                this.projectRegistry,
-                this::getLoggedInUser,
-                this.timeEntryRepository
-        );
-    }
+        this.activityService = AppContext.activityService;
+}
 
     private void initializeUsers() {
         employeeRepository.save(new Employee("huba", "Hubert Baumeister", true));
@@ -59,13 +59,12 @@ public class App {
     }
 
     public static App getInstance() {
-        if(instance == null) {
-            instance = new App();
-            instance.initializeUsers();
-            instance.run();
-        }
-        return instance;
+    if (instance == null) {
+        instance = new App();
+        instance.run();
     }
+    return instance;
+}
 
     public static void resetInstanceForTests() {
         instance = null;
@@ -87,18 +86,19 @@ public class App {
     public void importEmployeesFromFile(String path) {
     }
 
-    public void login(String initials) {
-        if (initials == null || initials.length() > 4) {
-            throw new IllegalArgumentException("Initials must be 1-4 characters");
-        }
-
-        Employee emp = employeeRepository.findByInitials(initials);
-        if (emp == null) {
-            throw new IllegalStateException("Employee not found");
-        }
-
-        this.loggedInUser = emp;
+public void login(String initials) {
+    if (initials == null || initials.length() > 4) {
+        throw new IllegalArgumentException("Initials must be 1-4 characters");
     }
+
+    Employee emp = employeeRepository.findByInitials(initials);
+
+    if (emp == null) {
+        throw new IllegalStateException("Employee not found");
+    }
+
+    this.loggedInUser = emp;
+}
 
     public EmployeeRepository getEmployeeRepository() {
         return employeeRepository;
