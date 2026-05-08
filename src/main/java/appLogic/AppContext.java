@@ -3,15 +3,11 @@ package appLogic; //s244813
 import appLogic.activity.ActivityService;
 import appLogic.activity.DefaultActivityService;
 import appLogic.activity.InMemoryActivityRepository;
-import appLogic.activity.command.CreateWorkActivity;
 import appLogic.employee.Employee;
 import appLogic.employee.InMemoryEmployeeRepository;
 import appLogic.employee.InMemoryTimeEntryRepository;
 import appLogic.project.Project;
 import appLogic.project.ProjectRegistry;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class AppContext {
     private static AppContext instance = null;
@@ -45,18 +41,19 @@ public class AppContext {
                 new InMemoryActivityRepository(),
                 projectRegistry,
                 () -> loggedInUser,
-                timeEntryRepository
+                timeEntryRepository,
+                employeeRepository
         );
     }
 
     private void loadEmployees() {
         employeeRepository.loadFromFile("employees.txt");
 
-        Project contextProject = projectRegistry.createProject("AppContext");
+        Project contextProject = projectRegistry.createProject("SoftwareHuset initialisering");
         contextProject.assignProjectLeader(loggedInUser);
 
-        saveTimeEntry(contextProject.getProjectID(), "huba", "Being a good teacher", "TDD/BDD forelæsning", 2.5);
-        saveTimeEntry(contextProject.getProjectID(), "wilo", "Being a good TA", "Explaining TDD issues", 1.5);
+        activityService.saveTimeEntry(contextProject.getProjectID(), "huba", "Being a good teacher", "TDD/BDD forelæsning", 2.5);
+        activityService.saveTimeEntry(contextProject.getProjectID(), "wilo", "Being a good TA", "Explaining TDD issues", 1.5);
 
         Project KBHShop = projectRegistry.createProject("KBHShop"); // generates 26001
         KBHShop.assignProjectLeader(employeeRepository.findByInitials("laha"));
@@ -76,30 +73,6 @@ public class AppContext {
         }
 
         this.loggedInUser = emp;
-    }
-
-    private void saveTimeEntry(String projectId,
-                                      String initials,
-                                      String description,
-                                      String summary,
-                                      double hours) {
-
-        Employee emp = employeeRepository.findByInitials(initials);
-
-        if (emp == null) {
-            System.out.println("Employee not found: " + initials);
-            return;
-        }
-
-        Activity activity = activityService.createWorkActivity(new CreateWorkActivity(
-                projectId,
-                initials + "-" + description,
-                description,
-                summary,
-                LocalDate.now()
-        ));
-
-        activityService.registerWork(activity.getId(), emp, LocalDateTime.now(), hours);
     }
 
     public InMemoryEmployeeRepository getEmployeeRepository() {

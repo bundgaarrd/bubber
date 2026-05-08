@@ -1,5 +1,8 @@
 package ui; //s244813 & s244970
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import appLogic.Activity;
 import appLogic.App;
 import appLogic.AppContext;
@@ -15,14 +18,15 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class RegisterTimeView {
 
