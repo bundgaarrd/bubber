@@ -27,18 +27,19 @@ public class AppContext {
     );
 
     static {
-    employeeRepository.save(new Employee("huba", "Hubert Baumeister", true));
-    employeeRepository.save(new Employee("wilo", "William Lopez", true));
-    employeeRepository.save(new Employee("anda", "Annemette A. Damgaard", true));
+    Employee huba = new Employee("huba", "Hubert Baumeister", true);
+    employeeRepository.save(huba);
+    Employee wilo = new Employee("wilo", "William Lopez", true);
+    employeeRepository.save(wilo);
+    Employee anda = new Employee("anda", "Annemette A. Damgaard", true);
+    employeeRepository.save(anda);
     Employee laha = new Employee("laha", "Lars Hansen", true);
     employeeRepository.save(laha);
     Employee alla = new Employee("alla", "Allan Lassen", true);
     employeeRepository.save(alla);
 
-    loggedInUser = employeeRepository.findByInitials("huba");
-
     Project contextProject = projectRegistry.createProject("AppContext");
-    contextProject.assignProjectLeader(loggedInUser);
+    contextProject.assignProjectLeader(huba);
 
     Project KBHShop = projectRegistry.createProject("KBHShop");
     KBHShop.assignProjectLeader(laha);
