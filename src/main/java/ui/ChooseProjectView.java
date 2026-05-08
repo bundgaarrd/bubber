@@ -1,6 +1,7 @@
 package ui;
 
 import appLogic.App;
+import appLogic.employee.Employee;
 import appLogic.employee.EmployeeRepository;
 import appLogic.project.Project;
 import javafx.beans.binding.StringExpression;
@@ -16,6 +17,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import javafx.scene.layout.VBox;
 
 public class ChooseProjectView {
 
@@ -78,20 +84,40 @@ public class ChooseProjectView {
             MainView mainView = new MainView(scene);
             scene.setRoot(mainView.getView());
         });
-
+        
         addProjectBtn.setOnAction(e -> {
-            TextInputDialog dialog = new TextInputDialog();
+            Dialog<ButtonType> dialog = new Dialog<>();
             dialog.setTitle("Add project information");
             dialog.setHeaderText(null);
-            dialog.setContentText("Project name");
+            dialog.getDialogPane().setMinWidth(300);
 
-            dialog.showAndWait().ifPresent(name -> {
-                if (!name.isBlank()) {
-                    Project project = app.getProjectRegistry().createProject(name);
+            TextField nameField = new TextField();
+            nameField.setPromptText("Project name");
+
+            // Get employee names as a string
+            List<String> allEmployees = app.getEmployeeRepository().findAll().stream().map(Employee::getName).toList();
+
+            ChoiceBox<String> projectLeaderChoice = new ChoiceBox<>();
+
+            projectLeaderChoice.getItems().addAll(allEmployees);
+            projectLeaderChoice.setValue(allEmployees.getFirst());
+
+
+            VBox content = new VBox(20,
+                    new Label("Project name:"), nameField,
+                    new Label("Choose project leader:"), projectLeaderChoice
+            );
+            dialog.getDialogPane().setContent(content);
+            dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+            dialog.showAndWait().ifPresent(result -> {
+                if (result == ButtonType.OK && !nameField.getText().isBlank()) {
+                    Project project = app.getProjectRegistry().createProject(nameField.getText());
                     projectData.add(project);
                 }
             });
         });
+
 
         tableData.setOnMouseClicked(e -> {
             Project selected = tableData.getSelectionModel().getSelectedItem();
