@@ -159,16 +159,12 @@ public class RegisterTimeView {
         table.setOnMouseClicked(e -> {
             TimeEntry selected = table.getSelectionModel().getSelectedItem();
 
-            if (e.getClickCount() == 2) {
-                if (selected != null) {
-                    Stage popupStage = new Stage();
-                    popupStage.initModality(Modality.APPLICATION_MODAL);
-                    popupStage.setTitle("Edit time entry");
-                    EditTimeEntryView editView = new EditTimeEntryView(selected);
-                    Scene popupScene = new Scene(editView.getView(), 400, 300);
-                    popupStage.setScene(popupScene);
-                    popupStage.showAndWait();
-                }
+            if (e.getClickCount() == 2 && selected != null) {
+                Dialog<ButtonType> dialog = new Dialog<>();
+                dialog.setTitle("Edit time entry");
+                dialog.getDialogPane().setContent(new EditTimeEntryView(selected).getView());
+                dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+                dialog.showAndWait();
             }
         });
 

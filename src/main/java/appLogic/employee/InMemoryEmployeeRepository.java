@@ -35,7 +35,7 @@ public class InMemoryEmployeeRepository implements EmployeeRepository {
         try {
             URL dataUrl = this.getClass().getResource(fileName);
             if(dataUrl == null) {
-                logger.log(System.Logger.Level.ERROR, "Could not find" + fileName + " in resources");
+                logger.log(System.Logger.Level.ERROR, "Could not find " + fileName + " in resources");
                 return;
             }
 

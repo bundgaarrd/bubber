@@ -79,12 +79,12 @@ public class CreateEmployeeView {
                     name,
                     availableBox.isSelected()
             );
-
+            
             employeeRepository.save(employee);
 
+            
             messageLabel.setText("Employee created!");
 
-            // clear fields
             initialsField.clear();
             nameField.clear();
             availableBox.setSelected(true);

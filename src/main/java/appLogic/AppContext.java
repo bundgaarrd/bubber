@@ -117,4 +117,8 @@ public class AppContext {
     public ActivityService getActivityService() {
         return activityService;
     }
+
+    public Employee getLoggedInUser() {
+        return loggedInUser;
+    }
 }

@@ -13,15 +13,10 @@ public class App {
     private static App instance;
     private AppContext appContext;
 
-    private Employee loggedInUser;
 
     public static void main(String[] args) { // Has to be run from mvn javafx:run
         System.out.println("Starting the application ...");
         instance = getInstance();
-    }
-
-    private void run() {
-
     }
 
     private App() {
@@ -31,7 +26,6 @@ public class App {
     public static App getInstance() {
         if(instance == null) {
             instance = new App();
-            instance.run();
         }
 
         return instance;
@@ -68,11 +62,11 @@ public class App {
 
     // Check login
     public boolean isUserLoggedIn() {
-        return loggedInUser != null;
+        return appContext.getLoggedInUser() != null;
     }
 
     public Employee getLoggedInUser() {
-        return loggedInUser;
+        return appContext.getLoggedInUser();
     }
 
     public ProjectRegistry getProjectRegistry() {
