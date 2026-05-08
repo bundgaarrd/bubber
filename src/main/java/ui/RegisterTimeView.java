@@ -250,6 +250,7 @@ public class RegisterTimeView {
             TimeEntry selected = table.getSelectionModel().getSelectedItem();
             if (e.getClickCount() == 2 && selected != null) {
                 new EditTimeEntryView(selected).show();
+                table.refresh();
             }
         });
 

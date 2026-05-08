@@ -4,11 +4,12 @@ import appLogic.App;
 import appLogic.AppContext;
 import appLogic.TimeEntry;
 import appLogic.employee.Employee;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import appLogic.employee.InMemoryEmployeeRepository;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EditTimeEntryView {
     private final TimeEntry timeEntry;
@@ -27,13 +28,21 @@ public class EditTimeEntryView {
         dialog.setHeaderText(null);
         dialog.getDialogPane().setMinWidth(300);
 
-        TextField employeeField = new TextField(timeEntry.getEmployee().getInitials());
+        // Get employee names as a string
+        List<String> allEmployees = new ArrayList<>();
+        allEmployees.add("(none)");
+        appContext.getEmployeeRepository().findAll().stream().map(Employee::getName).forEach(allEmployees::add);
+
+        ChoiceBox<String> employeeChoice = new ChoiceBox<>();
+        employeeChoice.getItems().addAll(allEmployees);
+        employeeChoice.setValue(timeEntry.getEmployee().getInitials());
+
         TextField activityField = new TextField(timeEntry.getActivity().getDescription());
         activityField.setEditable(false);
         TextField hoursField = new TextField(String.valueOf(timeEntry.getHoursWorked()));
 
         VBox content = new VBox(10,
-                new Label("Employee:"), employeeField,
+                new Label("Employee:"), employeeChoice,
                 new Label("Activity:"), activityField,
                 new Label("Hours:"), hoursField
         );
@@ -42,7 +51,7 @@ public class EditTimeEntryView {
 
         dialog.showAndWait().ifPresent(result -> {
             if (result == ButtonType.OK) {
-                Employee emp = appContext.getEmployeeRepository().findByInitials(employeeField.getText());
+                Employee emp = appContext.getEmployeeRepository().findByInitials(employeeChoice.getValue());
                 if (emp != null) timeEntry.setEmployee(emp);
                 timeEntry.setHoursWorked(Double.parseDouble(hoursField.getText()));
             }
