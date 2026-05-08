@@ -30,12 +30,11 @@ public class EditTimeEntryView {
 
         // Get employee names as a string
         List<String> allEmployees = new ArrayList<>();
-        allEmployees.add("(none)");
         appContext.getEmployeeRepository().findAll().stream().map(Employee::getName).sorted().forEach(allEmployees::add);
 
         ChoiceBox<String> employeeChoice = new ChoiceBox<>();
         employeeChoice.getItems().addAll(allEmployees);
-        employeeChoice.setValue(timeEntry.getEmployee().getInitials());
+        employeeChoice.setValue(timeEntry.getEmployee().getName());
 
         TextField activityField = new TextField(timeEntry.getActivity().getDescription());
         activityField.setEditable(false);
@@ -51,7 +50,7 @@ public class EditTimeEntryView {
 
         dialog.showAndWait().ifPresent(result -> {
             if (result == ButtonType.OK) {
-                Employee emp = appContext.getEmployeeRepository().findByInitials(employeeChoice.getValue());
+                Employee emp = appContext.getEmployeeRepository().findByName(employeeChoice.getValue());
                 if (emp != null) timeEntry.setEmployee(emp);
                 timeEntry.setHoursWorked(Double.parseDouble(hoursField.getText()));
             }

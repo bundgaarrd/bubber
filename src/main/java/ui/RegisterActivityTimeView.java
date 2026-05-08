@@ -98,7 +98,7 @@ public class RegisterActivityTimeView {
 
         List<String> name = new ArrayList<>();
         employeeRepository.getAllAvailableEmployees().stream()
-            .map(Employee::getName)
+            .map(Employee::getName).sorted()
             .forEach(name::add);
         ChoiceBox<String> employeeBox = new ChoiceBox<>();
         employeeBox.getItems().addAll(name);
