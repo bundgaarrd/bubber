@@ -1,0 +1,5 @@
+huba, Bubber, true
+wilo, Jaja, true
+anda, Okay, false
+laha, Nej, true
+alla, Hej, true

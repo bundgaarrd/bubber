@@ -1,5 +1,6 @@
 package ui; //s244813
 
+import appLogic.App;
 import appLogic.AppContext;
 import appLogic.employee.Employee;
 import appLogic.employee.EmployeeRepository;
@@ -17,10 +18,12 @@ import javafx.scene.layout.HBox;
 public class CreateEmployeeView {
 
     private final Scene scene;
-    private final EmployeeRepository employeeRepository = AppContext.employeeRepository;
+    private final EmployeeRepository employeeRepository;
 
     public CreateEmployeeView(Scene scene) {
         this.scene = scene;
+
+        this.employeeRepository = App.getInstance().getAppContext().getEmployeeRepository();
     }
 
     public Parent getView() {

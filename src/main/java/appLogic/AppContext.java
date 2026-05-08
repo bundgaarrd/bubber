@@ -14,44 +14,71 @@ import appLogic.project.Project;
 import appLogic.project.ProjectRegistry;
 
 public class AppContext {
+    private static AppContext instance = null;
 
-    public static final InMemoryEmployeeRepository employeeRepository = new InMemoryEmployeeRepository();
-    public static final InMemoryTimeEntryRepository timeEntryRepository = new InMemoryTimeEntryRepository();
-    public static final ProjectRegistry projectRegistry = new ProjectRegistry();
-    public static Employee loggedInUser;
-    public static final ActivityService activityService = new DefaultActivityService(
-            new InMemoryActivityRepository(),
-            projectRegistry,
-            () -> loggedInUser,
-            timeEntryRepository
-    );
+    private InMemoryEmployeeRepository employeeRepository;
+    private InMemoryTimeEntryRepository timeEntryRepository;
+    private InMemoryActivityRepository activityRepository;
+    private ProjectRegistry projectRegistry;
+    private Employee loggedInUser;
+    private ActivityService activityService;
 
-    static {
-    Employee huba = new Employee("huba", "Hubert Baumeister", true);
-    employeeRepository.save(huba);
-    Employee wilo = new Employee("wilo", "William Lopez", true);
-    employeeRepository.save(wilo);
-    Employee anda = new Employee("anda", "Annemette A. Damgaard", true);
-    employeeRepository.save(anda);
-    Employee laha = new Employee("laha", "Lars Hansen", true);
-    employeeRepository.save(laha);
-    Employee alla = new Employee("alla", "Allan Lassen", true);
-    employeeRepository.save(alla);
+    private AppContext() {
+        instance = this;
+    }
 
-    Project contextProject = projectRegistry.createProject("AppContext");
-    contextProject.assignProjectLeader(huba);
+    public static AppContext initialize() {
+         if(instance == null) {
+             instance = new AppContext();
+             instance.loadContext();
+             instance.loadEmployees();
+         }
+         return instance;
+    }
 
-    Project KBHShop = projectRegistry.createProject("KBHShop");
-    KBHShop.assignProjectLeader(laha);
+    private void loadContext() {
+        employeeRepository = new InMemoryEmployeeRepository();
+        timeEntryRepository = new InMemoryTimeEntryRepository();
+        activityRepository = new InMemoryActivityRepository();
+        projectRegistry = new ProjectRegistry();
+        activityService = new DefaultActivityService(
+                new InMemoryActivityRepository(),
+                projectRegistry,
+                () -> loggedInUser,
+                timeEntryRepository
+        );
+    }
 
-    Project DTU = projectRegistry.createProject("DTU");
-    DTU.assignProjectLeader(alla);
+    private void loadEmployees() {
+        employeeRepository.loadFromFile("employees.txt");
 
-    saveTimeEntry(contextProject.getProjectID(), "huba", "Being a good teacher", "TDD/BDD forelæsning", 2.5);
-    saveTimeEntry(contextProject.getProjectID(), "wilo", "Being a good TA", "Explaining TDD issues", 1.5);
-}
+        Project contextProject = projectRegistry.createProject("AppContext");
+        contextProject.assignProjectLeader(loggedInUser);
 
-    private static void saveTimeEntry(String projectId,
+        saveTimeEntry(contextProject.getProjectID(), "huba", "Being a good teacher", "TDD/BDD forelæsning", 2.5);
+        saveTimeEntry(contextProject.getProjectID(), "wilo", "Being a good TA", "Explaining TDD issues", 1.5);
+
+        Project KBHShop = projectRegistry.createProject("KBHShop"); // generates 26001
+        KBHShop.assignProjectLeader(employeeRepository.findByInitials("laha"));
+
+        Project DTU = projectRegistry.createProject("DTU");         // generates 26002
+        DTU.assignProjectLeader(employeeRepository.findByInitials("alla"));
+    }
+
+    public void login(String initials) {
+        if (initials == null || initials.length() > 4) {
+            throw new IllegalArgumentException("Initials must be 1-4 characters");
+        }
+
+        Employee emp = employeeRepository.findByInitials(initials);
+        if (emp == null) {
+            throw new IllegalStateException("Employee not found");
+        }
+
+        this.loggedInUser = emp;
+    }
+
+    private void saveTimeEntry(String projectId,
                                       String initials,
                                       String description,
                                       String summary,
@@ -73,5 +100,25 @@ public class AppContext {
         ));
 
         activityService.registerWork(activity.getId(), emp, LocalDateTime.now(), hours);
+    }
+
+    public InMemoryEmployeeRepository getEmployeeRepository() {
+        return employeeRepository;
+    }
+
+    public InMemoryTimeEntryRepository getTimeEntryRepository() {
+        return timeEntryRepository;
+    }
+
+    public ProjectRegistry getProjectRegistry() {
+        return projectRegistry;
+    }
+
+    public ActivityService getActivityService() {
+        return activityService;
+    }
+
+    public Employee getLoggedInUser() {
+        return loggedInUser;
     }
 }
