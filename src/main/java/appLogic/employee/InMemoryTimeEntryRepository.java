@@ -1,9 +1,9 @@
 package appLogic.employee;
 
-import appLogic.TimeEntry;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import appLogic.TimeEntry;
 
 public class InMemoryTimeEntryRepository {
 
@@ -11,6 +11,10 @@ public class InMemoryTimeEntryRepository {
 
     public void save(TimeEntry entry) {
         entries.add(entry);
+    }
+
+    public void remove(TimeEntry entry){
+        entries.remove(entry);
     }
 
     public List<TimeEntry> findAll() {

@@ -85,6 +85,9 @@ public class RegisterTimeView {
         Button addButton = new Button("Add time entry");
         form.add(addButton, 1, 4);
 
+        Button removeButton = new Button("Delete time entry");
+        form.add(removeButton, 1, 4);
+
         form.add(new Label("Double click on a time entry to update details"),2,0);
         Button backButton = new Button("Back");
         form.add(backButton, 1, 5);
@@ -124,6 +127,10 @@ public class RegisterTimeView {
 
         table.getColumns().addAll(colEmployee, colActivity, colStart, colHours);
         root.setCenter(table);
+
+        removeButton.setOnAction(e -> {
+                
+        });
 
         addButton.setOnAction(e -> {
 
