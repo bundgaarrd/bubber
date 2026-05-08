@@ -16,8 +16,10 @@ import io.cucumber.java.en.When;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -87,10 +89,15 @@ public class RegisterWorkSteps {
     public void iAddAFixedActivityWithNameAndSpecifiedStartAndEndDate(String name) {
         LocalDate startDate = LocalDate.now().plusDays(1);
         LocalDate endDate = startDate.plusDays(3);
+        WeekFields weekFields = WeekFields.of(Locale.getDefault());
+        int startWeek = startDate.get(weekFields.weekOfWeekBasedYear());
+        int endWeek = endDate.get(weekFields.weekOfWeekBasedYear());
+        int startYear = startDate.getYear();
+        int endYear = endDate.getYear();
         timesheetSizeBeforeAdd = fixedActivities.size();
-        datesOverlap = fixedActivities.stream().anyMatch(existing -> overlaps(existing, startDate, endDate));
+        datesOverlap = fixedActivities.stream().anyMatch(existing -> overlaps(existing, startWeek, endWeek, startYear, endYear));
         if (!datesOverlap) {
-            fixedActivities.add(createFixedActivity(name, startDate, endDate));
+            fixedActivities.add(createFixedActivity(name, startWeek, endWeek, startYear, endYear));
         }
     }
 
@@ -108,8 +115,13 @@ public class RegisterWorkSteps {
     public void iHaveAFixedActivityCalledWithSpecifiedStartAndEndDate(String name) {
         LocalDate startDate = LocalDate.now().plusDays(1);
         LocalDate endDate = startDate.plusDays(3);
+        WeekFields weekFields = WeekFields.of(Locale.getDefault());
+        int startWeek = startDate.get(weekFields.weekOfWeekBasedYear());
+        int endWeek = endDate.get(weekFields.weekOfWeekBasedYear());
+        int startYear = startDate.getYear();
+        int endYear = endDate.getYear();
         if (fixedActivities.stream().noneMatch(activity -> activity.getName().equals(name))) {
-            fixedActivities.add(createFixedActivity(name, startDate, endDate));
+            fixedActivities.add(createFixedActivity(name, startWeek, endWeek, startYear, endYear));
         }
     }
 
@@ -120,12 +132,14 @@ public class RegisterWorkSteps {
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Expected existing fixed activity: " + existingActivityName));
 
-        LocalDate startDate = existing.getStartDate();
-        LocalDate endDate = existing.getEndDate();
+        int startWeek = existing.getStartWeek();
+        int endWeek = existing.getEndWeek();
+        int startYear = existing.getStartYear();
+        int endYear = existing.getEndYear();
         timesheetSizeBeforeAdd = fixedActivities.size();
-        datesOverlap = fixedActivities.stream().anyMatch(activity -> overlaps(activity, startDate, endDate));
+        datesOverlap = fixedActivities.stream().anyMatch(activity -> overlaps(activity, startWeek, endWeek, startYear, endYear));
         if (!datesOverlap) {
-            fixedActivities.add(createFixedActivity(name, startDate, endDate));
+            fixedActivities.add(createFixedActivity(name, startWeek, endWeek, startYear, endYear));
             errorMessage = null;
         } else {
             errorMessage = "There is already a fixed activity on the same dates";
@@ -152,7 +166,7 @@ public class RegisterWorkSteps {
         } catch (ActivityNotFoundException notFound) {
             try {
                 activity = TestApp.getInstance().getApp().getActivityService().createProjectActivity(
-                        new CreateProjectActivity(projectId, name, "", "", LocalDate.now())
+                        new CreateProjectActivity(projectId, name, "", "", 0, 0, 0, 0)
                 );
             } catch (DuplicateActivityException duplicate) {
                 activity = TestApp.getInstance().getApp().getActivityService().findByProjectAndName(projectId, name);
@@ -183,7 +197,7 @@ public class RegisterWorkSteps {
         return employee;
     }
 
-    private FixedActivity createFixedActivity(String name, LocalDate startDate, LocalDate endDate) {
+    private FixedActivity createFixedActivity(String name, int startWeek, int endWeek, int startYear, int endYear) {
         Project project = requireCurrentProject();
         Activity created = TestApp.getInstance().getApp().getActivityService().createFixedActivity(
                 new CreateFixedActivity(
@@ -191,15 +205,16 @@ public class RegisterWorkSteps {
                         name,
                         "",
                         "",
-                        startDate,
-                        endDate,
+                        startWeek, endWeek,
+                        startYear, endYear,
                         FixedActivityType.VACATION
                 )
         );
         return (FixedActivity) created;
     }
 
-    private boolean overlaps(FixedActivity existing, LocalDate start, LocalDate end) {
-        return !(existing.getEndDate().isBefore(start) || existing.getStartDate().isAfter(end));
+    private boolean overlaps(FixedActivity existing, int startWeek, int endWeek, int startYear, int endYear) {
+        return startWeek <= existing.getEndWeek() && endWeek >= existing.getStartWeek() &&
+                startYear <= existing.getEndYear() && endYear >= existing.getStartYear();
     }
 }

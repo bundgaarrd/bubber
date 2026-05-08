@@ -34,7 +34,7 @@ public class AssignEmployeeSteps {
         } catch (ActivityNotFoundException e) {
             try {
                 targetActivity = TestApp.getInstance().getApp().getActivityService()
-                        .createWorkActivity(new CreateWorkActivity(projectId, activityName, "", "", LocalDate.now()));
+                        .createWorkActivity(new CreateWorkActivity(projectId, activityName, "", "", 0, 0, 0, 0));
             } catch (DuplicateActivityException ignored) {
                 targetActivity = TestApp.getInstance().getApp().getActivityService().findByProjectAndName(projectId, activityName);
             }

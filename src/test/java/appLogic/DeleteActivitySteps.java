@@ -22,7 +22,7 @@ public class DeleteActivitySteps {
         try {
             activity = TestApp.getInstance().getApp().getActivityService()
                     .createProjectActivity(new CreateProjectActivity(
-                            project.getProjectID(), name, "", "", LocalDate.now()
+                            project.getProjectID(), name, "", "", 0, 0, 0, 0
                     ));
         } catch (DuplicateActivityException e) {
             activity = TestApp.getInstance().getApp().getActivityService().findByProjectAndName(
