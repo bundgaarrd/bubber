@@ -10,6 +10,10 @@ import appLogic.employee.InMemoryTimeEntryRepository;
 import appLogic.project.Project;
 import appLogic.project.ProjectRegistry;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 public class AppContext {
     private static AppContext instance = null;
 
