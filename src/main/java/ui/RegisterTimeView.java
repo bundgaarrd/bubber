@@ -164,11 +164,7 @@ public class RegisterTimeView {
             TimeEntry selected = table.getSelectionModel().getSelectedItem();
 
             if (e.getClickCount() == 2 && selected != null) {
-                Dialog<ButtonType> dialog = new Dialog<>();
-                dialog.setTitle("Edit time entry");
-                dialog.getDialogPane().setContent(new EditTimeEntryView(selected).getView());
-                dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
-                dialog.showAndWait();
+                new EditTimeEntryView(selected).show();
             }
         });
 

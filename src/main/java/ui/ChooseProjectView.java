@@ -74,13 +74,13 @@ public class ChooseProjectView {
 
         // -----Begin buttons and labels------
         Label message = new Label("Double click on a project to edit details");
-        grid.add(message,1,0);
+        grid.add(message,3,0);
 
         Button backBtn = new Button("Back");
-        grid.add(backBtn, 2, 0);
+        grid.add(backBtn, 1, 0);
 
         Button addProjectBtn = new Button("Add project");
-        grid.add(addProjectBtn,3,0);
+        grid.add(addProjectBtn,2,0);
 
         // -----End buttons------
 
