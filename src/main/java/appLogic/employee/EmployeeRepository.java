@@ -11,4 +11,5 @@ public interface EmployeeRepository {
     void save(Employee empl);
     void loadFromFile(String path);
     Map<String, Employee> getEmployees();
+    Set<Employee> getAllAvailableEmployees();
 }
