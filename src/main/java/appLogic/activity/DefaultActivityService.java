@@ -1,34 +1,43 @@
 package appLogic.activity;
 
-import appLogic.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
+import appLogic.Activity;
+import appLogic.FixedActivity;
+import appLogic.TimeEntry;
+import appLogic.WorkActivity;
 import appLogic.activity.command.CreateFixedActivity;
 import appLogic.activity.command.CreateProjectActivity;
 import appLogic.activity.command.CreateWorkActivity;
 import appLogic.activity.exception.*;
 import appLogic.employee.Employee;
+import appLogic.employee.InMemoryEmployeeRepository;
 import appLogic.employee.InMemoryTimeEntryRepository;
 import appLogic.project.Project;
 import appLogic.project.ProjectActivity;
 import appLogic.project.ProjectRegistry;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
 
 public class DefaultActivityService implements ActivityService {
     private final ActivityRepository activityRepository;
     private final ProjectRegistry projectRegistry;
     private final CurrentUserProvider currentUserProvider;
     private final InMemoryTimeEntryRepository timeEntryRepository;
+    private final InMemoryEmployeeRepository employeeRepository;
 
     public DefaultActivityService(ActivityRepository activityRepository,
                                   ProjectRegistry projectRegistry,
                                   CurrentUserProvider currentUserProvider,
-                                  InMemoryTimeEntryRepository timeEntryRepository) {
+                                  InMemoryTimeEntryRepository timeEntryRepository,
+                                  InMemoryEmployeeRepository employeeRepository) {
         this.activityRepository = activityRepository;
         this.projectRegistry = projectRegistry;
         this.currentUserProvider = currentUserProvider;
         this.timeEntryRepository = timeEntryRepository;
+        this.employeeRepository = employeeRepository;
     }
 
     @Override
@@ -126,4 +135,28 @@ public class DefaultActivityService implements ActivityService {
             throw new UnauthorizedActivityAccessException("Only project leader can access activities.");
         }
     }
+
+    public void saveTimeEntry(String projectId,
+                                      String initials,
+                                      String description,
+                                      String summary,
+                                      double hours) {
+
+        Employee emp = employeeRepository.findByInitials(initials);
+
+        if (emp == null) {
+            throw new IllegalArgumentException("No such employee when saving time entry");
+        }
+
+        Activity activity = createWorkActivity(new CreateWorkActivity(
+                projectId,
+                initials + "-" + description,
+                description,
+                summary,
+                LocalDate.now()
+        ));
+
+        registerWork(activity.getId(), emp, LocalDateTime.now(), hours);
+    }
+    
 }
