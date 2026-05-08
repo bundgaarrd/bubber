@@ -1,13 +1,10 @@
 package appLogic.SystematicTests;
 
 import appLogic.App;
-import appLogic.activity.command.CreateWorkActivity;
 import appLogic.employee.Employee;
 import appLogic.project.Project;
 import appLogic.report.Report;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
