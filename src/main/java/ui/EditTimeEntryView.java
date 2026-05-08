@@ -4,15 +4,11 @@ import appLogic.App;
 import appLogic.AppContext;
 import appLogic.TimeEntry;
 import appLogic.employee.Employee;
-import javafx.geometry.Insets;
-import javafx.scene.Parent;
-import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-
-import java.util.List;
 
 public class EditTimeEntryView {
     private final TimeEntry timeEntry;
@@ -25,48 +21,31 @@ public class EditTimeEntryView {
         this.appContext = app.getAppContext();
     }
 
-    public Parent getView() {
-        BorderPane root = new BorderPane();
-        GridPane grid = new GridPane();
-        grid.setPadding(new Insets(15));
-        grid.setHgap(10);
-        grid.setVgap(10);
+    public void show() {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Edit time entry");
+        dialog.setHeaderText(null);
+        dialog.getDialogPane().setMinWidth(300);
 
-        TextField employeeField = new TextField();
-        TextField activityDescField = new TextField();
-        TextField activitySummaryField = new TextField();
-        TextField hoursField = new TextField();
+        TextField employeeField = new TextField(timeEntry.getEmployee().getInitials());
+        TextField activityField = new TextField(timeEntry.getActivity().getDescription());
+        activityField.setEditable(false);
+        TextField hoursField = new TextField(String.valueOf(timeEntry.getHoursWorked()));
 
-        grid.add(new Label("Employee initials:"), 0, 0);
-        grid.add(employeeField, 1, 0);
+        VBox content = new VBox(10,
+                new Label("Employee:"), employeeField,
+                new Label("Activity:"), activityField,
+                new Label("Hours:"), hoursField
+        );
+        dialog.getDialogPane().setContent(content);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
-        grid.add(new Label("Activity description:"), 0, 1);
-        grid.add(activityDescField, 1, 1);
-
-        grid.add(new Label("Activity summary:"), 0, 2);
-        grid.add(activitySummaryField, 1, 2);
-
-        grid.add(new Label("Hours worked:"), 0, 3);
-        grid.add(hoursField, 1, 3);
-
-        Button addButton = new Button("Update time entry");
-        grid.add(addButton, 1, 4);
-
-        Label availableEmployeesLabel = new Label("Available employees");
-        grid.add(availableEmployeesLabel,2,0);
-
-        ListView<String> availableEmployees = new ListView<>();
-        grid.add(availableEmployees,2,1);
-
-        List<Employee> employees= app.getAvailableEmployees();
-        for (Employee emp : employees) {
-            availableEmployees.getItems().add(emp.getName());
-        }
-
-        // Events
-
-
-        root.setCenter(grid);
-        return root;
+        dialog.showAndWait().ifPresent(result -> {
+            if (result == ButtonType.OK) {
+                Employee emp = appContext.getEmployeeRepository().findByInitials(employeeField.getText());
+                if (emp != null) timeEntry.setEmployee(emp);
+                timeEntry.setHoursWorked(Double.parseDouble(hoursField.getText()));
+            }
+        });
     }
 }

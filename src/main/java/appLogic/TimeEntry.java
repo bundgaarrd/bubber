@@ -7,8 +7,8 @@ import java.time.LocalDateTime;
 
 public class TimeEntry {
 
-    private final Employee employee;
-    private final Activity activity;
+    private Employee employee;
+    private Activity activity;
     private LocalDateTime entryStartTime;
     private double hoursWorked;
 
@@ -41,5 +41,13 @@ public class TimeEntry {
 
     public void setHoursWorked(double hoursWorked) {
         this.hoursWorked = hoursWorked;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
+    public void setActivity(Activity activity) {
+        this.activity = activity;
     }
 }
