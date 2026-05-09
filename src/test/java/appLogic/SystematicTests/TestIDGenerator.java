@@ -29,7 +29,7 @@ public class TestIDGenerator {
     @Test
     void generateId_sequenceTen_padsOneZero() {
         ProjectIdGenerator gen = new ProjectIdGenerator();
-        for (int i = 0; i < 9; i++) gen.generateId(); // advance to sequence 10
+        for (int i = 0; i < 9; i++) gen.generateId(); 
         assertEquals(YY + "010", gen.generateId());
     }
 
