@@ -1,5 +1,5 @@
-huba, Bubber, true
-wilo, Jaja, true
-anda, Okay, false
-laha, Nej, true
-alla, Hej, true
+huba, Hubert Baumeister, true
+wilo, William Lopez, true
+anda, Annemette A. Damgaard, false
+jool, John Olsen, true
+tux, Toby Uxillary, false
