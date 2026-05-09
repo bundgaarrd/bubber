@@ -23,8 +23,6 @@ public class TestReport {
         App.resetInstanceForTests();
         }
 
-        // Input: projectId not in projectRegistry
-        // Path 1: project == null → throw
         @Test
         void generateReport_unknownProject_throwsIllegalArgument() {
                 assertThrows(IllegalArgumentException.class, // Try-catch 
@@ -32,9 +30,6 @@ public class TestReport {
                 App.resetInstanceForTests();
         }
 
-        // Input: valid project, no activities, expectedHours = 10
-        // Path 2: project found, loop body never executes
-        // Output: hoursUsed=0, summaries empty, remainingHours = 10
         @Test
         void generateReport_noActivities_returnsZeroHoursAndFullRemainder() {
                 App app = App.getInstance();
@@ -49,9 +44,7 @@ public class TestReport {
                 App.resetInstanceForTests();
         }
 
-    // Input: valid project, 1 activity with 3 hours logged, expectedHours = 10
-    // Path 3: project found, loop executes once, totalHoursUsed(3) < expectedHours(10)
-    // Output: hoursUsed=3, summaries has 1 entry, remainingHours=7
+
     @Test
     void generateReport_withActivities_hoursUnderBudget_returnsCorrectSummary() {
         App app = App.getInstance();
@@ -78,9 +71,6 @@ public class TestReport {
         App.resetInstanceForTests();
     }
 
-    // Input: valid project, 1 activity with 15 hours logged, expectedHours = 10
-    // Path: project found, loop executes, totalHoursUsed(15) >= expectedHours(10) → Math.max clamps to 0
-    // Output: hoursUsed=15, summaries has 1 entry, remainingHours=0
     @Test
     void generateReport_hoursOverBudget_remainingHoursClampsToZero() {
         App app = App.getInstance();
