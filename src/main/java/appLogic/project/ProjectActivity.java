@@ -9,10 +9,6 @@ public class ProjectActivity extends Activity {
     private Set<Employee> assignedEmployees;
     private int hoursExpected;
     private ActivityStatus status;
-    private int startWeek;
-    private int startYear;
-    private int endWeek;
-    private int endYear;
 
     public ProjectActivity(String name) {
         this(name, "", "", 0, 0, 0, 0, null);
@@ -33,10 +29,10 @@ public class ProjectActivity extends Activity {
     }
 
     public boolean isOverlapWeek(int week, int year) {
-        if (year < startYear || year > endYear) return false;
-        if (startYear == endYear) return week >= startWeek && week <= endWeek;
-        if (year == startYear) return week >= startWeek;
-        if (year == endYear) return week <= endWeek;
+        if (year < getStartYear() || year > getEndYear()) return false;
+        if (getStartYear() == getEndYear()) return week >= getStartWeek() && week <= getEndWeek();
+        if (year == getStartYear()) return week >= getStartWeek();
+        if (year == getEndYear()) return week <= getEndWeek();
         return true;
     }
 }

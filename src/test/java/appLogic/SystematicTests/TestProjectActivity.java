@@ -4,7 +4,7 @@ import appLogic.project.ProjectActivity;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestActivity {
+public class TestProjectActivity {
 
     // isOverlapWeek has 8 execution paths based on year/week comparisons.
     // Object attributes: startWeek, startYear, endWeek, endYear
@@ -76,25 +76,7 @@ public class TestActivity {
         assertTrue(a.isOverlapWeek(30, 2025));
     }
 
-    // NOTE: makeActivity uses reflection because ProjectActivity has no
-    // constructor or setters for startWeek/startYear/endWeek/endYear.
-    // These fields should ideally be set via constructor to avoid this.
     private ProjectActivity makeActivity(int startWeek, int startYear, int endWeek, int endYear) {
-        ProjectActivity a = new ProjectActivity("test");
-        try {
-            setField(a, "startWeek", startWeek);
-            setField(a, "startYear", startYear);
-            setField(a, "endWeek", endWeek);
-            setField(a, "endYear", endYear);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return a;
-    }
-
-    private void setField(Object obj, String name, int value) throws Exception {
-        var field = obj.getClass().getDeclaredField(name);
-        field.setAccessible(true);
-        field.set(obj, value);
+        return new ProjectActivity("test", "", "", startWeek, endWeek, startYear, endYear, null);
     }
 }
