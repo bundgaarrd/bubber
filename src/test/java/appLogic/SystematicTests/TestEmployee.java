@@ -3,9 +3,9 @@ package appLogic.SystematicTests;
 import appLogic.employee.Employee;
 import appLogic.project.Project;
 import org.junit.jupiter.api.Test;
-import appLogic.Activity;
+import appLogic.activity.impl.Activity;
 import appLogic.App;
-import appLogic.WorkActivity;
+import appLogic.activity.impl.WorkActivity;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,7 +34,7 @@ public class TestEmployee {
     void getActiveActivityCount_activityMatchingWeekAndYear_returnsOne() {
         Employee emp = new Employee("test", "Test User", true);
         LocalDate date = LocalDate.of(2026, 1, 5); // week 2, 2026
-        Activity activity = new WorkActivity("task", "", "", date);
+        Activity activity = new WorkActivity("task", "", "", 0, 0, 0, 0, 10);
         emp.addActivity(activity);
 
         int week = date.get(java.time.temporal.WeekFields.of(java.util.Locale.getDefault()).weekOfWeekBasedYear());
@@ -45,7 +45,7 @@ public class TestEmployee {
     void getActiveActivityCount_activityInDifferentYear_returnsZero() {
         Employee emp = new Employee("test", "Test User", true);
         LocalDate date = LocalDate.of(2025, 1, 5);
-        Activity activity = new WorkActivity("task", "", "", date);
+        Activity activity = new WorkActivity("task", "", "", 0, 0, 0, 0, 10);
         emp.addActivity(activity);
 
         assertEquals(0, emp.getActiveActivityCount(1, 2026));

@@ -2,7 +2,7 @@ package appLogic.report;
 
 import appLogic.employee.InMemoryTimeEntryRepository;
 import appLogic.activity.*;
-import appLogic.Activity;
+import appLogic.activity.impl.Activity;
 import appLogic.TimeEntry;
 import appLogic.project.Project;
 import appLogic.project.ProjectRegistry;
@@ -46,7 +46,7 @@ public class ReportService {
             summaries.add(new Summary(activityHours, activity.getName()));
         }
 
-        int remainingHours = Math.max(0, project.getExpectedHours() - (int) totalHoursUsed);
+        double remainingHours = Math.max(0, project.getExpectedHours() - totalHoursUsed);
         return new Report(totalHoursUsed, summaries, remainingHours);
     }
 }

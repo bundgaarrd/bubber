@@ -3,6 +3,7 @@ package appLogic;
 import appLogic.activity.command.CreateProjectActivity;
 import appLogic.activity.exception.ActivityNotFoundException;
 import appLogic.activity.exception.DuplicateActivityException;
+import appLogic.activity.impl.Activity;
 import appLogic.project.Project;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -10,7 +11,6 @@ import io.cucumber.java.en.When;
 import org.junit.jupiter.api.Assertions;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 public class DeleteActivitySteps {
     private String errorMessage;
@@ -22,7 +22,7 @@ public class DeleteActivitySteps {
         try {
             activity = TestApp.getInstance().getApp().getActivityService()
                     .createProjectActivity(new CreateProjectActivity(
-                            project.getProjectID(), name, "", "", LocalDate.now()
+                            project.getProjectID(), name, "", "", 0, 0, 0, 0
                     ));
         } catch (DuplicateActivityException e) {
             activity = TestApp.getInstance().getApp().getActivityService().findByProjectAndName(

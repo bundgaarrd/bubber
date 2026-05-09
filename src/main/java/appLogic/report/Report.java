@@ -7,9 +7,9 @@ import appLogic.Summary;
 public class Report {
     private double hoursUsed;
     private Set<Summary> activitySummaries;
-    private int expectedRemainingHours;
+    private double expectedRemainingHours;
     
-    public Report(double hoursUsed, Set<Summary> activitySummaries, int expectedRemainingHours) {
+    public Report(double hoursUsed, Set<Summary> activitySummaries, double expectedRemainingHours) {
         this.hoursUsed = hoursUsed;
         this.activitySummaries = activitySummaries;
         this.expectedRemainingHours = expectedRemainingHours;
@@ -23,7 +23,7 @@ public class Report {
         return activitySummaries;
     }
 
-    public int getExpectedRemainingHours() {
+    public double getExpectedRemainingHours() {
         return expectedRemainingHours;
     }
 

@@ -1,11 +1,11 @@
+//s244813
 package appLogic.employee;
 
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
@@ -18,6 +18,16 @@ public class InMemoryEmployeeRepository implements EmployeeRepository {
     @Override
     public Employee findByInitials(String initials) {
         return employees.get(initials);
+    }
+
+    @Override
+    public Employee findByName(String name) {
+        for (Employee emp : employees.values()) {
+            if (emp.getName().equals(name)) {
+                return emp;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -66,5 +76,14 @@ public class InMemoryEmployeeRepository implements EmployeeRepository {
     @Override
     public Map<String, Employee> getEmployees() {
         return employees;
+    }
+
+    @Override
+    public Set<Employee> getAllAvailableEmployees() {
+        Set<Employee> available = new HashSet<>();
+        for (Employee emp : employees.values()) {
+            if (emp.isAvailable()) available.add(emp);
+        }
+    return available;
     }
 }

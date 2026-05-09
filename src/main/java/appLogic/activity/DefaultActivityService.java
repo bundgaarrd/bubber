@@ -1,6 +1,10 @@
 package appLogic.activity;
 
-import appLogic.*;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
+import appLogic.TimeEntry;
 import appLogic.activity.command.CreateFixedActivity;
 import appLogic.activity.command.CreateProjectActivity;
 import appLogic.activity.command.CreateWorkActivity;
@@ -8,30 +12,33 @@ import appLogic.activity.exception.ActivityNotFoundException;
 import appLogic.activity.exception.DuplicateActivityException;
 import appLogic.activity.exception.InvalidHoursException;
 import appLogic.activity.exception.UnauthorizedActivityAccessException;
+import appLogic.activity.impl.Activity;
+import appLogic.activity.impl.FixedActivity;
+import appLogic.activity.impl.WorkActivity;
 import appLogic.employee.Employee;
+import appLogic.employee.EmployeeRepository;
 import appLogic.employee.InMemoryTimeEntryRepository;
 import appLogic.project.Project;
 import appLogic.project.ProjectActivity;
 import appLogic.project.ProjectRegistry;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
 
 public class DefaultActivityService implements ActivityService {
     private final ActivityRepository activityRepository;
     private final ProjectRegistry projectRegistry;
     private final CurrentUserProvider currentUserProvider;
     private final InMemoryTimeEntryRepository timeEntryRepository;
+    private final EmployeeRepository employeeRepository;
 
     public DefaultActivityService(ActivityRepository activityRepository,
                                   ProjectRegistry projectRegistry,
                                   CurrentUserProvider currentUserProvider,
-                                  InMemoryTimeEntryRepository timeEntryRepository) {
+                                  InMemoryTimeEntryRepository timeEntryRepository,
+                                  EmployeeRepository employeeRepository) {
         this.activityRepository = activityRepository;
         this.projectRegistry = projectRegistry;
         this.currentUserProvider = currentUserProvider;
         this.timeEntryRepository = timeEntryRepository;
+        this.employeeRepository = employeeRepository;
     }
 
     @Override
@@ -39,7 +46,11 @@ public class DefaultActivityService implements ActivityService {
         Project project = requireProject(command.projectId());
         requireProjectLeader(project);
         ensureUniqueName(command.projectId(), command.name());
-        Activity activity = new ProjectActivity(command.name(), command.description(), command.summary(), command.date());
+        Activity activity = new ProjectActivity(
+                command.name(), command.description(), command.summary(),
+                command.startWeek(), command.endWeek(), command.startYear(), command.endYear(),
+                command.projectId()
+        );
         activityRepository.save(command.projectId(), activity);
         return activity;
     }
@@ -48,7 +59,12 @@ public class DefaultActivityService implements ActivityService {
     public Activity createWorkActivity(CreateWorkActivity command) {
         requireProject(command.projectId());
         ensureUniqueName(command.projectId(), command.name());
-        Activity activity = new WorkActivity(command.name(), command.description(), command.summary(), command.date());
+        Activity activity = new WorkActivity(
+                command.name(), command.description(), command.summary(),
+                command.startWeek(), command.endWeek(), command.startYear(), command.endYear(),
+                command.expectedHours(),
+                command.projectId()
+        );
         activityRepository.save(command.projectId(), activity);
         return activity;
     }
@@ -57,8 +73,12 @@ public class DefaultActivityService implements ActivityService {
     public Activity createFixedActivity(CreateFixedActivity command) {
         requireProject(command.projectId());
         ensureUniqueName(command.projectId(), command.name());
-        Activity activity = new FixedActivity(command.name(), command.description(), command.summary(),
-                command.startDate(), command.endDate(), command.type());
+        Activity activity = new FixedActivity(
+                command.name(), command.description(), command.summary(),
+                command.startWeek(), command.endWeek(), command.startYear(), command.endYear(),
+                command.type(),
+                command.projectId()
+        );
         activityRepository.save(command.projectId(), activity);
         return activity;
     }
@@ -128,5 +148,33 @@ public class DefaultActivityService implements ActivityService {
         if (currentUser == null || !currentUser.equals(project.getProjectLeader())) {
             throw new UnauthorizedActivityAccessException("Only project leader can access activities.");
         }
+    }
+
+    @Override
+    public void saveTimeEntry(String projectId,
+                              String initials,
+                              String description,
+                              String summary,
+                              int startWeek,
+                              int endWeek,
+                              int startYear,
+                              int endYear,
+                              double hours) {
+
+        Employee emp = employeeRepository.findByInitials(initials);
+        if (emp == null) {
+            throw new IllegalArgumentException("No such employee when saving time entry");
+        }
+
+        Activity activity = createWorkActivity(new CreateWorkActivity(
+                projectId,
+                initials + "-" + description,
+                description,
+                summary,
+                startWeek, endWeek, startYear, endYear,
+                (int) hours
+        ));
+
+        registerWork(activity.getId(), emp, LocalDateTime.now(), hours);
     }
 }

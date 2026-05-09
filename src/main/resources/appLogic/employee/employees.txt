@@ -2,4 +2,6 @@ huba, Hubert Baumeister, true
 wilo, William Lopez, true
 anda, Annemette A. Damgaard, false
 jool, John Olsen, true
-tux, Toby Uxillary, false
+fefo, Fede Foster, true
+laha, Lars Hansen, true
+alla, Allan Larsen, true
