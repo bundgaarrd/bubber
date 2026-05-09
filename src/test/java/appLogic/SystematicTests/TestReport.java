@@ -6,41 +6,48 @@ import appLogic.employee.Employee;
 import appLogic.project.Project;
 import appLogic.report.Report;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TestReport {
 
-    // Input: projectId not in projectRegistry
-    // Path 1: project == null → throw
-    @Test
-    void generateReport_unknownProject_throwsIllegalArgument() {
-        App app = App.getInstance();
-        assertThrows(IllegalArgumentException.class, // Try-catch 
-                () -> app.getReport("NONEXISTENT"));
+        private final App app = App.getInstance();
+        
+        @AfterEach
+        void reset() {
+        app.getAppContext().reset();
         App.resetInstanceForTests();
-    }
+        }
 
-    // Input: valid project, no activities, expectedHours = 10
-    // Path 2: project found, loop body never executes
-    // Output: hoursUsed=0, summaries empty, remainingHours = 10
-    @Test
-    void generateReport_noActivities_returnsZeroHoursAndFullRemainder() {
-        App app = App.getInstance();
-        Project p = app.getProjectRegistry().getAllProjects().get(0);
-        p.setExpectedHours(10);
+        // Input: projectId not in projectRegistry
+        // Path 1: project == null → throw
+        @Test
+        void generateReport_unknownProject_throwsIllegalArgument() {
+                assertThrows(IllegalArgumentException.class, // Try-catch 
+                        () -> app.getReport("NONEXISTENT"));
+                App.resetInstanceForTests();
+        }
 
-        Report report = app.getReport(p.getProjectID());
+        // Input: valid project, no activities, expectedHours = 10
+        // Path 2: project found, loop body never executes
+        // Output: hoursUsed=0, summaries empty, remainingHours = 10
+        @Test
+        void generateReport_noActivities_returnsZeroHoursAndFullRemainder() {
+                App app = App.getInstance();
+                Project p = app.getProjectRegistry().getAllProjects().get(0);
+                p.setExpectedHours(10);
 
-        assertEquals(0.0, report.getHoursUsed());
-        assertTrue(report.getActivitySummaries().isEmpty());
-        assertEquals(10, report.getExpectedRemainingHours());
-        App.resetInstanceForTests();
-    }
+                Report report = app.getReport(p.getProjectID());
+
+                assertEquals(0.0, report.getHoursUsed());
+                assertTrue(report.getActivitySummaries().isEmpty());
+                assertEquals(10.0, report.getExpectedRemainingHours());
+                App.resetInstanceForTests();
+        }
 
     // Input: valid project, 1 activity with 3 hours logged, expectedHours = 10
     // Path 3: project found, loop executes once, totalHoursUsed(3) < expectedHours(10)
@@ -67,7 +74,7 @@ public class TestReport {
 
         assertEquals(3.0, report.getHoursUsed());
         assertEquals(1, report.getActivitySummaries().size());
-        assertEquals(7, report.getExpectedRemainingHours());
+        assertEquals(7.0, report.getExpectedRemainingHours());
         App.resetInstanceForTests();
     }
 
@@ -96,7 +103,7 @@ public class TestReport {
 
         assertEquals(15.0, report.getHoursUsed());
         assertEquals(1, report.getActivitySummaries().size());
-        assertEquals(0, report.getExpectedRemainingHours());
+        assertEquals(0.0, report.getExpectedRemainingHours());
         App.resetInstanceForTests();
     }
 }
