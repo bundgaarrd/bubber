@@ -50,7 +50,8 @@ public class LoginView {
         });
 
         quitBtn.setOnAction(e -> {
-            javafx.application.Platform.exit();
+            // Defer shutdown to avoid closing the window while the current action is still dispatching.
+            javafx.application.Platform.runLater(javafx.application.Platform::exit);
         });
 
         root.getChildren().addAll(label, initialsField, loginBtn, quitBtn, errorLabel);
