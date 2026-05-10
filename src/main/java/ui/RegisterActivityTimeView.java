@@ -177,6 +177,7 @@ public class RegisterActivityTimeView {
                 btn.setStyle("-fx-text-fill: #c94444;");
                 btn.setOnAction(e -> {
                     TimeEntry entry = getTableView().getItems().get(getIndex());
+                    entry.getEmployee().removeEntry(entry);
                     tableData.remove(entry);
                     activityService.deleteEntry(entry);
                     updateRemainingHours();
