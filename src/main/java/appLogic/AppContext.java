@@ -11,6 +11,12 @@ import appLogic.project.Project;
 import appLogic.project.ProjectRegistry;
 import appLogic.report.ReportService;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 public class AppContext {
     private static AppContext instance = null;
 
@@ -62,8 +68,8 @@ public class AppContext {
         Project contextProject = projectRegistry.createProject("SoftwareHuset initialisering");
         contextProject.assignProjectLeader(loggedInUser);
 
-        activityService.saveTimeEntry(contextProject.getProjectID(), "huba", "Being a good teacher", "TDD/BDD forelæsning", 20, 21, 26, 26, 2.5);
-        activityService.saveTimeEntry(contextProject.getProjectID(), "wilo", "Being a good TA", "Explaining TDD issues", 33, 34, 26, 26, 1.5);
+        activityService.saveTimeEntry(contextProject.getProjectID(), "huba", "Being a good teacher", "TDD/BDD forelæsning", LocalDateTime.now(), LocalDateTime.now().plusDays(5), 2.5);
+        activityService.saveTimeEntry(contextProject.getProjectID(), "wilo", "Being a good TA", "Explaining TDD issues", LocalDateTime.now(), LocalDateTime.now().plusDays(15), 1.5);
 
         Project KBHShop = projectRegistry.createProject("KBHShop");
         KBHShop.assignProjectLeader(employeeRepository.findByInitials("laha"));

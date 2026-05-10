@@ -24,12 +24,12 @@ public interface ActivityService {
 
     void deleteActivity(String projectId, String activityName);
 
-    void assignEmployee(UUID activityId, Employee employee);
+    void assignEmployee(UUID activityId, TimeEntry entry);
 
-    TimeEntry registerWork(UUID activityId, Employee employee, LocalDateTime entryStart, double hoursWorked);
+    TimeEntry registerWork(UUID activityId, Employee employee, LocalDateTime entryStart, LocalDateTime entryEnd, double hoursWorked);
 
     double getRemainingHours(String projectId);
 
     void saveTimeEntry(String projectId, String initials, String description, String summary,
-                       int startWeek, int endWeek, int startYear, int endYear, double hours);
+                       LocalDateTime startDate, LocalDateTime endDate, double hours);
 }

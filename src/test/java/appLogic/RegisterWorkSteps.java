@@ -1,7 +1,7 @@
 package appLogic;
 
-import appLogic.activity.command.CreateProjectActivity;
 import appLogic.activity.command.CreateFixedActivity;
+import appLogic.activity.command.CreateProjectActivity;
 import appLogic.activity.exception.ActivityNotFoundException;
 import appLogic.activity.exception.DuplicateActivityException;
 import appLogic.activity.exception.InvalidHoursException;
@@ -14,8 +14,10 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +53,7 @@ public class RegisterWorkSteps {
     public void logHoursWorked(int hours) {
         Employee employee = requireLoggedInUser();
         lastTimeEntry = TestApp.getInstance().getApp().getActivityService()
-                .registerWork(activity.getId(), employee, LocalDateTime.now(), hours);
+                .registerWork(activity.getId(), employee, LocalDateTime.now(), LocalDateTime.now(), hours);
     }
 
     @Then("5 working hours are registered")
@@ -66,7 +68,7 @@ public class RegisterWorkSteps {
         timeEntriesBeforeNegativeAttempt = TestApp.getInstance().getApp().getTimeEntryRepository().findAll().size();
         try {
             TestApp.getInstance().getApp().getActivityService()
-                    .registerWork(activity.getId(), employee, LocalDateTime.now(), -5);
+                    .registerWork(activity.getId(), employee, LocalDateTime.now(), LocalDateTime.now(), -5);
             errorMessage = null;
         } catch (InvalidHoursException e) {
             errorMessage = e.getMessage();
@@ -166,7 +168,7 @@ public class RegisterWorkSteps {
         } catch (ActivityNotFoundException notFound) {
             try {
                 activity = TestApp.getInstance().getApp().getActivityService().createProjectActivity(
-                        new CreateProjectActivity(projectId, name, "", "", 0, 0, 0, 0)
+                        new CreateProjectActivity(projectId, name, "", "", LocalDateTime.now(), LocalDateTime.now(), 5)
                 );
             } catch (DuplicateActivityException duplicate) {
                 activity = TestApp.getInstance().getApp().getActivityService().findByProjectAndName(projectId, name);
@@ -179,7 +181,9 @@ public class RegisterWorkSteps {
     private void assignLoggedInUserToActivity(String name) {
         ensureActivityExistsInCurrentProject(name);
         Employee employee = requireLoggedInUser();
-        TestApp.getInstance().getApp().getActivityService().assignEmployee(activity.getId(), employee);
+        // Create a TimeEntry to represent the assignment and call the TimeEntry-based API
+        TimeEntry entry = new TimeEntry(employee, activity, LocalDateTime.now(), LocalDateTime.now(), 0);
+        TestApp.getInstance().getApp().getActivityService().assignEmployee(activity.getId(), entry);
 
         boolean assigned = employee.getActivities().stream().anyMatch(a -> a.getId().equals(activity.getId()));
         assertTrue(assigned, "Expected to be assigned to activity " + name + ".");
@@ -199,14 +203,25 @@ public class RegisterWorkSteps {
 
     private FixedActivity createFixedActivity(String name, int startWeek, int endWeek, int startYear, int endYear) {
         Project project = requireCurrentProject();
+        // Convert week/year to LocalDate (Monday of the given week)
+        WeekFields weekFields = WeekFields.of(java.util.Locale.getDefault());
+        LocalDate startDate = LocalDate.now()
+                .withYear(startYear)
+                .with(weekFields.weekOfWeekBasedYear(), startWeek)
+                .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDate endDate = LocalDate.now()
+                .withYear(endYear)
+                .with(weekFields.weekOfWeekBasedYear(), endWeek)
+                .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+
         Activity created = TestApp.getInstance().getApp().getActivityService().createFixedActivity(
                 new CreateFixedActivity(
                         project.getProjectID(),
                         name,
                         "",
                         "",
-                        startWeek, endWeek,
-                        startYear, endYear,
+                        startDate.atStartOfDay(),
+                        endDate.atStartOfDay(),
                         FixedActivityType.VACATION
                 )
         );

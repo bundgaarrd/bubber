@@ -2,18 +2,22 @@ package appLogic.activity.impl;
 
 import appLogic.FixedActivityType;
 
+import java.time.LocalDateTime;
+import java.time.temporal.WeekFields;
+import java.util.Locale;
+
 public class FixedActivity extends Activity {
 
-    private final int startWeek;
-    private final int endWeek;
+    private final LocalDateTime startDate;
+    private final LocalDateTime endDate;
     private final FixedActivityType type;
 
     public FixedActivity(String name, String description, String summary,
-                         int startWeek, int endWeek, int startYear, int endYear,
+                         LocalDateTime startDate, LocalDateTime endDate,
                          FixedActivityType type, String projectId) {
-        super(name, description, summary, startWeek, endWeek, startYear, endYear, projectId);
-        this.startWeek = startWeek;
-        this.endWeek = endWeek;
+        super(name, description, summary, startDate, endDate, projectId);
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.type = type;
     }
 
@@ -21,11 +25,29 @@ public class FixedActivity extends Activity {
         return type;
     }
 
+    public LocalDateTime getStartDate() {
+        return startDate;
+    }
+
+    public LocalDateTime getEndDate() {
+        return endDate;
+    }
+
     public int getStartWeek() {
-        return startWeek;
+        WeekFields wf = WeekFields.of(Locale.getDefault());
+        return startDate.toLocalDate().get(wf.weekOfWeekBasedYear());
     }
 
     public int getEndWeek() {
-        return endWeek;
+        WeekFields wf = WeekFields.of(Locale.getDefault());
+        return endDate.toLocalDate().get(wf.weekOfWeekBasedYear());
+    }
+
+    public int getStartYear() {
+        return startDate.getYear();
+    }
+
+    public int getEndYear() {
+        return endDate.getYear();
     }
 }

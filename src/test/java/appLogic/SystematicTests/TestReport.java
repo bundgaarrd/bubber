@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class TestReport {
 
         private final App app = App.getInstance();
-        
+
         @AfterEach
         void reset() {
         app.getAppContext().reset();
@@ -25,7 +25,7 @@ public class TestReport {
 
         @Test
         void generateReport_unknownProject_throwsIllegalArgument() {
-                assertThrows(IllegalArgumentException.class, // Try-catch 
+                assertThrows(IllegalArgumentException.class, // Try-catch
                         () -> app.getReport("NONEXISTENT"));
                 App.resetInstanceForTests();
         }
@@ -56,11 +56,12 @@ public class TestReport {
         Employee laha = app.getLoggedInUser();
         var activity = app.getActivityService().createProjectActivity(
                 new appLogic.activity.command.CreateProjectActivity(
-                        p.getProjectID(), "TestTask", "desc", "summary", 0, 0, 0, 0
+                        p.getProjectID(), "TestTask", "desc", "summary",
+                        LocalDateTime.now(), LocalDateTime.now(), 5
                 )
         );
         app.getActivityService().registerWork(
-                activity.getId(), laha, LocalDateTime.now(), 3.0
+                activity.getId(), laha, LocalDateTime.now(), LocalDateTime.now(), 3.0
         );
 
         Report report = app.getReport(p.getProjectID());
@@ -82,11 +83,12 @@ public class TestReport {
         Employee laha = app.getLoggedInUser();
         var activity = app.getActivityService().createProjectActivity(
                 new appLogic.activity.command.CreateProjectActivity(
-                        p.getProjectID(), "BigTask", "desc", "summary", 0, 0, 0, 0
+                        p.getProjectID(), "BigTask", "desc", "summary",
+                        LocalDateTime.now(), LocalDateTime.now(), 5
                 )
         );
         app.getActivityService().registerWork(
-                activity.getId(), laha, LocalDateTime.now(), 15.0
+                activity.getId(), laha, LocalDateTime.now(), LocalDateTime.now(), 15.0
         );
 
         Report report = app.getReport(p.getProjectID());
