@@ -4,7 +4,7 @@ This guide assumes that you have Maven and JavaFX installed.
 
 To run this application, do the following steps:
 
-## Clone this repository. 
+### Clone this repository. 
 There are different ways to do this depending on which git server you use.
 
 #### Github
@@ -17,11 +17,23 @@ git clone https://github.com/bundgaarrd/SoftwareHuset.git
 git clone https://gitlab.gbar.dtu.dk/s244970/softwarehuset.git
 ```
 
-## Run the application
+### Run the application and tests from the terminal
 Navigate to the correct directory and run the Maven project:
 ```bash
+# First clone the project via the steps above
+# Change dir to the project directory
 cd SoftwareHuset
+
+# Run the Maven projet
 mvn javafx:run
+
+# Run the tests for the project
+mvn test
+
+# Run the cucumber features only
+mvn test -Dtest=RunCucumberTest
 ```
 
-A UI will pop up, and the app can be used from there.
+Running the Maven project, will spawn a window from which the application can be used. Running the application can also be done from the IntelliJ IDE, but make sure that the whole project is built before running.
+
+The project can be build in IntelliJ by clicking **Build** > **Build project**

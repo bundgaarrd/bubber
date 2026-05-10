@@ -115,7 +115,7 @@ public class ChooseProjectView {
             // Get employee names as a string
             List<String> allEmployees = new ArrayList<>();
             allEmployees.add("(none)");
-            appContext.getEmployeeRepository().findAll().stream().map(Employee::getName).forEach(allEmployees::add);
+            appContext.getEmployeeRepository().findAll().stream().map(Employee::getName).sorted().forEach(allEmployees::add);
 
             ChoiceBox<String> projectLeaderChoice = new ChoiceBox<>();
 

@@ -146,6 +146,22 @@ public class DefaultActivityService implements ActivityService {
         }
     }
 
+    @Override
+    public double getRemainingHours(String projectId) {
+        double totalExpected = activityRepository.findByProject(projectId).stream()
+                .filter(a -> a instanceof WorkActivity)
+                .mapToDouble(a -> ((WorkActivity) a).getExpectedHours())
+                .sum();
+
+        double totalLogged = timeEntryRepository.findAll().stream()
+                .filter(entry -> projectId.equals(entry.getActivity().getProjectId()))
+                .mapToDouble(TimeEntry::getHoursWorked)
+                .sum();
+
+        return totalExpected - totalLogged;
+    }
+
+    @Override
     public void saveTimeEntry(String projectId,
                               String initials,
                               String description,
