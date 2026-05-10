@@ -38,6 +38,7 @@ public class ProjectSteps {
     // Create preexisting project
     @And("A project with the name {string} exists in the system")
     public void aProjectWithTheNameExistsInTheSystem(String name) {
+        assert name != null;
         Project existingProject = TestApp.getInstance().getApp().getProjectByName(name);
         Assertions.assertNotNull(existingProject, "A project with the name " + name + " does not exist in the system.");
     }

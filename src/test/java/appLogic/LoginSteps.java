@@ -17,6 +17,7 @@ public class LoginSteps {
 
     @Given("I am logged in as an employee or a project leader with the initials {string}")
     public void loggedInAsEither(String initials) {
+        assert initials != null && initials.length() <= 4;
         app.login(initials);
         assertTrue(app.isUserLoggedIn(), "User was not logged in successfully");
     }

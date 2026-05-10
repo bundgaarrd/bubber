@@ -31,6 +31,7 @@ public class FixedActivitySteps {
     @When("I add a fixed activity with name {string} and specified start and end date")
     public void addFixedActivity(String name){
         
+        
 
 
     
@@ -41,6 +42,7 @@ public class FixedActivitySteps {
         int year = startDate.getYear();
         fixedActivity = new FixedActivity(name, "Description of the test", "Summary of the Test", startDate, endDate, FixedActivityType.COURSE);
         checkDates = fixedActivity.isOverlappingWeek(week, year);
+        assert week > 0 && week <= 52; //precondition uger skal være størrre end 0 og mindre end 52
 
         if(!checkDates){
         fixedacts.add(fixedActivity);
@@ -49,7 +51,7 @@ public class FixedActivitySteps {
     }
     @Then("the fixed activity is added to the timesheet")
     public void addedActivityTimesheet(){
-        assertTrue(addedActivity);;
+        assertTrue(addedActivity); // postcondition med en assertTrue 
     }
     
     
