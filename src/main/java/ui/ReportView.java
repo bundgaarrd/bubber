@@ -90,11 +90,11 @@ public class ReportView {
 
         Label hoursUsedLabel = new Label("Hours Used:");
         hoursUsedLabel.setStyle("-fx-font-weight: bold;");
-        Label hoursUsedValue = new Label(String.format("%.1f hours", report.getHoursUsed()));
+        Label hoursUsedValue = new Label(String.format("%.1f hours", report.hoursUsed()));
 
         Label remainingLabel = new Label("Expected Remaining Hours:");
         remainingLabel.setStyle("-fx-font-weight: bold;");
-        Label remainingValue = new Label(String.format("%.1f hours", report.getExpectedRemainingHours()));
+        Label remainingValue = new Label(String.format("%.1f hours", report.expectedRemainingHours()));
 
         metricsGrid.add(hoursUsedLabel, 0, 0);
         metricsGrid.add(hoursUsedValue, 1, 0);
@@ -113,8 +113,8 @@ public class ReportView {
         activitiesLabel.setStyle("-fx-font-size: 14; -fx-font-weight: bold;");
 
         ObservableList<Summary> summaryData = FXCollections.observableArrayList();
-        if (report.getActivitySummaries() != null) {
-            summaryData.addAll(report.getActivitySummaries());
+        if (report.activitySummaries() != null) {
+            summaryData.addAll(report.activitySummaries());
         }
 
         TableView<Summary> tableView = new TableView<>();
@@ -134,7 +134,7 @@ public class ReportView {
 
         tableView.getColumns().addAll(summaryCol, hoursCol, expectedHoursCol);
 
-        if (report.getActivitySummaries().isEmpty()) {
+        if (report.activitySummaries().isEmpty()) {
             Label noActivitiesLabel = new Label("No activities recorded for this project.");
             noActivitiesLabel.setStyle("-fx-font-size: 12; -fx-text-fill: #666666;");
             tableBox.getChildren().addAll(activitiesLabel, noActivitiesLabel);

@@ -38,9 +38,9 @@ public class TestReport {
 
                 Report report = app.getReport(p.getProjectID());
 
-                assertEquals(0.0, report.getHoursUsed());
-                assertTrue(report.getActivitySummaries().isEmpty());
-                assertEquals(10.0, report.getExpectedRemainingHours());
+                assertEquals(0.0, report.hoursUsed());
+                assertTrue(report.activitySummaries().isEmpty());
+                assertEquals(10.0, report.expectedRemainingHours());
                 App.resetInstanceForTests();
         }
 
@@ -66,9 +66,9 @@ public class TestReport {
 
         Report report = app.getReport(p.getProjectID());
 
-        assertEquals(3.0, report.getHoursUsed());
-        assertEquals(1, report.getActivitySummaries().size());
-        assertEquals(7.0, report.getExpectedRemainingHours());
+        assertEquals(3.0, report.hoursUsed());
+        assertEquals(1, report.activitySummaries().size());
+        assertEquals(7.0, report.expectedRemainingHours());
         App.resetInstanceForTests();
     }
 
@@ -93,9 +93,9 @@ public class TestReport {
 
         Report report = app.getReport(p.getProjectID());
 
-        assertEquals(15.0, report.getHoursUsed());
-        assertEquals(1, report.getActivitySummaries().size());
-        assertEquals(0.0, report.getExpectedRemainingHours());
+        assertEquals(15.0, report.hoursUsed());
+        assertEquals(1, report.activitySummaries().size());
+        assertEquals(0.0, report.expectedRemainingHours());
         App.resetInstanceForTests();
     }
 }

@@ -1,12 +1,10 @@
 package appLogic.activity.impl; //s244813
 
 import java.time.LocalDateTime;
-import java.time.DayOfWeek;
 
 public class WorkActivity extends Activity {
     private final double expectedHours;
 
-    // ActivityStatus and status were previously on ProjectActivity; include them here
     public enum ActivityStatus {
         DONE,
         PROGRESS,
