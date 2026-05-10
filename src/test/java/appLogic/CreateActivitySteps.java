@@ -1,6 +1,6 @@
 package appLogic;
 
-import appLogic.activity.command.CreateProjectActivity;
+import appLogic.activity.command.CreateWorkActivity;
 import appLogic.activity.exception.DuplicateActivityException;
 import appLogic.activity.impl.Activity;
 import appLogic.employee.Employee;
@@ -11,6 +11,7 @@ import io.cucumber.java.en.When;
 import org.junit.jupiter.api.Assertions;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.WeekFields;
 import java.util.Locale;
 
@@ -34,12 +35,14 @@ public class CreateActivitySteps {
         Project project = TestApp.getInstance().getProject();
         try {
             Activity activity = TestApp.getInstance().getApp().getActivityService()
-                    .createProjectActivity(new CreateProjectActivity(
+                    .createWorkActivity(new CreateWorkActivity(
                             project.getProjectID(),
                             name,
                             "",
                             "",
-                            0, 0, 0, 0
+                            LocalDateTime.now(),
+                            LocalDateTime.now(),
+                            5
                     ));
             TestApp.getInstance().setActivity(activity);
             lastException = null;
@@ -62,12 +65,14 @@ public class CreateActivitySteps {
         Activity activity;
         try {
             activity = TestApp.getInstance().getApp().getActivityService()
-                    .createProjectActivity(new CreateProjectActivity(
+                    .createWorkActivity(new CreateWorkActivity(
                             project.getProjectID(),
                             name,
                             "",
                             "",
-                            0, 0, 0, 0
+                            LocalDateTime.now(),
+                            LocalDateTime.now(),
+                            5
                     ));
         } catch (DuplicateActivityException e) {
             activity = TestApp.getInstance().getApp().getActivityService().findByProjectAndName(
@@ -104,12 +109,14 @@ public class CreateActivitySteps {
         Project project = TestApp.getInstance().getProject();
         try {
             Activity activity = TestApp.getInstance().getApp().getActivityService()
-                    .createProjectActivity(new CreateProjectActivity(
+                    .createWorkActivity(new CreateWorkActivity(
                             project.getProjectID(),
                             "Activity-" + System.nanoTime(),
                             "",
                             "",
-                            0, 0, 0, 0
+                            LocalDateTime.now(),
+                            LocalDateTime.now(),
+                            5
                     ));
             TestApp.getInstance().setActivity(activity);
             lastException = null;

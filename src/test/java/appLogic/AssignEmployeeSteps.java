@@ -10,7 +10,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -34,7 +34,7 @@ public class AssignEmployeeSteps {
         } catch (ActivityNotFoundException e) {
             try {
                 targetActivity = TestApp.getInstance().getApp().getActivityService()
-                        .createWorkActivity(new CreateWorkActivity(projectId, activityName, "", "", 0, 0, 0, 0, 5));
+                        .createWorkActivity(new CreateWorkActivity(projectId, activityName, "", "", LocalDateTime.now(), LocalDateTime.now(), 5));
             } catch (DuplicateActivityException ignored) {
                 targetActivity = TestApp.getInstance().getApp().getActivityService().findByProjectAndName(projectId, activityName);
             }
@@ -61,7 +61,9 @@ public class AssignEmployeeSteps {
 
         try {
             targetActivity.removeEmployee(targetEmployee);
-            TestApp.getInstance().getApp().getActivityService().assignEmployee(targetActivity.getId(), targetEmployee);
+            // Create a TimeEntry to represent the assignment and call the TimeEntry-based API
+            TimeEntry entry = new TimeEntry(targetEmployee, targetActivity, LocalDateTime.now(), LocalDateTime.now(), 0);
+            TestApp.getInstance().getApp().getActivityService().assignEmployee(targetActivity.getId(), entry);
             assignmentSucceeded = targetActivity.getAssignedEmployees().contains(targetEmployee);
             errorMessage = null;
         } catch (Exception e) {

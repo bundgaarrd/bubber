@@ -3,7 +3,9 @@ package ui; // s244970
 import appLogic.App;
 import appLogic.AppContext;
 import appLogic.TimeEntry;
+import appLogic.activity.ActivityService;
 import appLogic.employee.Employee;
+import appLogic.employee.EmployeeRepository;
 import appLogic.employee.InMemoryEmployeeRepository;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -15,11 +17,15 @@ public class EditTimeEntryView {
     private final TimeEntry timeEntry;
     private App app;
     private AppContext appContext;
+    private ActivityService activityService;
+    private EmployeeRepository employeeRepository;
 
     public EditTimeEntryView(TimeEntry timeEntry) {
         this.timeEntry = timeEntry;
         this.app = App.getInstance();
         this.appContext = app.getAppContext();
+        this.activityService = app.getActivityService();
+        this.employeeRepository = app.getEmployeeRepository();
     }
 
     public void show() {
@@ -53,6 +59,7 @@ public class EditTimeEntryView {
                 Employee emp = appContext.getEmployeeRepository().findByName(employeeChoice.getValue());
                 if (emp != null) timeEntry.setEmployee(emp);
                 timeEntry.setHoursWorked(Double.parseDouble(hoursField.getText()));
+
             }
         });
     }

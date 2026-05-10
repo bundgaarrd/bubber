@@ -4,6 +4,7 @@ module hellofx {
     requires io.cucumber.core;
     requires io.cucumber.messages;
     requires picocontainer;
+    requires java.sql;
 
     exports ui; // Exporting to own application
     exports appLogic to picocontainer;

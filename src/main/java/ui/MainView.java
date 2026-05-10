@@ -26,13 +26,15 @@ public class MainView {
         Button projectsBtn = new Button("Show projects");
         Button employeeBtn = new Button("Create Employee");
         Label loggedInUser = new Label("Logged in as " + app.getLoggedInUser().getName());
+        Button showActivitiesBtn = new Button("Show activities");
 
         // ActionEvents
         employeeBtn.setOnAction(e -> scene.setRoot(new CreateEmployeeView(scene).getView()));
         logoutBtn.setOnAction(e -> scene.setRoot(new LoginView(scene).getView()));
         projectsBtn.setOnAction(e -> scene.setRoot(new ChooseProjectView(scene).getView()));
+        showActivitiesBtn.setOnAction(e -> scene.setRoot(new ShowActivitiesView(scene).getView()));
 
-        root.getChildren().addAll(loggedInUser, projectsBtn, employeeBtn, logoutBtn);
+        root.getChildren().addAll(loggedInUser, projectsBtn, employeeBtn, showActivitiesBtn, logoutBtn);
 
         return root;
     }

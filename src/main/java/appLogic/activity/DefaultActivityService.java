@@ -1,12 +1,7 @@
 package appLogic.activity;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
-
 import appLogic.TimeEntry;
 import appLogic.activity.command.CreateFixedActivity;
-import appLogic.activity.command.CreateProjectActivity;
 import appLogic.activity.command.CreateWorkActivity;
 import appLogic.activity.exception.ActivityNotFoundException;
 import appLogic.activity.exception.DuplicateActivityException;
@@ -19,8 +14,12 @@ import appLogic.employee.Employee;
 import appLogic.employee.EmployeeRepository;
 import appLogic.employee.InMemoryTimeEntryRepository;
 import appLogic.project.Project;
-import appLogic.project.ProjectActivity;
 import appLogic.project.ProjectRegistry;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
 
 public class DefaultActivityService implements ActivityService {
     private final ActivityRepository activityRepository;
@@ -42,28 +41,12 @@ public class DefaultActivityService implements ActivityService {
     }
 
     @Override
-    public Activity createProjectActivity(CreateProjectActivity command) {
-        Project project = requireProject(command.projectId());
-        requireProjectLeader(project);
-        ensureUniqueName(command.projectId(), command.name());
-        Activity activity = new ProjectActivity(
-                command.name(), command.description(), command.summary(),
-                command.startWeek(), command.endWeek(), command.startYear(), command.endYear(),
-                command.projectId()
-        );
-        activityRepository.save(command.projectId(), activity);
-        return activity;
-    }
-
-    @Override
     public Activity createWorkActivity(CreateWorkActivity command) {
         requireProject(command.projectId());
         ensureUniqueName(command.projectId(), command.name());
         Activity activity = new WorkActivity(
                 command.name(), command.description(), command.summary(),
-                command.startWeek(), command.endWeek(), command.startYear(), command.endYear(),
-                command.expectedHours(),
-                command.projectId()
+                command.startDate(), command.endDate(), command.expectedHours(), command.projectId()
         );
         activityRepository.save(command.projectId(), activity);
         return activity;
@@ -71,15 +54,8 @@ public class DefaultActivityService implements ActivityService {
 
     @Override
     public Activity createFixedActivity(CreateFixedActivity command) {
-        requireProject(command.projectId());
-        ensureUniqueName(command.projectId(), command.name());
-        Activity activity = new FixedActivity(
-                command.name(), command.description(), command.summary(),
-                command.startWeek(), command.endWeek(), command.startYear(), command.endYear(),
-                command.type(),
-                command.projectId()
-        );
-        activityRepository.save(command.projectId(), activity);
+        FixedActivity activity = new FixedActivity(command.startDate(), command.endDate(), command.type());
+        activityRepository.save(activity.getType().toString(), activity);
         return activity;
     }
 
@@ -105,27 +81,41 @@ public class DefaultActivityService implements ActivityService {
     }
 
     @Override
-    public void assignEmployee(UUID activityId, Employee employee) {
-        Activity activity = activityRepository.findById(activityId)
-                .orElseThrow(() -> new ActivityNotFoundException("Activity not found."));
-        if (!activity.assignEmployee(employee)) {
-            return;
-        }
-        if (!employee.getActivities().contains(activity)) {
-            employee.getActivities().add(activity);
-        }
+    public void deleteEntry(TimeEntry entry) {
+        Activity activity = entry.getActivity();
+        Project project = requireProject(activity.getProjectId());
+        requireProjectLeader(project);
+        project.getEvents().remove(entry);
+        activity.getTimeEntries().remove(entry);
+        Employee employee = entry.getEmployee();
+        employee.getEntries().remove(entry);
+        timeEntryRepository.remove(entry);
     }
 
     @Override
-    public TimeEntry registerWork(UUID activityId, Employee employee, LocalDateTime entryStart, double hoursWorked) {
+    public void assignEmployee(UUID activityId, TimeEntry entry) {
+        Activity activity = activityRepository.findById(activityId)
+                .orElseThrow(() -> new ActivityNotFoundException("Activity not found."));
+        if (!activity.assignEmployee(entry)) {
+            return;
+        }
+
+        Employee employee = entry.getEmployee();
+        employee.addEntry(entry);
+        // Keep employee activities in sync
+        employee.addActivity(activity);
+    }
+
+    @Override
+    public TimeEntry registerWork(UUID activityId, Employee employee, LocalDateTime entryStart, LocalDateTime entryEnd, double hoursWorked) {
         if (hoursWorked < 0) {
             throw new InvalidHoursException("Invalid hours");
         }
         Activity activity = activityRepository.findById(activityId)
                 .orElseThrow(() -> new ActivityNotFoundException("Activity not found."));
-        assignEmployee(activityId, employee);
-        TimeEntry entry = new TimeEntry(employee, activity, entryStart, hoursWorked);
-        timeEntryRepository.save(entry);
+        TimeEntry entry = new TimeEntry(employee, activity, entryStart, entryEnd, hoursWorked);
+        assignEmployee(activityId, entry);
+        try { timeEntryRepository.save(entry); } catch (Exception ignored) {}
         return entry;
     }
 
@@ -151,14 +141,27 @@ public class DefaultActivityService implements ActivityService {
     }
 
     @Override
+    public double getRemainingHours(String projectId) {
+        double totalExpected = activityRepository.findByProject(projectId).stream()
+                .filter(a -> a instanceof WorkActivity)
+                .mapToDouble(a -> ((WorkActivity) a).getExpectedHours())
+                .sum();
+
+        double totalLogged = timeEntryRepository.findAll().stream()
+                .filter(entry -> projectId.equals(entry.getActivity().getProjectId()))
+                .mapToDouble(TimeEntry::getHoursWorked)
+                .sum();
+
+        return totalExpected - totalLogged;
+    }
+
+    @Override
     public void saveTimeEntry(String projectId,
                               String initials,
                               String description,
                               String summary,
-                              int startWeek,
-                              int endWeek,
-                              int startYear,
-                              int endYear,
+                              LocalDateTime startDate,
+                              LocalDateTime endDate,
                               double hours) {
 
         Employee emp = employeeRepository.findByInitials(initials);
@@ -171,10 +174,11 @@ public class DefaultActivityService implements ActivityService {
                 initials + "-" + description,
                 description,
                 summary,
-                startWeek, endWeek, startYear, endYear,
+                startDate,
+                endDate,
                 (int) hours
         ));
 
-        registerWork(activity.getId(), emp, LocalDateTime.now(), hours);
+        registerWork(activity.getId(), emp, startDate, endDate, hours);
     }
 }

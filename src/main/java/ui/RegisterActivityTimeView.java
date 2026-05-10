@@ -1,12 +1,5 @@
 package ui; //s244813 & s244970
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.WeekFields;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
 import appLogic.App;
 import appLogic.AppContext;
 import appLogic.TimeEntry;
@@ -25,22 +18,14 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import javafx.util.StringConverter;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RegisterActivityTimeView {
 
@@ -54,6 +39,9 @@ public class RegisterActivityTimeView {
 
     private final ObservableList<TimeEntry> tableData     = FXCollections.observableArrayList();
     private final ObservableList<Activity>  activityList  = FXCollections.observableArrayList();
+
+    private Label remainingHoursLabel;
+//    private Label differenceLabel;
 
     public RegisterActivityTimeView(Scene scene, Project selectedProject) {
         this.scene = scene;
@@ -82,7 +70,34 @@ public class RegisterActivityTimeView {
         title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
         Label subtitle = new Label("Project ID: " + selectedProject.getProjectID());
         subtitle.setStyle("-fx-text-fill: #777; -fx-font-size: 12px;");
-        VBox header = new VBox(2, title, subtitle);
+        Label expectedHoursLabel = new Label("Project budget (hours): " + selectedProject.getExpectedHours());
+        expectedHoursLabel.setStyle("-fx-text-fill: #777; -fx-font-size: 12px;");
+        Button generateReportButton = new Button("Generate report");
+        generateReportButton.setStyle("-fx-base: #4f8ef7; -fx-text-fill: white; -fx-font-weight: bold;");
+
+        // Only enable generate report button for project leaders
+        Employee loggedInUser = App.getInstance().getLoggedInUser();
+        Employee projectLeader = selectedProject.getProjectLeader();
+        boolean isProjectLeader = projectLeader != null && loggedInUser.equals(projectLeader);
+        generateReportButton.setDisable(!isProjectLeader);
+        if (!isProjectLeader) {
+            generateReportButton.setStyle("-fx-base: #cccccc; -fx-text-fill: #666666;");
+        }
+
+        String projectLeaderName = projectLeader != null ? projectLeader.getName() : "none";
+        Label projectLeaderLabel = new Label("Project leader: " + projectLeaderName);
+        projectLeaderLabel.setStyle("-fx-text-fill: #777; -fx-font-size: 12px;");
+        // TODO: Find den rigtige metode til at få remaining hours
+        double diff = selectedProject.getExpectedHours() - activityService.getRemainingHours(selectedProject.getProjectID());
+//        differenceLabel = new Label("Budget vs. remaining: " + diff + " hours");
+//        differenceLabel.setStyle("-fx-text-fill: " + (diff < 0 ? "#c94444" : "#2e8b57") + "; -fx-font-size: 12px;");
+
+        remainingHoursLabel = new Label("Remaining on activities: " +  activityService.getRemainingHours(selectedProject.getProjectID()));
+        remainingHoursLabel.setStyle("-fx-text-fill: #777; -fx-font-size: 12px;");
+
+//        VBox header = new VBox(2, title, subtitle, projectLeaderLabel, expectedHoursLabel, remainingHoursLabel, differenceLabel);
+        VBox header = new VBox(2, title, subtitle, projectLeaderLabel, expectedHoursLabel, remainingHoursLabel, generateReportButton);
+
         header.setPadding(new Insets(0, 0, 15, 0));
         root.setTop(header);
 
@@ -171,7 +186,8 @@ public class RegisterActivityTimeView {
                 btn.setOnAction(e -> {
                     TimeEntry entry = getTableView().getItems().get(getIndex());
                     tableData.remove(entry);
-                    timeEntryRepository.remove(entry);
+                    activityService.deleteEntry(entry);
+                    updateRemainingHours();
                 });
             }
             @Override
@@ -214,8 +230,9 @@ public class RegisterActivityTimeView {
             }
 
             TimeEntry entry = activityService.registerWork(
-                activity.getId(), employee, LocalDateTime.now(), hours);
+                activity.getId(), employee, LocalDateTime.now(), LocalDateTime.now().plusDays(5), hours); //TODO Add to UI
             tableData.add(entry);
+            updateRemainingHours();
 
             messageLabel.setStyle("-fx-text-fill: #2e8b57;");
             messageLabel.setText("Time logged!");
@@ -233,6 +250,11 @@ public class RegisterActivityTimeView {
                 new EditTimeEntryView(selected).show();
                 table.refresh();
             }
+        });
+
+        generateReportButton.setOnAction(e -> {
+            ReportView reportView = new ReportView(scene, selectedProject);
+            scene.setRoot(reportView.getView());
         });
 
         return root;
@@ -277,24 +299,21 @@ public class RegisterActivityTimeView {
                 messageLabel.setText("Invalid expected hours"); return;
             }
 
-            WeekFields wf = WeekFields.of(Locale.getDefault());
-            int sw = startDate.getValue().get(wf.weekOfWeekBasedYear());
-            int ew = endDate.getValue().get(wf.weekOfWeekBasedYear());
-            int sy = startDate.getValue().getYear();
-            int ey = endDate.getValue().getYear();
-
             Activity activity = activityService.createWorkActivity(new CreateWorkActivity(
                 selectedProject.getProjectID(),
                 descField.getText(),              
                 descField.getText(),               
                 summaryField.getText(),
-                sw, ew, sy, ey, hours
+                startDate.getValue().atStartOfDay(),
+                endDate.getValue().atStartOfDay(),
+                hours
             ));
 
             activityList.add(activity);
             activityBox.setValue(activity);
             messageLabel.setStyle("-fx-text-fill: #2e8b57;");
             messageLabel.setText("Activity created!");
+            updateRemainingHours();
         });
     }
 
@@ -302,5 +321,13 @@ public class RegisterActivityTimeView {
         Label l = new Label(label);
         l.setStyle("-fx-font-size: 11px; -fx-text-fill: #555; -fx-font-weight: bold;");
         return new VBox(4, l, input);
+    }
+
+    private void updateRemainingHours() {
+        double remaining = activityService.getRemainingHours(selectedProject.getProjectID());
+        remainingHoursLabel.setText("Remaining on activities: " +  remaining);
+//        double diff = selectedProject.getExpectedHours() - remaining;
+//        differenceLabel.setText("Budget vs. remaining: " + diff + " hrs");
+//        differenceLabel.setStyle("-fx-text-fill: " + (diff < 0 ? "#c94444" : "#2e8b57") + "; -fx-font-size: 12px;");
     }
 }

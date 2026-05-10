@@ -1,35 +1,23 @@
 package appLogic.project;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import appLogic.Customer;
 import appLogic.TimeEntry;
 import appLogic.employee.Employee;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class Project {
     private String projectID;
     private String projectName;
     private boolean hasCustomer;
     private Employee projectLeader;
-    private boolean isCompleted = false;
-    private Set<Customer> customerList;
     private double expectedHours;
     private Set<TimeEntry> events;
-    private Set<Employee> employees;
 
-    
     public Project(String projectID, String projectName) {
         this.projectID = projectID;
         this.projectName = projectName;
-        this.employees = new HashSet<>(); 
         this.events = new HashSet<>();
-        this.customerList = new HashSet<>();
-    }
-
-    // Status true
-    public void setCompletedStatus(boolean status) {
-        this.isCompleted = status;
     }
 
     public Employee getProjectLeader() {
@@ -44,29 +32,12 @@ public class Project {
         if(empl != null) empl.addProjectAsLeader(this);
     }
 
-
-    public boolean assignEmployee(Employee empl) {
-        boolean b;
-        if (employees.contains(empl)) {
-            b = false;
-        } else {
-            employees.add(empl);
-            b = true;
-        }
-        return b;
-    }
-
     public void setExpectedHours(double hours) {
         this.expectedHours = hours;
     }
 
     public Set<TimeEntry> getEvents() {
-        Set<TimeEntry> entries = new HashSet<>();
-        return entries;
-    }
-
-    public Set<Customer> getCustomers() {
-        return customerList;
+        return events;
     }
 
     public String getProjectID() {
