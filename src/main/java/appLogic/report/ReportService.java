@@ -1,5 +1,6 @@
 package appLogic.report;
 
+import appLogic.activity.impl.WorkActivity;
 import appLogic.employee.InMemoryTimeEntryRepository;
 import appLogic.activity.*;
 import appLogic.activity.impl.Activity;
@@ -42,8 +43,9 @@ public class ReportService {
                 .filter(e -> e.getActivity().getId().equals(activity.getId()))
                 .mapToDouble(TimeEntry::getHoursWorked)
                 .sum();
+            double budgetHours = ((WorkActivity)activity).getExpectedHours();
             totalHoursUsed += activityHours;
-            summaries.add(new Summary(activityHours, activity.getName()));
+            summaries.add(new Summary(activityHours, budgetHours, activity.getName()));
         }
 
         double remainingHours = Math.max(0, project.getExpectedHours() - totalHoursUsed);

@@ -122,13 +122,17 @@ public class ReportView {
 
         TableColumn<Summary, String> summaryCol = new TableColumn<>("Activity Summary");
         summaryCol.setCellValueFactory(data ->
-                new javafx.beans.property.SimpleStringProperty(data.getValue().getActivitySummary()));
+                new javafx.beans.property.SimpleStringProperty(data.getValue().activitySummary()));
 
         TableColumn<Summary, String> hoursCol = new TableColumn<>("Hours Used");
         hoursCol.setCellValueFactory(data ->
-                new javafx.beans.property.SimpleStringProperty(String.format("%.1f", data.getValue().getHoursUsed())));
+                new javafx.beans.property.SimpleStringProperty(String.format("%.1f", data.getValue().hoursUsed())));
 
-        tableView.getColumns().addAll(summaryCol, hoursCol);
+        TableColumn<Summary, String> expectedHoursCol = new TableColumn<>("Expected hours");
+        expectedHoursCol.setCellValueFactory(data ->
+                new javafx.beans.property.SimpleStringProperty(String.format("%.1f", data.getValue().expectedHours())));
+
+        tableView.getColumns().addAll(summaryCol, hoursCol, expectedHoursCol);
 
         if (report.activitySummaries().isEmpty()) {
             Label noActivitiesLabel = new Label("No activities recorded for this project.");
