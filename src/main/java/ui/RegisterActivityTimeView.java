@@ -82,7 +82,17 @@ public class RegisterActivityTimeView {
         projectLeaderLabel.setStyle("-fx-text-fill: #777; -fx-font-size: 12px;");
         double diff = selectedProject.getExpectedHours() - activityService.getRemainingHours(selectedProject.getProjectID());
 
-        VBox header = new VBox(2, title, subtitle, projectLeaderLabel, generateReportButton);
+        HBox projectLeaderBox = new HBox(10, projectLeaderLabel);
+        projectLeaderBox.setAlignment(Pos.CENTER_LEFT);
+
+        if (projectLeader == null) {
+            Button assignLeaderBtn = new Button("Assign Project Leader");
+            assignLeaderBtn.setStyle("-fx-base: #f7a044; -fx-text-fill: white; -fx-font-weight: bold;");
+            assignLeaderBtn.setOnAction(e -> openAssignProjectLeaderDialog());
+            projectLeaderBox.getChildren().add(assignLeaderBtn);
+        }
+
+        VBox header = new VBox(2, title, subtitle, projectLeaderBox, generateReportButton);
 
         header.setPadding(new Insets(0, 0, 15, 0));
         root.setTop(header);
@@ -327,5 +337,42 @@ public class RegisterActivityTimeView {
 
     private void updateRemainingHours() {
         double remaining = activityService.getRemainingHours(selectedProject.getProjectID());
+    }
+
+    private void openAssignProjectLeaderDialog() {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("Assign Project Leader");
+        dialog.setHeaderText("Select an employee to be the project leader");
+        dialog.getDialogPane().setMinWidth(300);
+
+        List<String> employeeNames = new ArrayList<>();
+        employeeRepository.findAll().stream()
+            .map(Employee::getName)
+            .sorted()
+            .forEach(employeeNames::add);
+
+        ChoiceBox<String> employeeChoice = new ChoiceBox<>();
+        employeeChoice.getItems().addAll(employeeNames);
+        if (!employeeNames.isEmpty()) {
+            employeeChoice.setValue(employeeNames.get(0));
+        }
+
+        VBox content = new VBox(10, new Label("Choose employee:"), employeeChoice);
+        content.setPadding(new Insets(15));
+        dialog.getDialogPane().setContent(content);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        dialog.showAndWait().ifPresent(result -> {
+            if (result == ButtonType.OK) {
+                String selectedEmployeeName = employeeChoice.getValue();
+                if (selectedEmployeeName != null && !selectedEmployeeName.isBlank()) {
+                    Employee employee = employeeRepository.findByName(selectedEmployeeName);
+                    if (employee != null) {
+                        selectedProject.assignProjectLeader(employee);
+                        scene.setRoot(new RegisterActivityTimeView(scene, selectedProject).getView());
+                    }
+                }
+            }
+        });
     }
 }
