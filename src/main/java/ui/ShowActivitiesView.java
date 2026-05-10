@@ -9,7 +9,9 @@ import appLogic.activity.command.CreateFixedActivity;
 import appLogic.activity.command.CreateWorkActivity;
 import appLogic.activity.impl.Activity;
 import appLogic.employee.Employee;
+import appLogic.project.Project;
 import appLogic.project.ProjectRegistry;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -85,8 +87,14 @@ public class ShowActivitiesView {
                 new javafx.beans.property.SimpleStringProperty(data.getValue().getProjectId()));
 
         TableColumn<Activity, String> projectNamecol = new TableColumn<>("Project name");
-        projectNamecol.setCellValueFactory(data ->
-                new javafx.beans.property.SimpleStringProperty(projectRegistry.getProjectById(data.getValue().getProjectId()).getProjectName()));
+        projectNamecol.setCellValueFactory(data -> {
+            Project project = projectRegistry.getProjectById(data.getValue().getProjectId());
+            if (project == null) {
+                return new SimpleStringProperty("N/A");
+            }
+
+            return new SimpleStringProperty(project.getProjectName());
+        });
 
         TableView<Activity> tableData = new TableView<>();
         tableData.setItems(entries);

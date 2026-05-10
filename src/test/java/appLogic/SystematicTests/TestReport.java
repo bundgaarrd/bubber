@@ -5,7 +5,6 @@ import appLogic.AppContext;
 import appLogic.employee.Employee;
 import appLogic.project.Project;
 import appLogic.report.Report;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,34 +14,34 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestReport {
 
-        private final App app = App.getInstance();
+    private final App app = App.getInstance();
 
-        @AfterEach
-        void reset() {
+    @AfterEach
+    void reset() {
         app.getAppContext().reset();
         App.resetInstanceForTests();
-        }
+    }
 
-        @Test
-        void generateReport_unknownProject_throwsIllegalArgument() {
-                assertThrows(IllegalArgumentException.class, // Try-catch
-                        () -> app.getReport("NONEXISTENT"));
-                App.resetInstanceForTests();
-        }
+    @Test
+    void generateReport_unknownProject_throwsIllegalArgument() {
+        assertThrows(IllegalArgumentException.class, // Try-catch
+                () -> app.getReport("NONEXISTENT"));
+        App.resetInstanceForTests();
+    }
 
-        @Test
-        void generateReport_noActivities_returnsZeroHoursAndFullRemainder() {
-                App app = App.getInstance();
-                Project p = app.getProjectRegistry().getAllProjects().get(0);
-                p.setExpectedHours(10);
+    @Test
+    void generateReport_noActivities_returnsZeroHoursAndFullRemainder() {
+        App app = App.getInstance();
+        Project p = app.getProjectRegistry().getAllProjects().get(0);
+        p.setExpectedHours(10);
 
-                Report report = app.getReport(p.getProjectID());
+        Report report = app.getReport(p.getProjectID());
 
-                assertEquals(0.0, report.hoursUsed());
-                assertTrue(report.activitySummaries().isEmpty());
-                assertEquals(10.0, report.expectedRemainingHours());
-                App.resetInstanceForTests();
-        }
+        assertEquals(0.0, report.hoursUsed());
+        assertTrue(report.activitySummaries().isEmpty());
+        assertEquals(10.0, report.expectedRemainingHours());
+        App.resetInstanceForTests();
+    }
 
 
     @Test

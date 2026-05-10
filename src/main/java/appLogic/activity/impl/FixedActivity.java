@@ -4,7 +4,6 @@ import appLogic.FixedActivityType;
 
 import java.time.LocalDateTime;
 import java.time.temporal.WeekFields;
-import java.util.Arrays;
 import java.util.Locale;
 
 public class FixedActivity extends Activity {
