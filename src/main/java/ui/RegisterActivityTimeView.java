@@ -182,6 +182,11 @@ public class RegisterActivityTimeView {
                     activityService.deleteEntry(entry);
                     updateRemainingHours();
                 });
+
+                if (!isProjectLeader) {
+                    btn.setDisable(true);
+                    btn.setStyle("-fx-base: #cccccc; -fx-text-fill: #666666;");
+                }
             }
             @Override
             protected void updateItem(Void item, boolean empty) {
