@@ -54,8 +54,8 @@ public class TestReport {
         p.setExpectedHours(10);
 
         Employee laha = app.getLoggedInUser();
-        var activity = app.getActivityService().createProjectActivity(
-                new appLogic.activity.command.CreateProjectActivity(
+        var activity = app.getActivityService().createWorkActivity(
+                new appLogic.activity.command.CreateWorkActivity(
                         p.getProjectID(), "TestTask", "desc", "summary",
                         LocalDateTime.now(), LocalDateTime.now(), 5
                 )
@@ -81,8 +81,8 @@ public class TestReport {
         p.setExpectedHours(10);
 
         Employee laha = app.getLoggedInUser();
-        var activity = app.getActivityService().createProjectActivity(
-                new appLogic.activity.command.CreateProjectActivity(
+        var activity = app.getActivityService().createWorkActivity(
+                new appLogic.activity.command.CreateWorkActivity(
                         p.getProjectID(), "BigTask", "desc", "summary",
                         LocalDateTime.now(), LocalDateTime.now(), 5
                 )

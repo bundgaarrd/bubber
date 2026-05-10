@@ -7,13 +7,10 @@ import java.util.UUID;
 import appLogic.activity.impl.Activity;
 import appLogic.TimeEntry;
 import appLogic.activity.command.CreateFixedActivity;
-import appLogic.activity.command.CreateProjectActivity;
 import appLogic.activity.command.CreateWorkActivity;
 import appLogic.employee.Employee;
 
 public interface ActivityService {
-    Activity createProjectActivity(CreateProjectActivity command);
-
     Activity createWorkActivity(CreateWorkActivity command);
 
     Activity createFixedActivity(CreateFixedActivity command);
@@ -23,6 +20,8 @@ public interface ActivityService {
     List<Activity> findByProject(String projectId);
 
     void deleteActivity(String projectId, String activityName);
+
+    void deleteEntry(TimeEntry entry);
 
     void assignEmployee(UUID activityId, TimeEntry entry);
 
