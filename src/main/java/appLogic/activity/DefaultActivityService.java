@@ -2,7 +2,6 @@ package appLogic.activity;
 
 import appLogic.TimeEntry;
 import appLogic.activity.command.CreateFixedActivity;
-import appLogic.activity.command.CreateProjectActivity;
 import appLogic.activity.command.CreateWorkActivity;
 import appLogic.activity.exception.ActivityNotFoundException;
 import appLogic.activity.exception.DuplicateActivityException;
@@ -39,17 +38,6 @@ public class DefaultActivityService implements ActivityService {
         this.currentUserProvider = currentUserProvider;
         this.timeEntryRepository = timeEntryRepository;
         this.employeeRepository = employeeRepository;
-    }
-
-    @Override
-    public Activity createProjectActivity(CreateProjectActivity command) {
-        Project project = requireProject(command.projectId());
-        requireProjectLeader(project);
-        ensureUniqueName(command.projectId(), command.name());
-        Activity activity = new WorkActivity(command.name(), command.description(), command.summary(),
-                command.startDate(), command.endDate(), command.expectedHours(), command.projectId());
-        activityRepository.save(command.projectId(), activity);
-        return activity;
     }
 
     @Override
@@ -93,6 +81,13 @@ public class DefaultActivityService implements ActivityService {
         requireProjectLeader(project);
         Activity activity = findByProjectAndName(projectId, activityName);
         activityRepository.delete(activity.getId());
+    }
+
+    @Override
+    public void deleteEntry(TimeEntry entry) {
+        Employee employee = entry.getEmployee();
+        employee.getEntries().remove(entry);
+        timeEntryRepository.remove(entry);
     }
 
     @Override

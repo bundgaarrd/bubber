@@ -1,6 +1,6 @@
 package appLogic;
 
-import appLogic.activity.command.CreateProjectActivity;
+import appLogic.activity.command.CreateWorkActivity;
 import appLogic.activity.exception.ActivityNotFoundException;
 import appLogic.activity.exception.DuplicateActivityException;
 import appLogic.activity.impl.Activity;
@@ -21,7 +21,7 @@ public class DeleteActivitySteps {
         Activity activity;
         try {
             activity = TestApp.getInstance().getApp().getActivityService()
-                    .createProjectActivity(new CreateProjectActivity(project.getProjectID(), name, "", "", LocalDateTime.now(), LocalDateTime.now(), 5));
+                    .createWorkActivity(new CreateWorkActivity(project.getProjectID(), name, "", "", LocalDateTime.now(), LocalDateTime.now(), 5));
         } catch (DuplicateActivityException e) {
             activity = TestApp.getInstance().getApp().getActivityService().findByProjectAndName(
                     project.getProjectID(), name

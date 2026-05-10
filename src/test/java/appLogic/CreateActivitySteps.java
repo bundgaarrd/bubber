@@ -1,6 +1,6 @@
 package appLogic;
 
-import appLogic.activity.command.CreateProjectActivity;
+import appLogic.activity.command.CreateWorkActivity;
 import appLogic.activity.exception.DuplicateActivityException;
 import appLogic.activity.impl.Activity;
 import appLogic.employee.Employee;
@@ -35,7 +35,7 @@ public class CreateActivitySteps {
         Project project = TestApp.getInstance().getProject();
         try {
             Activity activity = TestApp.getInstance().getApp().getActivityService()
-                    .createProjectActivity(new CreateProjectActivity(
+                    .createWorkActivity(new CreateWorkActivity(
                             project.getProjectID(),
                             name,
                             "",
@@ -65,7 +65,7 @@ public class CreateActivitySteps {
         Activity activity;
         try {
             activity = TestApp.getInstance().getApp().getActivityService()
-                    .createProjectActivity(new CreateProjectActivity(
+                    .createWorkActivity(new CreateWorkActivity(
                             project.getProjectID(),
                             name,
                             "",
@@ -109,7 +109,7 @@ public class CreateActivitySteps {
         Project project = TestApp.getInstance().getProject();
         try {
             Activity activity = TestApp.getInstance().getApp().getActivityService()
-                    .createProjectActivity(new CreateProjectActivity(
+                    .createWorkActivity(new CreateWorkActivity(
                             project.getProjectID(),
                             "Activity-" + System.nanoTime(),
                             "",

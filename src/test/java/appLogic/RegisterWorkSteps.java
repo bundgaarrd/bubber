@@ -1,7 +1,7 @@
 package appLogic;
 
 import appLogic.activity.command.CreateFixedActivity;
-import appLogic.activity.command.CreateProjectActivity;
+import appLogic.activity.command.CreateWorkActivity;
 import appLogic.activity.exception.ActivityNotFoundException;
 import appLogic.activity.exception.DuplicateActivityException;
 import appLogic.activity.exception.InvalidHoursException;
@@ -167,8 +167,8 @@ public class RegisterWorkSteps {
             activity = TestApp.getInstance().getApp().getActivityService().findByProjectAndName(projectId, name);
         } catch (ActivityNotFoundException notFound) {
             try {
-                activity = TestApp.getInstance().getApp().getActivityService().createProjectActivity(
-                        new CreateProjectActivity(projectId, name, "", "", LocalDateTime.now(), LocalDateTime.now(), 5)
+                activity = TestApp.getInstance().getApp().getActivityService().createWorkActivity(
+                        new appLogic.activity.command.CreateWorkActivity(projectId, name, "", "", LocalDateTime.now(), LocalDateTime.now(), 5)
                 );
             } catch (DuplicateActivityException duplicate) {
                 activity = TestApp.getInstance().getApp().getActivityService().findByProjectAndName(projectId, name);
