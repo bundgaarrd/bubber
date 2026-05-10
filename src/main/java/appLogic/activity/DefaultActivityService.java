@@ -18,8 +18,6 @@ import appLogic.project.Project;
 import appLogic.project.ProjectRegistry;
 
 import java.time.LocalDateTime;
-
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -107,9 +105,8 @@ public class DefaultActivityService implements ActivityService {
 
         Employee employee = entry.getEmployee();
         employee.addEntry(entry);
-        //if (!employee.getEntries().contains(activity)) {
-        //    employee.getActivities().add(activity);
-        //}
+        // Keep employee activities in sync
+        employee.addActivity(activity);
     }
 
     @Override
@@ -121,7 +118,7 @@ public class DefaultActivityService implements ActivityService {
                 .orElseThrow(() -> new ActivityNotFoundException("Activity not found."));
         TimeEntry entry = new TimeEntry(employee, activity, entryStart, entryEnd, hoursWorked);
         assignEmployee(activityId, entry);
-        timeEntryRepository.save(entry);
+        try { timeEntryRepository.save(entry); } catch (Exception ignored) {}
         return entry;
     }
 

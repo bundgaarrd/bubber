@@ -57,11 +57,11 @@ public class TestReport {
         var activity = app.getActivityService().createProjectActivity(
                 new appLogic.activity.command.CreateProjectActivity(
                         p.getProjectID(), "TestTask", "desc", "summary",
-                        0, 0, 0, 0, 5
+                        LocalDateTime.now(), LocalDateTime.now(), 5
                 )
         );
         app.getActivityService().registerWork(
-                activity.getId(), laha, LocalDateTime.now(), 3.0
+                activity.getId(), laha, LocalDateTime.now(), LocalDateTime.now(), 3.0
         );
 
         Report report = app.getReport(p.getProjectID());
@@ -84,11 +84,11 @@ public class TestReport {
         var activity = app.getActivityService().createProjectActivity(
                 new appLogic.activity.command.CreateProjectActivity(
                         p.getProjectID(), "BigTask", "desc", "summary",
-                        0, 0, 0, 0, 5
+                        LocalDateTime.now(), LocalDateTime.now(), 5
                 )
         );
         app.getActivityService().registerWork(
-                activity.getId(), laha, LocalDateTime.now(), 15.0
+                activity.getId(), laha, LocalDateTime.now(), LocalDateTime.now(), 15.0
         );
 
         Report report = app.getReport(p.getProjectID());

@@ -61,8 +61,7 @@ public class Project {
     }
 
     public Set<TimeEntry> getEvents() {
-        Set<TimeEntry> entries = new HashSet<>();
-        return entries;
+        return events;
     }
 
     public Set<Customer> getCustomers() {

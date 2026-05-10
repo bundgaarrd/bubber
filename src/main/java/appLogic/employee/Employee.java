@@ -2,6 +2,7 @@ package appLogic.employee;
 
 import appLogic.TimeEntry;
 import appLogic.project.Project;
+import appLogic.activity.impl.Activity;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,6 +20,9 @@ public class Employee {
      * Projects where this employee is a leader
      */
     private final Set<Project> leaderProjects = new HashSet<>();
+
+    // Activities this employee is assigned to
+    private final Set<Activity> activities = new HashSet<>();
 
     public Employee(String initials, String name, boolean isAvailable) {
         this.initials = initials;
@@ -70,5 +74,18 @@ public class Employee {
 
     public void removeProjectAsLeader(Project project) {
         leaderProjects.remove(project);
+    }
+
+    // Activity schedule management
+    public Set<Activity> getActivities() {
+        return activities;
+    }
+
+    public void addActivity(Activity activity) {
+        activities.add(activity);
+    }
+
+    public void removeActivity(Activity activity) {
+        activities.remove(activity);
     }
 }

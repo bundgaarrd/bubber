@@ -3,6 +3,8 @@ package appLogic.activity.impl;
 import appLogic.FixedActivityType;
 
 import java.time.LocalDateTime;
+import java.time.temporal.WeekFields;
+import java.util.Locale;
 
 public class FixedActivity extends Activity {
 
@@ -13,7 +15,7 @@ public class FixedActivity extends Activity {
     public FixedActivity(String name, String description, String summary,
                          LocalDateTime startDate, LocalDateTime endDate,
                          FixedActivityType type, String projectId) {
-        super(name, description, summary, startDate, endDate, null);
+        super(name, description, summary, startDate, endDate, projectId);
         this.startDate = startDate;
         this.endDate = endDate;
         this.type = type;
@@ -29,5 +31,23 @@ public class FixedActivity extends Activity {
 
     public LocalDateTime getEndDate() {
         return endDate;
+    }
+
+    public int getStartWeek() {
+        WeekFields wf = WeekFields.of(Locale.getDefault());
+        return startDate.toLocalDate().get(wf.weekOfWeekBasedYear());
+    }
+
+    public int getEndWeek() {
+        WeekFields wf = WeekFields.of(Locale.getDefault());
+        return endDate.toLocalDate().get(wf.weekOfWeekBasedYear());
+    }
+
+    public int getStartYear() {
+        return startDate.getYear();
+    }
+
+    public int getEndYear() {
+        return endDate.getYear();
     }
 }

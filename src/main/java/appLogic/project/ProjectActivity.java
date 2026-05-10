@@ -29,11 +29,15 @@ public class ProjectActivity extends Activity {
     }
 
     public boolean isOverlapWeek(int week, int year) {
-        if (year < getStartYear() || year > getEndYear()) return false;
-        if (getStartYear() == getEndYear()) return week >= getStartWeek() && week <= getEndWeek();
-        if (year == getStartYear()) return week >= getStartWeek();
-        if (year == getEndYear()) return week <= getEndWeek();
-        return true;
+        LocalDateTime startDate = getStartDate();
+        LocalDateTime endDate = getEndDate();
+
+        LocalDateTime weekStart = LocalDateTime.of(year, 1, 1, 0, 0)
+                .with(java.time.temporal.TemporalAdjusters.firstInMonth(java.time.DayOfWeek.MONDAY))
+                .plusWeeks(week - 1);
+        LocalDateTime weekEnd = weekStart.plusDays(6).withHour(23).withMinute(59).withSecond(59);
+
+        return (startDate.isBefore(weekEnd) && endDate.isAfter(weekStart));
     }
 }
 

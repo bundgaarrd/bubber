@@ -24,10 +24,8 @@ import javafx.util.StringConverter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class RegisterActivityTimeView {
 
@@ -285,18 +283,14 @@ public class RegisterActivityTimeView {
                 messageLabel.setText("Invalid expected hours"); return;
             }
 
-            WeekFields wf = WeekFields.of(Locale.getDefault());
-            int sw = startDate.getValue().get(wf.weekOfWeekBasedYear());
-            int ew = endDate.getValue().get(wf.weekOfWeekBasedYear());
-            int sy = startDate.getValue().getYear();
-            int ey = endDate.getValue().getYear();
-
             Activity activity = activityService.createWorkActivity(new CreateWorkActivity(
                 selectedProject.getProjectID(),
                 descField.getText(),              
                 descField.getText(),               
                 summaryField.getText(),
-                LocalDateTime.now(), LocalDateTime.now().plusDays(5), hours //TODO Fix in UI
+                startDate.getValue().atStartOfDay(),
+                endDate.getValue().atStartOfDay(),
+                hours
             ));
 
             activityList.add(activity);

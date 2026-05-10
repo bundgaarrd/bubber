@@ -90,4 +90,12 @@ public abstract class Activity {
     public int getDuration() { //TODO Add to UI
         return Math.toIntExact(endDate.toEpochSecond(ZoneOffset.UTC) - startDate.toEpochSecond(ZoneOffset.UTC));
     }
+
+    public LocalDateTime getStartDate() {
+        return startDate;
+    }
+
+    public LocalDateTime getEndDate() {
+        return endDate;
+    }
 }

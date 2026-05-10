@@ -11,6 +11,7 @@ import io.cucumber.java.en.When;
 import org.junit.jupiter.api.Assertions;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.WeekFields;
 import java.util.Locale;
 
@@ -39,7 +40,8 @@ public class CreateActivitySteps {
                             name,
                             "",
                             "",
-                            0, 0, 0, 0,
+                            LocalDateTime.now(),
+                            LocalDateTime.now(),
                             5
                     ));
             TestApp.getInstance().setActivity(activity);
@@ -68,7 +70,8 @@ public class CreateActivitySteps {
                             name,
                             "",
                             "",
-                            0, 0, 0, 0,
+                            LocalDateTime.now(),
+                            LocalDateTime.now(),
                             5
                     ));
         } catch (DuplicateActivityException e) {
@@ -111,7 +114,8 @@ public class CreateActivitySteps {
                             "Activity-" + System.nanoTime(),
                             "",
                             "",
-                            0, 0, 0, 0,
+                            LocalDateTime.now(),
+                            LocalDateTime.now(),
                             5
                     ));
             TestApp.getInstance().setActivity(activity);
