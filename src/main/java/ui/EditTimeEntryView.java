@@ -57,7 +57,14 @@ public class EditTimeEntryView {
         dialog.showAndWait().ifPresent(result -> {
             if (result == ButtonType.OK) {
                 Employee emp = appContext.getEmployeeRepository().findByName(employeeChoice.getValue());
-                if (emp != null) timeEntry.setEmployee(emp);
+                if (emp != null) {
+                    Employee previous = timeEntry.getEmployee();
+                    if (previous != null) {
+                        previous.removeEntry(timeEntry);
+                    }
+                    timeEntry.setEmployee(emp);
+                    emp.addEntry(timeEntry);
+                }
                 timeEntry.setHoursWorked(Double.parseDouble(hoursField.getText()));
 
             }

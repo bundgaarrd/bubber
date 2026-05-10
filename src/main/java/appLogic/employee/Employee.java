@@ -48,20 +48,25 @@ public class Employee {
 
     public void addEntry(TimeEntry entry) {
         entries.add(entry);
+        boolean alreadyAssigned = activities.stream()
+                .anyMatch(activity -> activity.equals(entry.getActivity()));
+        if (!alreadyAssigned) {
+            activities.add(entry.getActivity());
+        }
+    }
+
+    public void removeEntry(TimeEntry timeEntry) {
+        entries.remove(timeEntry);
+        // Check if the employee is still assigned to the activity through other time entries
+        boolean stillAssigned = entries.stream()
+                .anyMatch(e -> e.getActivity().equals(timeEntry.getActivity()));
+        if (!stillAssigned) {
+            activities.remove(timeEntry.getActivity());
+        }
     }
 
     public List<TimeEntry> getEntries() {
         return entries;
-    }
-
-    public int getActiveActivityCount(int week, int year) {
-        int count = 0;
-
-        for (TimeEntry entry : entries) {
-
-        }
-
-        return count;
     }
 
     public Set<Project> getLeaderProjects() {
@@ -75,8 +80,8 @@ public class Employee {
     public void removeProjectAsLeader(Project project) {
         leaderProjects.remove(project);
     }
-
     // Activity schedule management
+
     public Set<Activity> getActivities() {
         return activities;
     }
