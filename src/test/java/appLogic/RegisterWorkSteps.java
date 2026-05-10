@@ -1,7 +1,6 @@
 package appLogic;
 
 import appLogic.activity.command.CreateFixedActivity;
-import appLogic.activity.command.CreateWorkActivity;
 import appLogic.activity.exception.ActivityNotFoundException;
 import appLogic.activity.exception.DuplicateActivityException;
 import appLogic.activity.exception.InvalidHoursException;
@@ -130,7 +129,7 @@ public class RegisterWorkSteps {
     @When("I add a fixed activity with name {string} at the same dates as {string}")
     public void iAddAFixedActivityWithNameAtTheSameDatesAs(String name, String existingActivityName) {
         FixedActivity existing = fixedActivities.stream()
-                .filter(activity -> activity.getName().equals(existingActivityName))
+                .filter(activity -> activity.getName().equalsIgnoreCase(existingActivityName))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Expected existing fixed activity: " + existingActivityName));
 
@@ -202,7 +201,6 @@ public class RegisterWorkSteps {
     }
 
     private FixedActivity createFixedActivity(String name, int startWeek, int endWeek, int startYear, int endYear) {
-        Project project = requireCurrentProject();
         // Convert week/year to LocalDate (Monday of the given week)
         WeekFields weekFields = WeekFields.of(java.util.Locale.getDefault());
         LocalDate startDate = LocalDate.now()
@@ -214,15 +212,13 @@ public class RegisterWorkSteps {
                 .with(weekFields.weekOfWeekBasedYear(), endWeek)
                 .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
 
+        FixedActivityType type = FixedActivityType.valueOf(name.toUpperCase().replace(" ", "_"));
+
         Activity created = TestApp.getInstance().getApp().getActivityService().createFixedActivity(
                 new CreateFixedActivity(
-                        project.getProjectID(),
-                        name,
-                        "",
-                        "",
                         startDate.atStartOfDay(),
                         endDate.atStartOfDay(),
-                        FixedActivityType.VACATION
+                        type
                 )
         );
         return (FixedActivity) created;
