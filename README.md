@@ -22,7 +22,7 @@ Navigate to the correct directory and run the Maven project:
 ```bash
 # First clone the project via the steps above
 # Change dir to the project directory
-cd SoftwareHuset
+cd SoftwareHuset # or whatever the directory is called (depending on which git server you cloned from)
 
 # Run the Maven projet
 mvn javafx:run
