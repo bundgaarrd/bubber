@@ -72,6 +72,8 @@ public class RegisterActivityTimeView {
         subtitle.setStyle("-fx-text-fill: #777; -fx-font-size: 12px;");
         Label expectedHoursLabel = new Label("Project budget (hours): " + selectedProject.getExpectedHours());
         expectedHoursLabel.setStyle("-fx-text-fill: #777; -fx-font-size: 12px;");
+        Button generateReportButton = new Button("Generate report");
+        generateReportButton.setStyle("-fx-base: #4f8ef7; -fx-text-fill: white; -fx-font-weight: bold;");
 
         String projectLeaderName = selectedProject.getProjectLeader() != null ? selectedProject.getProjectLeader().getName() : "none";
         Label projectLeaderLabel = new Label("Project leader: " + projectLeaderName);
@@ -85,7 +87,7 @@ public class RegisterActivityTimeView {
         remainingHoursLabel.setStyle("-fx-text-fill: #777; -fx-font-size: 12px;");
 
 //        VBox header = new VBox(2, title, subtitle, projectLeaderLabel, expectedHoursLabel, remainingHoursLabel, differenceLabel);
-        VBox header = new VBox(2, title, subtitle, projectLeaderLabel, expectedHoursLabel, remainingHoursLabel);
+        VBox header = new VBox(2, title, subtitle, projectLeaderLabel, expectedHoursLabel, remainingHoursLabel, generateReportButton);
 
         header.setPadding(new Insets(0, 0, 15, 0));
         root.setTop(header);
@@ -239,6 +241,11 @@ public class RegisterActivityTimeView {
                 new EditTimeEntryView(selected).show();
                 table.refresh();
             }
+        });
+
+        generateReportButton.setOnAction(e -> {
+            ReportView reportView = new ReportView(scene, selectedProject);
+            scene.setRoot(reportView.getView());
         });
 
         return root;
