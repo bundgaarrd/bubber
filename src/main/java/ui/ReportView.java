@@ -2,6 +2,7 @@ package ui;
 
 import appLogic.App;
 import appLogic.Summary;
+import appLogic.employee.Employee;
 import appLogic.project.Project;
 import appLogic.report.Report;
 import javafx.collections.FXCollections;
@@ -30,6 +31,14 @@ public class ReportView {
     }
 
     public Parent getView() {
+        Employee loggedInUser = app.getLoggedInUser();
+        Employee projectLeader = project.getProjectLeader();
+
+        // Check if user is project leader
+        if (projectLeader == null || !loggedInUser.equals(projectLeader)) {
+            return createUnauthorizedView();
+        }
+
         BorderPane root = new BorderPane();
         Report report = app.getReport(project.getProjectID());
 
@@ -45,6 +54,24 @@ public class ReportView {
         VBox bottomSection = createBottomSection();
         root.setBottom(bottomSection);
 
+        return root;
+    }
+
+    private Parent createUnauthorizedView() {
+        VBox root = new VBox(20);
+        root.setPadding(new Insets(40));
+        root.setAlignment(Pos.CENTER);
+
+        Label errorTitle = new Label("Access Denied");
+        errorTitle.setStyle("-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #c94444;");
+
+        Label errorMessage = new Label("Only the project leader can generate reports.");
+        errorMessage.setStyle("-fx-font-size: 14; -fx-text-fill: #666666;");
+
+        Button backBtn = new Button("Back");
+        backBtn.setOnAction(e -> scene.setRoot(new RegisterActivityTimeView(scene, project).getView()));
+
+        root.getChildren().addAll(errorTitle, errorMessage, backBtn);
         return root;
     }
 
@@ -120,7 +147,7 @@ public class ReportView {
         bottomBox.setAlignment(Pos.CENTER_LEFT);
 
         Button backBtn = new Button("Back");
-        backBtn.setOnAction(e -> scene.setRoot(new MainView(scene).getView()));
+        backBtn.setOnAction(e -> scene.setRoot(new RegisterActivityTimeView(scene, project).getView()));
 
         bottomBox.getChildren().add(backBtn);
         return bottomBox;

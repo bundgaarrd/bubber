@@ -75,7 +75,16 @@ public class RegisterActivityTimeView {
         Button generateReportButton = new Button("Generate report");
         generateReportButton.setStyle("-fx-base: #4f8ef7; -fx-text-fill: white; -fx-font-weight: bold;");
 
-        String projectLeaderName = selectedProject.getProjectLeader() != null ? selectedProject.getProjectLeader().getName() : "none";
+        // Only enable generate report button for project leaders
+        Employee loggedInUser = App.getInstance().getLoggedInUser();
+        Employee projectLeader = selectedProject.getProjectLeader();
+        boolean isProjectLeader = projectLeader != null && loggedInUser.equals(projectLeader);
+        generateReportButton.setDisable(!isProjectLeader);
+        if (!isProjectLeader) {
+            generateReportButton.setStyle("-fx-base: #cccccc; -fx-text-fill: #666666;");
+        }
+
+        String projectLeaderName = projectLeader != null ? projectLeader.getName() : "none";
         Label projectLeaderLabel = new Label("Project leader: " + projectLeaderName);
         projectLeaderLabel.setStyle("-fx-text-fill: #777; -fx-font-size: 12px;");
         // TODO: Find den rigtige metode til at få remaining hours
