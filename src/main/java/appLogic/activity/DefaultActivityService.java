@@ -85,6 +85,11 @@ public class DefaultActivityService implements ActivityService {
 
     @Override
     public void deleteEntry(TimeEntry entry) {
+        Activity activity = entry.getActivity();
+        Project project = requireProject(activity.getProjectId());
+        requireProjectLeader(project);
+        project.getEvents().remove(entry);
+        activity.getTimeEntries().remove(entry);
         Employee employee = entry.getEmployee();
         employee.getEntries().remove(entry);
         timeEntryRepository.remove(entry);
