@@ -41,18 +41,6 @@ public class TimeEntry {
         return entryStartTime;
     }
 
-    public void setEntryStartTime(LocalDateTime entryStartTime) {
-        this.entryStartTime = entryStartTime;
-    }
-
-    public LocalDateTime getEntryEndTime() {
-        return entryEndTime;
-    }
-
-    public void setEntryEndTime(LocalDateTime entryEndTime) {
-        this.entryEndTime = entryEndTime;
-    }
-
     public double getHoursWorked() {
         return hoursWorked;
     }

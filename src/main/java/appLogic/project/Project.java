@@ -12,24 +12,15 @@ public class Project {
     private String projectName;
     private boolean hasCustomer;
     private Employee projectLeader;
-    private boolean isCompleted = false;
     private Set<Customer> customerList;
     private double expectedHours;
     private Set<TimeEntry> events;
-    private Set<Employee> employees;
-    private double remainingHours;
-    
+
     public Project(String projectID, String projectName) {
         this.projectID = projectID;
         this.projectName = projectName;
-        this.employees = new HashSet<>(); 
         this.events = new HashSet<>();
         this.customerList = new HashSet<>();
-    }
-
-    // Status true
-    public void setCompletedStatus(boolean status) {
-        this.isCompleted = status;
     }
 
     public Employee getProjectLeader() {
@@ -44,28 +35,12 @@ public class Project {
         if(empl != null) empl.addProjectAsLeader(this);
     }
 
-
-    public boolean assignEmployee(Employee empl) {
-        boolean b;
-        if (employees.contains(empl)) {
-            b = false;
-        } else {
-            employees.add(empl);
-            b = true;
-        }
-        return b;
-    }
-
     public void setExpectedHours(double hours) {
         this.expectedHours = hours;
     }
 
     public Set<TimeEntry> getEvents() {
         return events;
-    }
-
-    public Set<Customer> getCustomers() {
-        return customerList;
     }
 
     public String getProjectID() {

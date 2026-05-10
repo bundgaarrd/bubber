@@ -44,10 +44,6 @@ public abstract class Activity {
         return name;
     }
 
-    public String getProjectReferenceId() {
-        return id.toString();
-    }
-
     public Set<TimeEntry> getTimeEntries() {
         return entries;
     }
@@ -85,10 +81,6 @@ public abstract class Activity {
 
     public String getSummary() {
         return summary;
-    }
-
-    public int getDuration() { //TODO Add to UI
-        return Math.toIntExact(endDate.toEpochSecond(ZoneOffset.UTC) - startDate.toEpochSecond(ZoneOffset.UTC));
     }
 
     public LocalDateTime getStartDate() {
