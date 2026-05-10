@@ -17,7 +17,7 @@ public class Project {
     private double expectedHours;
     private Set<TimeEntry> events;
     private Set<Employee> employees;
-
+    private double remainingHours;
     
     public Project(String projectID, String projectName) {
         this.projectID = projectID;
