@@ -1,18 +1,16 @@
 package appLogic.project;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import appLogic.Customer;
 import appLogic.TimeEntry;
 import appLogic.employee.Employee;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class Project {
     private String projectID;
     private String projectName;
     private boolean hasCustomer;
     private Employee projectLeader;
-    private Set<Customer> customerList;
     private double expectedHours;
     private Set<TimeEntry> events;
 
@@ -20,7 +18,6 @@ public class Project {
         this.projectID = projectID;
         this.projectName = projectName;
         this.events = new HashSet<>();
-        this.customerList = new HashSet<>();
     }
 
     public Employee getProjectLeader() {
