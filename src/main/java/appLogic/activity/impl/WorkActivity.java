@@ -32,17 +32,4 @@ public class WorkActivity extends Activity {
     public void setStatus(ActivityStatus status) {
         this.status = status;
     }
-
-    // Keep previous helper for tests/compatibility: determines if activity overlaps a week/year
-    public boolean isOverlapWeek(int week, int year) {
-        LocalDateTime startDate = getStartDate();
-        LocalDateTime endDate = getEndDate();
-
-        LocalDateTime weekStart = LocalDateTime.of(year, 1, 1, 0, 0)
-                .with(java.time.temporal.TemporalAdjusters.firstInMonth(DayOfWeek.MONDAY))
-                .plusWeeks(week - 1);
-        LocalDateTime weekEnd = weekStart.plusDays(6).withHour(23).withMinute(59).withSecond(59);
-
-        return ( !startDate.isAfter(weekEnd) ) && ( !endDate.isBefore(weekStart) );
-    }
 }
