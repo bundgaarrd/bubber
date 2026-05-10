@@ -56,6 +56,7 @@ public class RegisterActivityTimeView {
     private final ObservableList<Activity>  activityList  = FXCollections.observableArrayList();
 
     private Label remainingHoursLabel;
+//    private Label differenceLabel;
 
     public RegisterActivityTimeView(Scene scene, Project selectedProject) {
         this.scene = scene;
@@ -91,9 +92,14 @@ public class RegisterActivityTimeView {
         Label projectLeaderLabel = new Label("Project leader: " + projectLeaderName);
         projectLeaderLabel.setStyle("-fx-text-fill: #777; -fx-font-size: 12px;");
         // TODO: Find den rigtige metode til at få remaining hours
+        double diff = selectedProject.getExpectedHours() - activityService.getRemainingHours(selectedProject.getProjectID());
+//        differenceLabel = new Label("Budget vs. remaining: " + diff + " hours");
+//        differenceLabel.setStyle("-fx-text-fill: " + (diff < 0 ? "#c94444" : "#2e8b57") + "; -fx-font-size: 12px;");
+
         remainingHoursLabel = new Label("Remaining on activities: " +  activityService.getRemainingHours(selectedProject.getProjectID()));
         remainingHoursLabel.setStyle("-fx-text-fill: #777; -fx-font-size: 12px;");
 
+//        VBox header = new VBox(2, title, subtitle, projectLeaderLabel, expectedHoursLabel, remainingHoursLabel, differenceLabel);
         VBox header = new VBox(2, title, subtitle, projectLeaderLabel, expectedHoursLabel, remainingHoursLabel);
 
         header.setPadding(new Insets(0, 0, 15, 0));
@@ -321,6 +327,10 @@ public class RegisterActivityTimeView {
     }
 
     private void updateRemainingHours() {
-        remainingHoursLabel.setText("Remaining on activities: " +  activityService.getRemainingHours(selectedProject.getProjectID()));
+        double remaining = activityService.getRemainingHours(selectedProject.getProjectID());
+        remainingHoursLabel.setText("Remaining on activities: " +  remaining);
+//        double diff = selectedProject.getExpectedHours() - remaining;
+//        differenceLabel.setText("Budget vs. remaining: " + diff + " hrs");
+//        differenceLabel.setStyle("-fx-text-fill: " + (diff < 0 ? "#c94444" : "#2e8b57") + "; -fx-font-size: 12px;");
     }
 }
