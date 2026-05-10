@@ -9,6 +9,7 @@ import appLogic.activity.command.CreateFixedActivity;
 import appLogic.activity.command.CreateWorkActivity;
 import appLogic.activity.impl.Activity;
 import appLogic.employee.Employee;
+import appLogic.project.ProjectRegistry;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -35,6 +36,7 @@ public class ShowActivitiesView {
     private Employee user;
     private String username;
     private ActivityService activityService;
+    private ProjectRegistry projectRegistry;
 
     public ShowActivitiesView(Scene scene) {
         this.scene = scene;
@@ -45,6 +47,7 @@ public class ShowActivitiesView {
         this.activitySet = this.user.getActivities();
         this.entries.addAll(activitySet);
         this.activityService = appContext.getActivityService();
+        this.projectRegistry = appContext.getProjectRegistry();
     }
 
     public Parent getView() {
@@ -71,15 +74,23 @@ public class ShowActivitiesView {
 
         TableColumn<Activity, String> startDateCol = new TableColumn<>("Start date");
         startDateCol.setCellValueFactory(data ->
-                new javafx.beans.property.SimpleStringProperty(data.getValue().getStartDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
+                new javafx.beans.property.SimpleStringProperty(data.getValue().getStartDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
 
         TableColumn<Activity, String> endDateCol = new TableColumn<>("End date");
         endDateCol.setCellValueFactory(data ->
-                new javafx.beans.property.SimpleStringProperty(data.getValue().getEndDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
+                new javafx.beans.property.SimpleStringProperty(data.getValue().getEndDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
+
+        TableColumn<Activity, String> projectIDcol = new TableColumn<>("Project ID");
+        projectIDcol.setCellValueFactory(data ->
+                new javafx.beans.property.SimpleStringProperty(data.getValue().getProjectId()));
+
+        TableColumn<Activity, String> projectNamecol = new TableColumn<>("Project name");
+        projectNamecol.setCellValueFactory(data ->
+                new javafx.beans.property.SimpleStringProperty(projectRegistry.getProjectById(data.getValue().getProjectId()).getProjectName()));
 
         TableView<Activity> tableData = new TableView<>();
         tableData.setItems(entries);
-        tableData.getColumns().addAll(activityNameCol, startDateCol, endDateCol);
+        tableData.getColumns().addAll(activityNameCol, startDateCol, endDateCol, projectIDcol, projectNamecol);
 
         // Event handlers
         backBtn.setOnAction(e -> {
