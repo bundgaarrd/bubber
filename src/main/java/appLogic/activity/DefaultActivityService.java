@@ -54,11 +54,8 @@ public class DefaultActivityService implements ActivityService {
 
     @Override
     public Activity createFixedActivity(CreateFixedActivity command) {
-        requireProject(command.projectId());
-        ensureUniqueName(command.projectId(), command.name());
-        Activity activity = new FixedActivity(command.name(), command.description(), command.summary(),
-                command.startDate(), command.endDate(), command.type(), command.projectId());
-        activityRepository.save(command.projectId(), activity);
+        FixedActivity activity = new FixedActivity(command.startDate(), command.endDate(), command.type());
+        activityRepository.save(activity.getType().toString(), activity);
         return activity;
     }
 

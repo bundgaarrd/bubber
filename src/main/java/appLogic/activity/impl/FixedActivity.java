@@ -12,10 +12,8 @@ public class FixedActivity extends Activity {
     private final LocalDateTime endDate;
     private final FixedActivityType type;
 
-    public FixedActivity(String name, String description, String summary,
-                         LocalDateTime startDate, LocalDateTime endDate,
-                         FixedActivityType type, String projectId) {
-        super(name, description, summary, startDate, endDate, projectId);
+    public FixedActivity(LocalDateTime startDate, LocalDateTime endDate, FixedActivityType type) {
+        super("", type.name(),"", startDate, endDate, "");
         this.startDate = startDate;
         this.endDate = endDate;
         this.type = type;

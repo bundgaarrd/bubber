@@ -175,7 +175,7 @@ public class RegisterActivityTimeView {
                 btn.setOnAction(e -> {
                     TimeEntry entry = getTableView().getItems().get(getIndex());
                     tableData.remove(entry);
-                    timeEntryRepository.remove(entry);
+                    activityService.deleteEntry(entry);
                     updateRemainingHours();
                 });
             }

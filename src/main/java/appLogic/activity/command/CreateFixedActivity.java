@@ -4,6 +4,5 @@ import appLogic.FixedActivityType;
 
 import java.time.LocalDateTime;
 
-public record CreateFixedActivity(String projectId, String name, String description, String summary,
-                                  LocalDateTime startDate, LocalDateTime endDate, FixedActivityType type) {
+public record CreateFixedActivity(LocalDateTime startDate, LocalDateTime endDate, FixedActivityType type) {
 }

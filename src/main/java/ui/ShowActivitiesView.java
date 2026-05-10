@@ -2,7 +2,11 @@ package ui;
 
 import appLogic.App;
 import appLogic.AppContext;
+import appLogic.FixedActivityType;
 import appLogic.activity.ActivityRepository;
+import appLogic.activity.ActivityService;
+import appLogic.activity.command.CreateFixedActivity;
+import appLogic.activity.command.CreateWorkActivity;
 import appLogic.activity.impl.Activity;
 import appLogic.employee.Employee;
 import javafx.collections.FXCollections;
@@ -10,13 +14,14 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 
+import java.sql.SQLOutput;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Set;
 
 public class ShowActivitiesView {
@@ -29,6 +34,7 @@ public class ShowActivitiesView {
     private Set<Activity> activitySet;
     private Employee user;
     private String username;
+    private ActivityService activityService;
 
     public ShowActivitiesView(Scene scene) {
         this.scene = scene;
@@ -38,6 +44,7 @@ public class ShowActivitiesView {
         this.username = this.user.getName();
         this.activitySet = this.user.getActivities();
         this.entries.addAll(activitySet);
+        this.activityService = appContext.getActivityService();
     }
 
     public Parent getView() {
@@ -49,20 +56,30 @@ public class ShowActivitiesView {
 
         // Information in grid
         Label message = new Label("Showing activies for user: " + username);
-        grid.add(message,1,1);
+        grid.add(message,2,1);
 
         Button backBtn = new Button("Back");
         grid.add(backBtn, 0, 1);
 
+        Button fixedActivityButton = new Button("New fixed activity");
+        grid.add(fixedActivityButton, 1,1);
 
         // Columns
-        TableColumn<Activity, String> activityNameCol = new TableColumn<>("Activity name");
+        TableColumn<Activity, String> activityNameCol = new TableColumn<>("Activity description");
         activityNameCol.setCellValueFactory(data ->
                 new javafx.beans.property.SimpleStringProperty(data.getValue().getDescription()));
 
+        TableColumn<Activity, String> startDateCol = new TableColumn<>("Start date");
+        startDateCol.setCellValueFactory(data ->
+                new javafx.beans.property.SimpleStringProperty(data.getValue().getStartDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
+
+        TableColumn<Activity, String> endDateCol = new TableColumn<>("End date");
+        endDateCol.setCellValueFactory(data ->
+                new javafx.beans.property.SimpleStringProperty(data.getValue().getEndDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
+
         TableView<Activity> tableData = new TableView<>();
         tableData.setItems(entries);
-        tableData.getColumns().addAll(activityNameCol);
+        tableData.getColumns().addAll(activityNameCol, startDateCol, endDateCol);
 
         // Event handlers
         backBtn.setOnAction(e -> {
@@ -70,10 +87,44 @@ public class ShowActivitiesView {
             scene.setRoot(mainView.getView());
         });
 
-
+        fixedActivityButton.setOnAction(e -> openNewActivityDialog());
 
         root.setTop(grid);
         root.setCenter(tableData);
         return root;
+    }
+
+    private void openNewActivityDialog() {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setTitle("New Fixed activity");
+        dialog.setHeaderText("Create fixed activity");
+
+        DatePicker startDate   = new DatePicker(LocalDate.now());
+        DatePicker endDate     = new DatePicker(LocalDate.now());
+
+        ChoiceBox<String> fixedActivityChoice = new ChoiceBox<>();
+        // Stream, get enum to array of strings.
+        fixedActivityChoice.getItems().addAll(Arrays.stream(FixedActivityType.values()).map(FixedActivityType::toString).toList());
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10); grid.setVgap(10); grid.setPadding(new Insets(10));
+        grid.add(new Label("Choose fixed activity"),0,1); grid.add(fixedActivityChoice, 1,1);
+        grid.add(new Label("Start date:"),     0, 2); grid.add(startDate,    1, 2);
+        grid.add(new Label("End date:"),       0, 3); grid.add(endDate,      1, 3);
+
+        dialog.getDialogPane().setContent(grid);
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        dialog.showAndWait().ifPresent(result -> {
+            if (result != ButtonType.OK) return;
+
+            // Create fixed activity
+            Activity activity = activityService.createFixedActivity(new CreateFixedActivity(
+                    startDate.getValue().atStartOfDay(), endDate.getValue().atStartOfDay(), FixedActivityType.valueOf(fixedActivityChoice.getValue())
+            ));
+
+            user.addActivity(activity);
+            entries.add(activity);
+        });
     }
 }
