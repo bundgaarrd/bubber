@@ -40,9 +40,6 @@ public class RegisterActivityTimeView {
     private final ObservableList<TimeEntry> tableData     = FXCollections.observableArrayList();
     private final ObservableList<Activity>  activityList  = FXCollections.observableArrayList();
 
-    private Label remainingHoursLabel;
-//    private Label differenceLabel;
-
     public RegisterActivityTimeView(Scene scene, Project selectedProject) {
         this.scene = scene;
         this.selectedProject = selectedProject;
@@ -70,8 +67,6 @@ public class RegisterActivityTimeView {
         title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
         Label subtitle = new Label("Project ID: " + selectedProject.getProjectID());
         subtitle.setStyle("-fx-text-fill: #777; -fx-font-size: 12px;");
-        Label expectedHoursLabel = new Label("Project budget (hours): " + selectedProject.getExpectedHours());
-        expectedHoursLabel.setStyle("-fx-text-fill: #777; -fx-font-size: 12px;");
         Button generateReportButton = new Button("Generate report");
         generateReportButton.setStyle("-fx-base: #4f8ef7; -fx-text-fill: white; -fx-font-weight: bold;");
 
@@ -80,23 +75,14 @@ public class RegisterActivityTimeView {
         Employee projectLeader = selectedProject.getProjectLeader();
         boolean isProjectLeader = projectLeader != null && loggedInUser.equals(projectLeader);
         generateReportButton.setDisable(!isProjectLeader);
-        if (!isProjectLeader) {
-            generateReportButton.setStyle("-fx-base: #cccccc; -fx-text-fill: #666666;");
-        }
+
 
         String projectLeaderName = projectLeader != null ? projectLeader.getName() : "none";
         Label projectLeaderLabel = new Label("Project leader: " + projectLeaderName);
         projectLeaderLabel.setStyle("-fx-text-fill: #777; -fx-font-size: 12px;");
-        // TODO: Find den rigtige metode til at få remaining hours
         double diff = selectedProject.getExpectedHours() - activityService.getRemainingHours(selectedProject.getProjectID());
-//        differenceLabel = new Label("Budget vs. remaining: " + diff + " hours");
-//        differenceLabel.setStyle("-fx-text-fill: " + (diff < 0 ? "#c94444" : "#2e8b57") + "; -fx-font-size: 12px;");
 
-        remainingHoursLabel = new Label("Remaining on activities: " +  activityService.getRemainingHours(selectedProject.getProjectID()));
-        remainingHoursLabel.setStyle("-fx-text-fill: #777; -fx-font-size: 12px;");
-
-//        VBox header = new VBox(2, title, subtitle, projectLeaderLabel, expectedHoursLabel, remainingHoursLabel, differenceLabel);
-        VBox header = new VBox(2, title, subtitle, projectLeaderLabel, expectedHoursLabel, remainingHoursLabel, generateReportButton);
+        VBox header = new VBox(2, title, subtitle, projectLeaderLabel, generateReportButton);
 
         header.setPadding(new Insets(0, 0, 15, 0));
         root.setTop(header);
@@ -110,6 +96,12 @@ public class RegisterActivityTimeView {
         activityBox.setMaxWidth(Double.MAX_VALUE);
 
         Button newActivityBtn = new Button("+ New activity");
+        newActivityBtn.setDisable(!isProjectLeader);
+
+        if (!isProjectLeader) {
+            generateReportButton.setStyle("-fx-base: #cccccc; -fx-text-fill: #666666;");
+            newActivityBtn.setStyle("-fx-base: #cccccc; -fx-text-fill: #666666;");
+        }
 
         List<String> name = new ArrayList<>();
         employeeRepository.getAllAvailableEmployees().stream()
@@ -209,7 +201,11 @@ public class RegisterActivityTimeView {
         VBox.setVgrow(tableBlock, Priority.ALWAYS);
         root.setCenter(center);
 
-        newActivityBtn.setOnAction(e -> openNewActivityDialog(activityBox, messageLabel));
+        newActivityBtn.setOnAction(e -> {
+            if (isProjectLeader) {
+                openNewActivityDialog(activityBox, messageLabel);
+            }
+        });
 
         logTimeBtn.setOnAction(e -> {
             messageLabel.setStyle("-fx-text-fill: #c94444;");
@@ -325,9 +321,5 @@ public class RegisterActivityTimeView {
 
     private void updateRemainingHours() {
         double remaining = activityService.getRemainingHours(selectedProject.getProjectID());
-        remainingHoursLabel.setText("Remaining on activities: " +  remaining);
-//        double diff = selectedProject.getExpectedHours() - remaining;
-//        differenceLabel.setText("Budget vs. remaining: " + diff + " hrs");
-//        differenceLabel.setStyle("-fx-text-fill: " + (diff < 0 ? "#c94444" : "#2e8b57") + "; -fx-font-size: 12px;");
     }
 }
