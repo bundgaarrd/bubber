@@ -82,7 +82,16 @@ public class RegisterActivityTimeView {
         title.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
         Label subtitle = new Label("Project ID: " + selectedProject.getProjectID());
         subtitle.setStyle("-fx-text-fill: #777; -fx-font-size: 12px;");
-        VBox header = new VBox(2, title, subtitle);
+        Label expectedHoursLabel = new Label("Expected hours: " + selectedProject.getExpectedHours());
+        expectedHoursLabel.setStyle("-fx-text-fill: #777; -fx-font-size: 12px;");
+        Label projectLeaderLabel = new Label("Project leader: " + selectedProject.getProjectLeader().getName());
+        projectLeaderLabel.setStyle("-fx-text-fill: #777; -fx-font-size: 12px;");
+        // TODO: Find den rigtige metode til at få remaining hours
+        Label remainingHoursLabel = new Label("Remaining hours: ");
+        remainingHoursLabel.setStyle("-fx-text-fill: #777; -fx-font-size: 12px;");
+
+        VBox header = new VBox(2, title, subtitle, projectLeaderLabel, expectedHoursLabel, remainingHoursLabel);
+
         header.setPadding(new Insets(0, 0, 15, 0));
         root.setTop(header);
 
