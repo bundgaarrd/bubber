@@ -1,3 +1,4 @@
+// s245072 Lea
 package appLogic;
 
 import appLogic.activity.command.CreateWorkActivity;
@@ -115,7 +116,7 @@ public class AssignEmployeeSteps {
     }
     private void ensureCurrentProjectAndActivity(String activityName) {
         Project project = TestApp.getInstance().getProject();
-        assertNotNull(project, "No current project is set for this scenario. Add feature setup: a project ... with an activity ... exists");
+        assertNotNull(project, "No current project is set for this scenario.");
 
         String projectId = project.getProjectID();
         if (targetActivity == null || !targetActivity.getName().equals(activityName)) {

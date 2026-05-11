@@ -1,4 +1,5 @@
-package appLogic;
+// s245072 Lea
+package appLogic.report;
 
 public class Summary {
     private double hoursUsed;

@@ -1,3 +1,4 @@
+// s245072 Lea
 package appLogic.report;
 
 import appLogic.employee.InMemoryTimeEntryRepository;
@@ -6,7 +7,6 @@ import appLogic.activity.impl.Activity;
 import appLogic.TimeEntry;
 import appLogic.project.Project;
 import appLogic.project.ProjectRegistry;
-import appLogic.Summary;
 
 import java.util.List;
 import java.util.Set;

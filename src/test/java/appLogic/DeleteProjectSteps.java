@@ -1,3 +1,4 @@
+// s245072 Lea
 package appLogic;
 
 import appLogic.project.Project;
@@ -5,9 +6,9 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.jupiter.api.Assertions;
 
-/**
- * Feature: Deleting projects
- */
+
+// Feature: Deleting projects
+
 public class DeleteProjectSteps {
     private String projectName;
     private Exception exception;

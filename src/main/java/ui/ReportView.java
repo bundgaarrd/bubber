@@ -1,10 +1,10 @@
 package ui;
 
 import appLogic.App;
-import appLogic.Summary;
 import appLogic.employee.Employee;
 import appLogic.project.Project;
 import appLogic.report.Report;
+import appLogic.report.Summary;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
