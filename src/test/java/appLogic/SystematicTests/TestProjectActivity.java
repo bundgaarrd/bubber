@@ -1,4 +1,3 @@
-// s245072 Lea
 package appLogic.SystematicTests;
 
 import appLogic.activity.impl.WorkActivity;

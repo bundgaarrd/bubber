@@ -5,8 +5,6 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.junit.jupiter.api.Assertions;
 
-import java.util.UUID;
-
 /**
  * Scenario: Viewing the overall schedule of activities
  */

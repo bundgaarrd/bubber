@@ -1,4 +1,4 @@
-package ui; // s244970
+package ui;
 
 import appLogic.App;
 import appLogic.AppContext;
