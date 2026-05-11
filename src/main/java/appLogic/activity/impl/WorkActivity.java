@@ -1,4 +1,4 @@
-package appLogic.activity.impl;
+package appLogic.activity.impl; // Lavet af Valdemar (s246575)
 
 import java.time.LocalDateTime;
 

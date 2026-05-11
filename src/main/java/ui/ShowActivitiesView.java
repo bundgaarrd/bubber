@@ -1,4 +1,4 @@
-package ui;
+package ui; // Lavet af Andreas (244970)
 
 import appLogic.App;
 import appLogic.AppContext;
@@ -72,19 +72,19 @@ public class ShowActivitiesView {
         // Columns
         TableColumn<Activity, String> activityNameCol = new TableColumn<>("Activity description");
         activityNameCol.setCellValueFactory(data ->
-                new javafx.beans.property.SimpleStringProperty(data.getValue().getDescription()));
+                new SimpleStringProperty(data.getValue().getDescription()));
 
         TableColumn<Activity, String> startDateCol = new TableColumn<>("Start date");
         startDateCol.setCellValueFactory(data ->
-                new javafx.beans.property.SimpleStringProperty(data.getValue().getStartDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
+                new SimpleStringProperty(data.getValue().getStartDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
 
         TableColumn<Activity, String> endDateCol = new TableColumn<>("End date");
         endDateCol.setCellValueFactory(data ->
-                new javafx.beans.property.SimpleStringProperty(data.getValue().getEndDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
+                new SimpleStringProperty(data.getValue().getEndDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))));
 
         TableColumn<Activity, String> projectIDcol = new TableColumn<>("Project ID");
         projectIDcol.setCellValueFactory(data ->
-                new javafx.beans.property.SimpleStringProperty(data.getValue().getProjectId()));
+                new SimpleStringProperty(data.getValue().getProjectId()));
 
         TableColumn<Activity, String> projectNamecol = new TableColumn<>("Project name");
         projectNamecol.setCellValueFactory(data -> {

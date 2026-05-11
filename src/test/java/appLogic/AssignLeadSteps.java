@@ -1,4 +1,4 @@
-package appLogic;
+package appLogic; // Lavet af Lea s245072
 
 import appLogic.employee.Employee;
 import appLogic.project.Project;

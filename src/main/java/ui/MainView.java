@@ -1,4 +1,4 @@
-package ui;
+package ui; // Lavet af Andreas (s244970)
 
 import appLogic.App;
 import javafx.geometry.Pos;

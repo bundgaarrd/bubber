@@ -1,4 +1,4 @@
-package appLogic.employee;
+package appLogic.employee; // Lavet af Artur (s244813) og Andreas (s244970)
 
 import java.util.Map;
 import java.util.Set;

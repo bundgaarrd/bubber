@@ -1,4 +1,4 @@
-package ui; 
+package ui; // Lavet af Artur (s244813)
 
 import appLogic.App;
 import appLogic.employee.Employee;

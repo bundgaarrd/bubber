@@ -1,8 +1,4 @@
-package appLogic;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+package appLogic; // Lavet af Andreas (s244970) og Lea (s245072)
 
 import appLogic.activity.ActivityService;
 import appLogic.employee.Employee;

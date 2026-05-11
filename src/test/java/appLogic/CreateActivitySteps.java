@@ -1,4 +1,4 @@
-package appLogic;
+package appLogic; // Lavet af Valdemar s246575
 
 import appLogic.activity.command.CreateWorkActivity;
 import appLogic.activity.exception.DuplicateActivityException;

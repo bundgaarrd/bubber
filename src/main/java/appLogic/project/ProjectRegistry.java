@@ -1,4 +1,4 @@
-package appLogic.project;
+package appLogic.project; // Lavet af Valdemar (s246575)
 
 import java.util.HashSet;
 import java.util.ArrayList;

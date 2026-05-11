@@ -1,4 +1,4 @@
-package appLogic.activity;
+package appLogic.activity; // Lavet af Valdemar (s246575) og Andreas (s244970)
 
 import appLogic.TimeEntry;
 import appLogic.activity.command.CreateFixedActivity;

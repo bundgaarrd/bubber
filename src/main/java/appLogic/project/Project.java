@@ -1,4 +1,4 @@
-package appLogic.project;
+package appLogic.project; // Lavet af Andreas (s244970) og Lea (s245072)
 
 import appLogic.TimeEntry;
 import appLogic.employee.Employee;
