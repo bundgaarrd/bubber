@@ -3,6 +3,8 @@ package ui;
 import appLogic.App;
 import appLogic.AppContext;
 import javafx.geometry.Pos;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -13,7 +15,7 @@ import javafx.scene.layout.VBox;
 
 public class LoginView {
 
-    private Scene scene;
+    private final Scene scene;
 
     public LoginView(Scene scene) {
         this.scene = scene;
@@ -36,7 +38,7 @@ public class LoginView {
         Button loginBtn = new Button("Login");
         Button quitBtn = new Button("Quit");
 
-        loginBtn.setOnAction(e -> {
+        Runnable loginAction = () -> {
             String initials = initialsField.getText().trim();
 
             try {
@@ -46,6 +48,14 @@ public class LoginView {
             } catch (IllegalArgumentException | IllegalStateException exception) {
                 errorLabel.setText(exception.getMessage());
                 errorLabel.setVisible(true);
+            }
+        };
+
+        loginBtn.setOnAction(e -> loginAction.run());
+        initialsField.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                loginAction.run();
+                e.consume();
             }
         });
 
