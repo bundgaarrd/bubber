@@ -6,7 +6,6 @@ import appLogic.FixedActivityType;
 import appLogic.activity.ActivityRepository;
 import appLogic.activity.ActivityService;
 import appLogic.activity.command.CreateFixedActivity;
-import appLogic.activity.command.CreateWorkActivity;
 import appLogic.activity.impl.Activity;
 import appLogic.employee.Employee;
 import appLogic.project.Project;
@@ -21,7 +20,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 
-import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
