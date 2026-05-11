@@ -23,10 +23,12 @@ public class FixedActivity extends Activity {
         return type;
     }
 
+    @Override
     public LocalDateTime getStartDate() {
         return startDate;
     }
 
+    @Override
     public LocalDateTime getEndDate() {
         return endDate;
     }
