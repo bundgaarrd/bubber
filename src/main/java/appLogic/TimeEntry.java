@@ -1,4 +1,4 @@
-package appLogic; //s244813
+package appLogic;
 
 import appLogic.activity.impl.Activity;
 import appLogic.employee.Employee;

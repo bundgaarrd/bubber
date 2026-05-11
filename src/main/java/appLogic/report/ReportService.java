@@ -1,4 +1,3 @@
-// s245072 Lea
 package appLogic.report;
 
 import appLogic.activity.impl.WorkActivity;
