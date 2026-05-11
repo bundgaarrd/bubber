@@ -1,5 +1,6 @@
 // Ekstra feature
 // Lavet af Lea - s245072
+
 Feature: Look up employee
   Description: An employee is found in employee repository
   Actors: Projectleader, Employee
