@@ -1,4 +1,4 @@
-// s245072 Lea
+// Lavet af Lea - s245072
 package appLogic;
 
 import appLogic.employee.Employee;
