@@ -1,50 +1,105 @@
 package appLogic; //s244813
 
-import java.time.LocalDate;
+import appLogic.activity.ActivityRepository;
+import appLogic.activity.ActivityService;
+import appLogic.activity.DefaultActivityService;
+import appLogic.activity.InMemoryActivityRepository;
+import appLogic.employee.Employee;
+import appLogic.employee.InMemoryEmployeeRepository;
+import appLogic.employee.InMemoryTimeEntryRepository;
+import appLogic.project.Project;
+import appLogic.project.ProjectRegistry;
+import appLogic.report.ReportService;
+
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class AppContext {
+    private static AppContext instance = null;
 
-    public static final InMemoryEmployeeRepository employeeRepository = new InMemoryEmployeeRepository();
-    public static final InMemoryTimeEntryRepository timeEntryRepository = new InMemoryTimeEntryRepository();
+    private InMemoryEmployeeRepository employeeRepository;
+    private InMemoryTimeEntryRepository timeEntryRepository;
+    private InMemoryActivityRepository activityRepository;
+    private ProjectRegistry projectRegistry;
+    private Employee loggedInUser;
+    private ActivityService activityService;
+    private ReportService reportService;
 
-    static {
-        employeeRepository.save(new Employee("huba", "Hubert Baumeister", true));
-        employeeRepository.save(new Employee("wilo", "William Lopez", true));
-        employeeRepository.save(new Employee("anda", "Annemette A. Damgaard", true));
-
-        saveTimeEntry("huba", "Being a good teacher", "TDD/BDD forelæsning", 2.5);
-        saveTimeEntry("wilo", "Being a good TA", "Explaining TDD issues", 1.5);
+    private AppContext() {
+        instance = this;
     }
 
-    private static void saveTimeEntry(String initials,
-                                      String description,
-                                      String summary,
-                                      double hours) {
+    public static AppContext initialize() {
+        if (instance == null) {
+            instance = new AppContext();
+            instance.loadContext();
+            instance.loadEmployees();
+        }
+        return instance;
+    }
 
-        Employee emp = employeeRepository.findByInitials(initials);
+    private void loadContext() {
+        employeeRepository  = new InMemoryEmployeeRepository();
+        timeEntryRepository = new InMemoryTimeEntryRepository();
+        activityRepository  = new InMemoryActivityRepository();
+        projectRegistry     = new ProjectRegistry();
 
-        if (emp == null) {
-            System.out.println("Employee not found: " + initials);
-            return;
+        activityService = new DefaultActivityService(
+                activityRepository,
+                projectRegistry,
+                () -> loggedInUser,
+                timeEntryRepository,
+                employeeRepository
+        );
+
+        reportService = new ReportService(
+                projectRegistry,
+                activityRepository,
+                timeEntryRepository
+        );
+    }
+
+    private void loadEmployees() {
+        employeeRepository.loadFromFile("employees.txt");
+
+        Project contextProject = projectRegistry.createProject("SoftwareHuset initialisering");
+        contextProject.assignProjectLeader(loggedInUser);
+
+        activityService.saveTimeEntry(contextProject.getProjectID(), "huba", "Being a good teacher", "TDD/BDD forelæsning", LocalDateTime.now(), LocalDateTime.now().plusDays(5), 2.5);
+        activityService.saveTimeEntry(contextProject.getProjectID(), "wilo", "Being a good TA", "Explaining TDD issues", LocalDateTime.now(), LocalDateTime.now().plusDays(15), 1.5);
+
+        Project KBHShop = projectRegistry.createProject("KBHShop");
+        KBHShop.assignProjectLeader(employeeRepository.findByInitials("laha"));
+
+        Project DTU = projectRegistry.createProject("DTU");
+        DTU.assignProjectLeader(employeeRepository.findByInitials("alla"));
+    }
+
+    public void login(String initials) {
+        if (initials == null || initials.length() > 4) {
+            throw new IllegalArgumentException("Initials must be 1-4 characters");
         }
 
-        Activity activity = new WorkActivity(
-                initials,
-                description,
-                summary,
-                LocalDate.now()
-        );
+        Employee emp = employeeRepository.findByInitials(initials);
+        if (emp == null) {
+            throw new IllegalStateException("Employee not found");
+        }
+        this.loggedInUser = emp;
+    }
 
-        emp.addActivity(activity);
+    public InMemoryEmployeeRepository getEmployeeRepository() { return employeeRepository; }
+    public InMemoryTimeEntryRepository getTimeEntryRepository() { return timeEntryRepository; }
+    public ProjectRegistry              getProjectRegistry()   { return projectRegistry; }
+    public ActivityService              getActivityService()   { return activityService; }
+    public ActivityRepository           getActivityRepository(){ return activityRepository; }
+    public Employee                     getLoggedInUser()      { return loggedInUser; }
+    public ReportService                getReportService()     { return reportService; }
 
-        TimeEntry entry = new TimeEntry(
-                emp,
-                activity,
-                LocalDateTime.now(),
-                hours
-        );
-
-        timeEntryRepository.save(entry);
+    public void reset() {
+        instance = null;
+        initialize();
     }
 }

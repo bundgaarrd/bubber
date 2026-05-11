@@ -1,14 +1,27 @@
 package appLogic; //s244813
 
+import appLogic.activity.impl.Activity;
+import appLogic.employee.Employee;
+
 import java.time.LocalDateTime;
 
 public class TimeEntry {
 
-    private final Employee employee;
-    private final Activity activity;
+    private Employee employee;
+    private Activity activity;
     private LocalDateTime entryStartTime;
+    private LocalDateTime entryEndTime;
     private double hoursWorked;
 
+    public TimeEntry(Employee employee, Activity activity, LocalDateTime entryStartTime, LocalDateTime entryEndTime, double hoursWorked) {
+        this.employee = employee;
+        this.activity = activity;
+        this.entryStartTime = entryStartTime;
+        this.entryEndTime = entryEndTime;
+        this.hoursWorked = hoursWorked;
+    }
+
+    @Deprecated
     public TimeEntry(Employee employee, Activity activity, LocalDateTime entryStartTime, double hoursWorked) {
         this.employee = employee;
         this.activity = activity;
@@ -28,15 +41,19 @@ public class TimeEntry {
         return entryStartTime;
     }
 
-    public void setEntryStartTime(LocalDateTime entryStartTime) {
-        this.entryStartTime = entryStartTime;
-    }
-
     public double getHoursWorked() {
         return hoursWorked;
     }
 
     public void setHoursWorked(double hoursWorked) {
         this.hoursWorked = hoursWorked;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
+    public void setActivity(Activity activity) {
+        this.activity = activity;
     }
 }

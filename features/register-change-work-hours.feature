@@ -4,15 +4,17 @@ Feature: Register and change working hours
 
 
   Scenario: Register working hours for activity
-    Given I am logged in as an employee or a project leader with the initials "huba"
-     And There is an activity named "Analysis" in this project
-     And I am assigned to the activity named "Analysis"
+    Given I am logged in as an employee or a project leader with the initials "laha"
+    And A project with the name "KBHShop" exists in the system
+    And There is an activity named "Analysis" in this project
+    And I am assigned to the activity named "Analysis"
     When I log that I have worked 5 hours
     Then 5 working hours are registered
 
 
   Scenario: Registering invalid hours
-    Given I am logged in as an employee or a project leader with the initials "huba"
+    Given I am logged in as an employee or a project leader with the initials "laha"
+    And A project with the name "KBHShop" exists in the system
     And There is an activity named "Analysis" in this project
     And I am assigned to the activity named "Analysis"
     When I register negative hours

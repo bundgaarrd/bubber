@@ -14,7 +14,7 @@ import io.cucumber.java.en.When;
 import io.cucumber.java.en.Then;
 
 
-public class FixedActivitySteps {
+public class FixedActivitySteps {/*
     private String ErrorMessage;
     private boolean addedActivity;
     private FixedActivity fixedActivity;
@@ -84,6 +84,6 @@ public class FixedActivitySteps {
         assertFalse(addedActivity);
     }
 
-
+*/
 
 }

@@ -1,8 +1,8 @@
 package ui; //s244813
 
-import appLogic.AppContext;
-import appLogic.Employee;
-import appLogic.EmployeeRepository;
+import appLogic.App;
+import appLogic.employee.Employee;
+import appLogic.employee.EmployeeRepository;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -17,10 +17,12 @@ import javafx.scene.layout.HBox;
 public class CreateEmployeeView {
 
     private final Scene scene;
-    private final EmployeeRepository employeeRepository = AppContext.employeeRepository;
+    private final EmployeeRepository employeeRepository;
 
     public CreateEmployeeView(Scene scene) {
         this.scene = scene;
+
+        this.employeeRepository = App.getInstance().getAppContext().getEmployeeRepository();
     }
 
     public Parent getView() {
@@ -76,12 +78,12 @@ public class CreateEmployeeView {
                     name,
                     availableBox.isSelected()
             );
-
+            
             employeeRepository.save(employee);
+
 
             messageLabel.setText("Employee created!");
 
-            // clear fields
             initialsField.clear();
             nameField.clear();
             availableBox.setSelected(true);

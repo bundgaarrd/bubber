@@ -1,15 +1,14 @@
 package ui;
 
 import appLogic.App;
-import io.cucumber.messages.types.Exception;
+import appLogic.AppContext;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
-
-import javafx.scene.control.Label;
 
 
 public class LoginView {
@@ -22,6 +21,7 @@ public class LoginView {
 
     public Parent getView() {
         App app = App.getInstance();
+        AppContext appContext = app.getAppContext();
 
         VBox root = new VBox(15);
         root.setAlignment(Pos.CENTER);
@@ -34,14 +34,13 @@ public class LoginView {
         initialsField.setPromptText("e.g. huba");
         initialsField.setMaxWidth(150);
         Button loginBtn = new Button("Login");
+        Button quitBtn = new Button("Quit");
 
         loginBtn.setOnAction(e -> {
             String initials = initialsField.getText().trim();
 
-            // TODO: Mangler at lave et reelt opslag på om brugeren findes. -> Artur?
             try {
-                app.login(initials);
-                System.out.println("User " + initials + " logged in!");
+                appContext.login(initials);
                 MainView mainView = new MainView(scene);
                 scene.setRoot(mainView.getView());
             } catch (IllegalArgumentException | IllegalStateException exception) {
@@ -50,7 +49,12 @@ public class LoginView {
             }
         });
 
-        root.getChildren().addAll(label, initialsField, loginBtn, errorLabel);
+        quitBtn.setOnAction(e -> {
+            // Defer shutdown to avoid closing the window while the current action is still dispatching.
+            javafx.application.Platform.runLater(javafx.application.Platform::exit);
+        });
+
+        root.getChildren().addAll(label, initialsField, loginBtn, quitBtn, errorLabel);
 
         return root;
     }

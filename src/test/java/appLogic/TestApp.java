@@ -1,5 +1,10 @@
 package appLogic;
 
+import appLogic.activity.impl.Activity;
+import appLogic.employee.Employee;
+import appLogic.project.Project;
+import appLogic.project.ProjectRegistry;
+
 public class TestApp {
     private static TestApp instance;
     private App app;
@@ -18,11 +23,19 @@ public class TestApp {
     }
 
     public void reset() {
-        this.app = new App();
-}   
+        App.resetInstanceForTests();
+        this.app = App.getInstance();
+        this.app.getAppContext().reset();
+        this.project = null;
+        this.activity = null;
+    }
 
     public App getApp() {
         return app;
+    }
+
+    public ProjectRegistry getProjectRegistry() {
+        return app.getProjectRegistry();
     }
 
     public void setProject(Project project) {
