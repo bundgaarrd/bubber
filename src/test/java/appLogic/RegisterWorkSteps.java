@@ -1,4 +1,4 @@
-package appLogic;
+package appLogic; // Lavet af Ahmed s246522
 
 import appLogic.activity.command.CreateFixedActivity;
 import appLogic.activity.exception.ActivityNotFoundException;

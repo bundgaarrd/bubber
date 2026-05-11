@@ -1,4 +1,4 @@
-package ui;
+package ui; // Lavet af Artur (s244813) og Valdemar (s246575)
 
 import appLogic.App;
 import appLogic.AppContext;

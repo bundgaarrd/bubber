@@ -1,4 +1,4 @@
-package appLogic.employee;
+package appLogic.employee; // Lavet af Artur (s244813)
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,10 +1,10 @@
-package appLogic.activity.impl;
-
-import appLogic.FixedActivityType;
+package appLogic.activity.impl; // Lavet af Artur (s244813) og Valdemar (s246575)
 
 import java.time.LocalDateTime;
 import java.time.temporal.WeekFields;
 import java.util.Locale;
+
+import appLogic.FixedActivityType;
 
 public class FixedActivity extends Activity {
 
@@ -23,10 +23,12 @@ public class FixedActivity extends Activity {
         return type;
     }
 
+    @Override
     public LocalDateTime getStartDate() {
         return startDate;
     }
 
+    @Override
     public LocalDateTime getEndDate() {
         return endDate;
     }

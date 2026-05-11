@@ -1,4 +1,4 @@
-package appLogic;
+package appLogic; // Lavet af Artur (s244813) og Valdemar (s246575)
 
 import appLogic.activity.ActivityRepository;
 import appLogic.activity.ActivityService;

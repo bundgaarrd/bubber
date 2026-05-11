@@ -1,4 +1,4 @@
-package appLogic;
+package appLogic; // Lavet af Lea (s245072) og Valdemar (s246575)
 
 import appLogic.activity.impl.Activity;
 import appLogic.employee.Employee;

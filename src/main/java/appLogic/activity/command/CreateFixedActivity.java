@@ -1,4 +1,4 @@
-package appLogic.activity.command;
+package appLogic.activity.command; // Lavet af Andreas (s244970) og Valdemar (s246575)
 
 import appLogic.FixedActivityType;
 
