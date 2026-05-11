@@ -1,10 +1,10 @@
 package appLogic.activity.impl;
 
-import appLogic.FixedActivityType;
-
 import java.time.LocalDateTime;
 import java.time.temporal.WeekFields;
 import java.util.Locale;
+
+import appLogic.FixedActivityType;
 
 public class FixedActivity extends Activity {
 
