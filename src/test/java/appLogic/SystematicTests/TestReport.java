@@ -34,7 +34,7 @@ public class TestReport {
         @Test
         void generateReport_noActivities_returnsZeroHoursAndFullRemainder() {
                 App app = App.getInstance();
-                Project p = app.getProjectRegistry().getAllProjects().get(0);
+                Project p = app.getProjectRegistry().getProjectByName("KBHShop");
                 p.setExpectedHours(10);
 
                 Report report = app.getReport(p.getProjectID());

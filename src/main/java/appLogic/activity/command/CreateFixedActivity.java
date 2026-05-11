@@ -1,8 +1,8 @@
 package appLogic.activity.command;
 
-import appLogic.FixedActivityType;
-
 import java.time.LocalDateTime;
+
+import appLogic.activity.FixedActivityType;
 
 public record CreateFixedActivity(LocalDateTime startDate, LocalDateTime endDate, FixedActivityType type) {
 }

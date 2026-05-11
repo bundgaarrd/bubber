@@ -54,6 +54,7 @@ public class Employee {
         return entries;
     }
 
+    // bruges ikke?
     public int getActiveActivityCount(int week, int year) {
         int count = 0;
 
@@ -71,7 +72,8 @@ public class Employee {
     public void addProjectAsLeader(Project project) {
         leaderProjects.add(project);
     }
-
+    
+    // Bruges ikke?
     public void removeProjectAsLeader(Project project) {
         leaderProjects.remove(project);
     }
@@ -84,7 +86,8 @@ public class Employee {
     public void addActivity(Activity activity) {
         activities.add(activity);
     }
-
+    
+    // bruges ikke?
     public void removeActivity(Activity activity) {
         activities.remove(activity);
     }

@@ -2,9 +2,9 @@ package ui;
 
 import appLogic.App;
 import appLogic.AppContext;
-import appLogic.FixedActivityType;
 import appLogic.activity.ActivityRepository;
 import appLogic.activity.ActivityService;
+import appLogic.activity.FixedActivityType;
 import appLogic.activity.command.CreateFixedActivity;
 import appLogic.activity.command.CreateWorkActivity;
 import appLogic.activity.impl.Activity;

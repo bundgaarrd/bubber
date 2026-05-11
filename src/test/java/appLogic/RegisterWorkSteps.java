@@ -1,5 +1,6 @@
 package appLogic;
 
+import appLogic.activity.FixedActivityType;
 import appLogic.activity.command.CreateFixedActivity;
 import appLogic.activity.exception.ActivityNotFoundException;
 import appLogic.activity.exception.DuplicateActivityException;

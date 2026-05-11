@@ -1,4 +1,4 @@
-package appLogic;
+package appLogic.activity;
 
 public enum FixedActivityType {
     SICK,
