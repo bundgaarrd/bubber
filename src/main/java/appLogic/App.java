@@ -36,19 +36,6 @@ public class App {
         instance = null;
     }
 
-    public List<Employee> getAvailableEmployees() {
-        Map<String, Employee> employeeMap = appContext.getEmployeeRepository().getEmployees();
-        List<Employee> returnList = new ArrayList<>();
-
-        for (Employee emp : employeeMap.values()) {
-
-            if (emp.isAvailable()) {
-                returnList.add(emp);
-            }
-        }
-        return returnList;
-    }
-
     public AppContext getAppContext() {
         return appContext;
     }
